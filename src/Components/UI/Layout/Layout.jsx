@@ -12,11 +12,19 @@ export default function Layout({ children }) {
           },
           {
             label: "All Sheets",
-            link: "/mysheets",
+            link: "/allsheets",
           },
           {
             label: "LeaderBoard",
             link: "/leaderboard",
+          },
+          {
+            label: "Friends",
+            link: "/friends",
+          },
+          {
+            label: "Admin",
+            link: "/admin",
           },
         ]}
       />

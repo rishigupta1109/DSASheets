@@ -7,6 +7,108 @@ import {
 import { useHotkeys, useLocalStorage } from "@mantine/hooks";
 import Layout from "./Components/UI/Layout/Layout";
 import Home from "./pages/Home";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Topics from "./pages/Topics";
+import AllSheets from "./pages/AllSheets";
+import { Questions } from "./pages/Questions";
+import LeaderBoard from "./pages/LeaderBoard";
+import { AuthenticationForm } from "./pages/Login";
+import Friends from "./pages/Friends";
+import Admin from "./pages/Admin";
+import EditTopics from "./pages/EditTopics";
+import { EditQuestions } from "./pages/EditQuestions";
+import { ModalsProvider } from "@mantine/modals";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <Layout>
+        {" "}
+        <Home />
+      </Layout>
+    ),
+  },
+  {
+    path: "/:sheet_id",
+    element: (
+      <Layout>
+        <Topics />
+      </Layout>
+    ),
+  },
+  {
+    path: "/:sheet_id/:topic_id/questions",
+    element: (
+      <Layout>
+        <Questions />
+      </Layout>
+    ),
+  },
+  {
+    path: "/allsheets",
+    element: (
+      <Layout>
+        <AllSheets />
+      </Layout>
+    ),
+  },
+  {
+    path: "/leaderboard",
+    element: (
+      <Layout>
+        <LeaderBoard />
+      </Layout>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <Layout>
+        <AuthenticationForm />
+      </Layout>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <Layout>
+        <AuthenticationForm />
+      </Layout>
+    ),
+  },
+  {
+    path: "/friends",
+    element: (
+      <Layout>
+        <Friends />
+      </Layout>
+    ),
+  },
+  {
+    path: "/admin",
+    element: (
+      <Layout>
+        <Admin />
+      </Layout>
+    ),
+  },
+  {
+    path: "/admin/:sheet_id",
+    element: (
+      <Layout>
+        <EditTopics />
+      </Layout>
+    ),
+  },
+  {
+    path: "/admin/:sheet_id/:topic_id/questions",
+    element: (
+      <Layout>
+        <EditQuestions />
+      </Layout>
+    ),
+  },
+]);
 function App() {
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "mantine-color-scheme",
@@ -39,9 +141,9 @@ function App() {
           withGlobalStyles
           withNormalizeCSS
         >
-          <Layout>
-            <Home />
-          </Layout>
+          <ModalsProvider>
+            <RouterProvider router={router}></RouterProvider>
+          </ModalsProvider>
         </MantineProvider>
       </ColorSchemeProvider>
     </div>

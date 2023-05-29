@@ -9,26 +9,36 @@ import {
 } from "@mantine/core";
 // import { MantineLogo } from "@mantine/ds";
 // import { IconUpload } from "@tabler/icons-react";
-
-export function SheetCard() {
+import { useNavigate } from "react-router-dom";
+export function SheetCard({
+  title ,
+  description ,
+  completed ,
+  total ,
+  started,
+  link
+}) {
+  const navigate = useNavigate();
   return (
     <div
       style={{
         // height: "500px",
         width: "350px",
+        cursor: "pointer",
       }}
+      onClick={() => navigate(link)}
     >
       <Card withBorder padding="lg" radius="md">
         <Group position="apart">
           {/* <MantineLogo type="mark" size="2rem" /> */}
-          <Badge>Not Started Yet</Badge>
+          {!started&&<Badge>Not Started Yet</Badge>}
         </Group>
 
         <Text fz="lg" fw={500} mt="md">
-          Striver Sheet
+          {title}
         </Text>
         <Text fz="sm" c="dimmed" mt={5}>
-          A sheet curated by sde Striver to help you ace your coding interviews
+          {description}
         </Text>
 
         <Text c="dimmed" fz="sm" mt="md">
@@ -40,7 +50,7 @@ export function SheetCard() {
               color: theme.colorScheme === "dark" ? theme.white : theme.black,
             })}
           >
-            23/36
+            {completed}/{total}
           </Text>
         </Text>
         <Text
@@ -53,7 +63,7 @@ export function SheetCard() {
             justifyContent: "space-between",
           }}
         >
-          15 More to go{" "}
+          {total-completed}  More to go{" "}
           <Text
             span
             fw={500}
@@ -61,11 +71,11 @@ export function SheetCard() {
               color: theme.colorScheme === "dark" ? theme.white : theme.black,
             })}
           >
-            {((23 / 36) * 100).toFixed(0)}% Completed
+            {((completed/total) * 100).toFixed(0)}% Completed
           </Text>
         </Text>
 
-        <Progress value={(23 / 36) * 100} mt={5} />
+        <Progress value={(completed/total) * 100} mt={5} />
       </Card>
     </div>
   );

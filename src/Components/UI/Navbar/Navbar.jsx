@@ -13,6 +13,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 // import { MantineLogo } from "@mantine/ds";
 import logo from "../../../logo.svg";
+import { NavLink, useNavigate } from "react-router-dom";
+import { SegmentedToggle } from "./Toggle";
 const HEADER_HEIGHT = rem(80);
 
 const useStyles = createStyles((theme) => ({
@@ -98,22 +100,22 @@ export function Navbar({ links }) {
   const [opened, { toggle, close }] = useDisclosure(false);
   const [active, setActive] = useState(links[0].link);
   const { classes, cx } = useStyles();
-
+  const navigate =useNavigate()
   const items = links.map((link) => (
-    <a
+    <NavLink
       key={link.label}
-      href={link.link}
+      to={link.link}
       className={cx(classes.link, {
         [classes.linkActive]: active === link.link,
       })}
       onClick={(event) => {
-        event.preventDefault();
+        // event.preventDefault();
         setActive(link.link);
         close();
       }}
     >
       {link.label}
-    </a>
+    </NavLink>
   ));
 
   return (
@@ -125,9 +127,10 @@ export function Navbar({ links }) {
           {items}
         </Group>
         <Group spacing={5} className={classes.links}>
-          <Button variant="default">Log in</Button>
-          <Button>Sign up</Button>
+          <Button onClick={()=>navigate("/login")} variant="default">Log in</Button>
+          <Button onClick={()=>navigate("/register")}>Sign up</Button>
         </Group>
+        <SegmentedToggle/>
 
         <Burger
           opened={opened}
@@ -135,7 +138,6 @@ export function Navbar({ links }) {
           className={classes.burger}
           size="sm"
         />
-
         <Transition transition="pop-top-right" duration={200} mounted={opened}>
           {(styles) => (
             <Paper className={classes.dropdown} withBorder style={styles}>
