@@ -18,7 +18,12 @@ import Admin from "./pages/Admin";
 import EditTopics from "./pages/EditTopics";
 import { EditQuestions } from "./pages/EditQuestions";
 import { ModalsProvider } from "@mantine/modals";
-const router = createBrowserRouter([
+
+import { Notifications } from "@mantine/notifications";
+import globalContext from "./Components/Context/GlobalContext";
+import { useContext, useEffect } from "react";
+import { validateSession } from "./Services";
+const routerAdmin = createBrowserRouter([
   {
     path: "/",
     element: (
@@ -109,13 +114,142 @@ const router = createBrowserRouter([
     ),
   },
 ]);
+const routerUser = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <Layout>
+        {" "}
+        <Home />
+      </Layout>
+    ),
+  },
+  {
+    path: "/:sheet_id",
+    element: (
+      <Layout>
+        <Topics />
+      </Layout>
+    ),
+  },
+  {
+    path: "/:sheet_id/:topic_id/questions",
+    element: (
+      <Layout>
+        <Questions />
+      </Layout>
+    ),
+  },
+  {
+    path: "/allsheets",
+    element: (
+      <Layout>
+        <AllSheets />
+      </Layout>
+    ),
+  },
+  {
+    path: "/leaderboard",
+    element: (
+      <Layout>
+        <LeaderBoard />
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/friends",
+    element: (
+      <Layout>
+        <Friends />
+      </Layout>
+    ),
+  },
+]);
+const routerGuest = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <Layout>
+        {" "}
+        <Home />
+      </Layout>
+    ),
+  },
+  {
+    path: "/:sheet_id",
+    element: (
+      <Layout>
+        <Topics />
+      </Layout>
+    ),
+  },
+  {
+    path: "/:sheet_id/:topic_id/questions",
+    element: (
+      <Layout>
+        <Questions />
+      </Layout>
+    ),
+  },
+  {
+    path: "/allsheets",
+    element: (
+      <Layout>
+        <AllSheets />
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/login",
+    element: (
+      <Layout>
+        <AuthenticationForm />
+      </Layout>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <Layout>
+        <AuthenticationForm />
+      </Layout>
+    ),
+  },
+]);
+
 function App() {
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "mantine-color-scheme",
     defaultValue: "light",
     getInitialValueInEffect: true,
   });
-
+  const {
+    isUserAdmin,
+    isUserLoggedIn,
+    setIsUserAdmin,
+    setIsUserLoggedIn,
+    setToken,
+    setUser,
+  } = useContext(globalContext);
+  useEffect(() => {
+    const validateUserSession = async () => {
+      try {
+        const res = await validateSession();
+        if (res.status === 200) {
+          console.log(res.data);
+          setIsUserAdmin(res.data.isAdmin);
+          setIsUserLoggedIn(true);
+          setToken(res.data.token);
+          setUser(res.data.user);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    validateUserSession();
+  }, []);
   const toggleColorScheme = (value) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
@@ -142,7 +276,16 @@ function App() {
           withNormalizeCSS
         >
           <ModalsProvider>
-            <RouterProvider router={router}></RouterProvider>
+            <Notifications position="top-right" zIndex={2077} />
+            <RouterProvider
+              router={
+                isUserLoggedIn
+                  ? isUserAdmin
+                    ? routerAdmin
+                    : routerUser
+                  : routerGuest
+              }
+            ></RouterProvider>
           </ModalsProvider>
         </MantineProvider>
       </ColorSchemeProvider>

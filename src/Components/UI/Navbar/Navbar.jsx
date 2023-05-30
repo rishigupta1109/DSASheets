@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   createStyles,
   Header,
@@ -15,6 +15,7 @@ import { useDisclosure } from "@mantine/hooks";
 import logo from "../../../logo.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { SegmentedToggle } from "./Toggle";
+import globalContext from "../../Context/GlobalContext";
 const HEADER_HEIGHT = rem(80);
 
 const useStyles = createStyles((theme) => ({
@@ -100,7 +101,8 @@ export function Navbar({ links }) {
   const [opened, { toggle, close }] = useDisclosure(false);
   const [active, setActive] = useState(links[0].link);
   const { classes, cx } = useStyles();
-  const navigate =useNavigate()
+  const navigate = useNavigate();
+  const globalCtx = useContext(globalContext);
   const items = links.map((link) => (
     <NavLink
       key={link.label}
@@ -125,12 +127,31 @@ export function Navbar({ links }) {
         <img src={logo} alt="logo" height={50} />
         <Group spacing={5} className={classes.links}>
           {items}
+          {!globalCtx.isUserLoggedIn && (
+            <Group spacing={5} className={classes.links}>
+              <Button onClick={() => navigate("/login")} variant="default">
+                Log in
+              </Button>
+              <Button onClick={() => navigate("/register")}>Sign up</Button>
+            </Group>
+          )}
+          {globalCtx.isUserLoggedIn && (
+            <Button
+              onClick={() => {
+                navigate("/");
+                globalCtx.setIsUserLoggedIn(false);
+                globalCtx.setToken(null);
+                globalCtx.setUser(null);
+                globalCtx.setIsUserAdmin(false);
+
+                localStorage.removeItem("token");
+              }}
+            >
+              Logout
+            </Button>
+          )}
         </Group>
-        <Group spacing={5} className={classes.links}>
-          <Button onClick={()=>navigate("/login")} variant="default">Log in</Button>
-          <Button onClick={()=>navigate("/register")}>Sign up</Button>
-        </Group>
-        <SegmentedToggle/>
+        <SegmentedToggle />
 
         <Burger
           opened={opened}
@@ -142,23 +163,42 @@ export function Navbar({ links }) {
           {(styles) => (
             <Paper className={classes.dropdown} withBorder style={styles}>
               {items}
-              <Button
-                variant="default"
-                sx={{
-                  display: "block",
-                  margin: "1rem auto",
-                }}
-              >
-                Log in
-              </Button>
-              <Button
-                sx={{
-                  margin: "1rem auto",
-                  display: "block",
-                }}
-              >
-                Sign up
-              </Button>
+              {!globalCtx.isUserLoggedIn && (
+                <>
+                  <Button
+                    variant="default"
+                    sx={{
+                      display: "block",
+                      margin: "1rem auto",
+                    }}
+                  >
+                    Log in
+                  </Button>
+                  <Button
+                    sx={{
+                      margin: "1rem auto",
+                      display: "block",
+                    }}
+                  >
+                    Sign up
+                  </Button>
+                </>
+              )}
+              {globalCtx.isUserLoggedIn && (
+                <Button
+                  onClick={() => {
+                    navigate("/");
+                    globalCtx.setIsUserLoggedIn(false);
+                    globalCtx.setToken(null);
+                    globalCtx.setUser(null);
+                    globalCtx.setIsUserAdmin(false);
+
+                    localStorage.removeItem("token");
+                  }}
+                >
+                  Logout
+                </Button>
+              )}
             </Paper>
           )}
         </Transition>
