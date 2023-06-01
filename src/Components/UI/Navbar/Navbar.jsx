@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   createStyles,
   Header,
@@ -99,7 +99,14 @@ const useStyles = createStyles((theme) => ({
 
 export function Navbar({ links }) {
   const [opened, { toggle, close }] = useDisclosure(false);
-  const [active, setActive] = useState(links[0].link);
+  const [active, setActive] = useState(
+    links.find((link) => link.link === window.location.pathname)?.link
+  );
+  useEffect(() => {
+    setActive(
+      links.find((link) => link.link === window.location.pathname)?.link
+    );
+  }, [window.location.pathname]);
   const { classes, cx } = useStyles();
   const navigate = useNavigate();
   const globalCtx = useContext(globalContext);

@@ -7,7 +7,11 @@ import {
 import { useHotkeys, useLocalStorage } from "@mantine/hooks";
 import Layout from "./Components/UI/Layout/Layout";
 import Home from "./pages/Home";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Topics from "./pages/Topics";
 import AllSheets from "./pages/AllSheets";
 import { Questions } from "./pages/Questions";
@@ -113,6 +117,14 @@ const routerAdmin = createBrowserRouter([
       </Layout>
     ),
   },
+  {
+    path: "/*",
+    element: (
+      <Layout>
+        <Navigate to={"/"} />
+      </Layout>
+    ),
+  },
 ]);
 const routerUser = createBrowserRouter([
   {
@@ -162,6 +174,14 @@ const routerUser = createBrowserRouter([
     element: (
       <Layout>
         <Friends />
+      </Layout>
+    ),
+  },
+  {
+    path: "/*",
+    element: (
+      <Layout>
+        <Navigate to={"/"} />
       </Layout>
     ),
   },
@@ -217,6 +237,14 @@ const routerGuest = createBrowserRouter([
       </Layout>
     ),
   },
+  {
+    path: "/*",
+    element: (
+      <Layout>
+        <Navigate to={"/"} />
+      </Layout>
+    ),
+  },
 ]);
 
 function App() {
@@ -225,31 +253,8 @@ function App() {
     defaultValue: "light",
     getInitialValueInEffect: true,
   });
-  const {
-    isUserAdmin,
-    isUserLoggedIn,
-    setIsUserAdmin,
-    setIsUserLoggedIn,
-    setToken,
-    setUser,
-  } = useContext(globalContext);
-  useEffect(() => {
-    const validateUserSession = async () => {
-      try {
-        const res = await validateSession();
-        if (res.status === 200) {
-          console.log(res.data);
-          setIsUserAdmin(res.data.isAdmin);
-          setIsUserLoggedIn(true);
-          setToken(res.data.token);
-          setUser(res.data.user);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    validateUserSession();
-  }, []);
+  const { isUserAdmin, isUserLoggedIn } = useContext(globalContext);
+
   const toggleColorScheme = (value) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 

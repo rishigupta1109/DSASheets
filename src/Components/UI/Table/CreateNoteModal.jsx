@@ -9,10 +9,16 @@ import {
   Textarea,
   Container,
 } from "@mantine/core";
+import { useEffect, useState } from "react";
 
 function CreateNoteModal({ opened, close, question, onSave }) {
   const theme = useMantineTheme();
-  console.log(question);
+  const [value, setValue] = useState(question?.notes || "");
+
+  useEffect(() => {
+    setValue(question?.notes || "");
+  }, [question]);
+  // console.log(question);
   return (
     <>
       <Modal
@@ -31,21 +37,28 @@ function CreateNoteModal({ opened, close, question, onSave }) {
       >
         <Container
           sx={{
-            height: "350px",
             display: "flex",
             flexDirection: "column",
             gap: "1rem",
           }}
         >
-          <Title order={3}>{question.title}</Title>
+          <Title order={3}>{question?.title}</Title>
           <Textarea
             placeholder="Write here.."
             // label="Notes"
             autosize
-            minRows={10}
+            value={value}
+            onChange={(event) => setValue(event.currentTarget.value)}
+            minRows={5}
           />
           <Group>
-            <Button variant="gradient" onClick={onSave}>
+            <Button
+              variant="gradient"
+              onClick={() => {
+                onSave(value, question?._id);
+                close();
+              }}
+            >
               Save
             </Button>
             <Button variant="outline" onClick={close}>

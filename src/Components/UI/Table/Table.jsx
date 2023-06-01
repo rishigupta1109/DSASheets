@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   createStyles,
   Table,
@@ -13,6 +13,7 @@ import { keys } from "@mantine/utils";
 import { useDisclosure } from "@mantine/hooks";
 import CreateNoteModal from "./CreateNoteModal";
 import {
+  IconBadgeTm,
   IconBrandLeetcode,
   IconCross,
   IconCrossFilled,
@@ -20,6 +21,13 @@ import {
   IconMedicalCrossFilled,
   IconNote,
 } from "@tabler/icons-react";
+import globalContext from "../../Context/GlobalContext";
+import { useParams } from "react-router-dom";
+import {
+  createNote,
+  createProgress,
+  customisedNotification,
+} from "../../../Services";
 const useStyles = createStyles((theme) => ({
   rowSelected: {
     backgroundColor:
@@ -30,52 +38,98 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function filterData(data, search) {
-  const query = search.toLowerCase().trim();
-  return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
+  const query = search?.toLowerCase().trim();
+  console.log({ data });
+  return data?.filter((item) =>
+    keys(data[0])?.some((key) =>
+      String(item[key])?.toLowerCase()?.includes(query)
+    )
   );
 }
 
 export default function CustomTable({ questionData, onEdit, onDelete }) {
   const [opened, { open, close }] = useDisclosure(false);
-  const [selectedQuestion, setSelectedQuestion] = useState(questionData[0]);
+  const [selectedQuestion, setSelectedQuestion] = useState();
   const { classes, cx } = useStyles();
   const [search, setSearch] = useState("");
   const [data, setData] = useState(questionData);
   const [filteredData, setFilteredData] = useState(questionData);
   const [selection, setSelection] = useState(["1"]);
-  const toggleRow = (id) =>
-    setSelection((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
+  const { sheets, setSheets, user } = useContext(globalContext);
+  const { topic_id, sheet_id } = useParams();
+  const toggleRow = async (id) => {
+    console.log({ id });
+    if (user) {
+      try {
+        console.log({ id, user, topic_id, sheet_id });
+        const res = await createProgress(id, user?.userId, topic_id, sheet_id);
+        console.log({ res });
+      } catch (e) {
+        customisedNotification("Error", "Something went wrong");
+      }
+    }
+    const newSheets = sheets.map((sheet) => {
+      if (sheet?._id === sheet_id) {
+        const newQuestions = sheet?.questions?.map((question) => {
+          if (question?._id === id) {
+            return {
+              ...question,
+              isCompleted: !question.isCompleted,
+            };
+          }
+          return question;
+        });
+        return {
+          ...sheet,
+          questions: newQuestions,
+        };
+      }
 
-  const rows = filteredData.map((item) => {
-    const selected = selection.includes(item.id);
+      return sheet;
+    });
+    setSheets(newSheets);
+  };
+  useEffect(() => {
+    setFilteredData(questionData);
+    setData(questionData);
+  }, [questionData]);
+  console.log({ questionData, filteredData, data });
+  const rows = filteredData?.map((item) => {
     return (
-      <tr key={item.id} className={cx({ [classes.rowSelected]: selected })}>
+      <tr
+        key={item?._id}
+        className={cx({ [classes.rowSelected]: item?.isCompleted })}
+      >
         <td>
           <Checkbox
-            checked={selection.includes(item.id)}
-            onChange={() => toggleRow(item.id)}
+            checked={item?.isCompleted || false}
+            onChange={() => toggleRow(item._id)}
             transitionDuration={0}
           />
         </td>
         <td>{item.title}</td>
         <td>
-          <Anchor href={item.link1} target="_blank" rel="noreferrer">
-            <IconBrandLeetcode />
-          </Anchor>
+          {item?.links?.length > 0 &&
+            item?.links?.map((link, index) => {
+              if (link?.trim()?.length === 0) return;
+              return (
+                <Anchor
+                  key={index}
+                  href={link}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <IconBrandLeetcode />
+                </Anchor>
+              );
+            })}
         </td>
-        <td>
-          <Anchor href={item.link1} target="_blank" rel="noreferrer">
-            <IconBrandLeetcode />
-          </Anchor>
-        </td>
+
         <td
           onClick={() => {
             open();
+            console.log({ item });
+            setSelectedQuestion(item);
           }}
           style={{
             cursor: "pointer",
@@ -107,6 +161,41 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
     setSearch(value);
     setFilteredData(filterData(data, value));
   };
+  console.log({ user });
+  const onSaveHandler = async (note, questionId) => {
+    console.log({ user });
+    if (user) {
+      try {
+        const res = await createNote(questionId, user?.userId, note, topic_id);
+        console.log({ res });
+        customisedNotification("Success", res?.data?.message, "success");
+      } catch (err) {
+        console.log({ err });
+        customisedNotification("Error", "Something went wrong");
+        return;
+      }
+    }
+    const newSheets = sheets.map((sheet) => {
+      if (sheet._id === sheet_id) {
+        const newQuestions = sheet.questions.map((question) => {
+          if (question._id === questionId) {
+            return {
+              ...question,
+              notes: note,
+            };
+          }
+          return question;
+        });
+        return {
+          ...sheet,
+          questions: newQuestions,
+        };
+      }
+
+      return sheet;
+    });
+    setSheets(newSheets);
+  };
 
   return (
     <ScrollArea>
@@ -114,6 +203,7 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
         question={selectedQuestion}
         close={close}
         opened={opened}
+        onSave={onSaveHandler}
       />
       <TextInput
         placeholder="Search by any field"
@@ -134,8 +224,7 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
               /> */}
             </th>
             <th>Question</th>
-            <th>Link-1</th>
-            <th>Link-2</th>
+            <th>Links</th>
             <th>Note </th>
             {onEdit && <th>Action</th>}
           </tr>

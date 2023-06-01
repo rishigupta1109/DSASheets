@@ -7,33 +7,34 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import QuestionTable from "../Components/UI/Table/Table";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import FormModal from "../Components/UI/Admin/FormModal";
 import { modals } from "@mantine/modals";
+import globalContext from "../Components/Context/GlobalContext";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  createMultipleQuestion,
+  createQuestion,
+  customisedNotification,
+  deleteTopic,
+} from "../Services";
 export const EditQuestions = () => {
-  const data = [
-    {
-      id: "1",
-      title: "Four Sum",
-      link1: "Leetcode",
-      link2: "GFG",
-    },
-    {
-      id: "2",
-      title: "Four Sum",
-      link1: "Leetcode",
-      link2: "GFG",
-    },
-    {
-      id: "3",
-      title: "Four Sum",
-      link1: "Leetcode",
-      link2: "GFG",
-    },
-  ];
+  const { sheet_id, topic_id } = useParams();
+  // console.log(sheet_id, topic_id);
+  const { sheets, setSheets } = useContext(globalContext);
+
+  const sheet = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
+  const topic = sheet?.topics?.filter((topic) => topic._id === topic_id)[0];
+  // console.log(sheet, topic);
+  const data = sheet?.questions?.filter((question) =>
+    question?.topicId?.includes(topic_id)
+  );
+
+  const navigate = useNavigate();
+  // console.log(data);
   const [opened, { open, close }] = useDisclosure(false);
   const [openedMultiple, { open: openMultiple, close: closeMultiple }] =
     useDisclosure(false);
@@ -57,7 +58,15 @@ export const EditQuestions = () => {
     },
 
     validate: {
-      data: (value) => value.trim().length > 0,
+      data: (value) => {
+        try {
+          const questions = JSON.parse(value);
+          if (Array.isArray(questions)) return true;
+          return false;
+        } catch (err) {
+          return false;
+        }
+      },
     },
   });
   useEffect(() => {
@@ -66,9 +75,59 @@ export const EditQuestions = () => {
       link1: selectedQuestion?.link1 || "",
       link2: selectedQuestion?.link2 || "",
     });
-  }, [selectedQuestion]);
+  }, [selectedQuestion, sheets]);
+  const createMultipleQuestionsHandler = async () => {
+    const { data } = form2.values;
+    let questions = JSON.parse(data);
+    console.log(questions);
+    if (!Array.isArray(questions)) {
+      customisedNotification("error", "Invalid JSON");
+      form2.setErrors({ data: "Invalid JSON" });
+      return;
+    } else if (questions.length === 0) {
+      customisedNotification("error", "No questions found");
+      form2.setErrors({ data: "No questions found" });
+      return;
+    }
+    let hasError = false;
+    questions.forEach((question) => {
+      if (!question.title || !question.links || !question.links[0]) {
+        hasError = true;
+      }
+    });
+    if (hasError) {
+      customisedNotification("error", "Invalid JSON");
+      form2.setErrors({ data: "Invalid JSON" });
+      return;
+    }
+    questions = questions.map((question) => {
+      return { ...question, topicId: [topic_id] };
+    });
+
+    try {
+      const res = await createMultipleQuestion(questions);
+      console.log(res);
+      setSheets((prev) => {
+        const newSheets = [...prev];
+        const sheetIndex = newSheets.findIndex(
+          (sheet) => sheet._id === sheet_id
+        );
+        newSheets[sheetIndex].questions.push(...res.data.createdQuestions);
+        return newSheets;
+      });
+
+      customisedNotification(
+        "success",
+        "Question created successfully",
+        "success"
+      );
+      closeMultiple();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const formHTMLMultiple = (
-    <form onSubmit={form.onSubmit(() => {})}>
+    <form>
       <Stack>
         <JsonInput
           label="Write in JSON format"
@@ -78,16 +137,56 @@ export const EditQuestions = () => {
           autosize
           minRows={4}
           maxRows={8}
+          error={form2.errors.data && "Invalid JSON"}
+          onChange={(event) => {
+            form2.setValues({ data: event });
+          }}
           value={form2.values.data}
         />
-        <Button type="submit" variant="gradient" color="blue">
+        <Button
+          onClick={createMultipleQuestionsHandler}
+          variant="gradient"
+          color="blue"
+        >
           Submit
         </Button>
       </Stack>
     </form>
   );
+
+  const createQuestionHandler = async () => {
+    const { title, link1, link2 } = form.values;
+
+    const question = {
+      title,
+      links: [link1, link2],
+      topicId: [topic_id],
+    };
+    try {
+      const res = await createQuestion(question);
+      console.log(res);
+      question.isCompleted = false;
+      question.notes = "";
+      setSheets((prev) => {
+        const newSheets = [...prev];
+        const sheetIndex = newSheets.findIndex(
+          (sheet) => sheet._id === sheet_id
+        );
+        newSheets[sheetIndex].questions.push(res.data);
+        return newSheets;
+      });
+      customisedNotification(
+        "success",
+        "Question created successfully",
+        "success"
+      );
+      close();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const formHTML = (
-    <form onSubmit={form.onSubmit(() => {})}>
+    <form>
       <Stack>
         <TextInput
           required
@@ -122,7 +221,7 @@ export const EditQuestions = () => {
           radius="md"
         />
 
-        <Button type="submit" variant="gradient" color="blue">
+        <Button onClick={createQuestionHandler} variant="gradient" color="blue">
           Submit
         </Button>
       </Stack>
@@ -154,6 +253,33 @@ export const EditQuestions = () => {
     });
     console.log(question);
   };
+  const deleteTopicHandler = async () => {
+    try {
+      const res = await deleteTopic(topic_id);
+      console.log(res);
+      setSheets((prev) => {
+        const newSheets = [...prev];
+        const sheetIndex = newSheets.findIndex(
+          (sheet) => sheet._id === sheet_id
+        );
+        const newTopics = [...newSheets[sheetIndex].topics];
+        const topicIndex = newTopics.findIndex(
+          (topic) => topic._id === topic_id
+        );
+        newTopics.splice(topicIndex, 1);
+        newSheets[sheetIndex].topics = newTopics;
+        return newSheets;
+      });
+      customisedNotification(
+        "success",
+        "Topic Deleted Successfully",
+        "success"
+      );
+      navigate(-1);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const openDeleteConfirm = () => {
     return modals.openConfirmModal({
       title: "Please confirm your action",
@@ -165,9 +291,13 @@ export const EditQuestions = () => {
       ),
       labels: { confirm: "Confirm", cancel: "Cancel" },
       onCancel: () => console.log("Cancel"),
-      onConfirm: () => console.log("Confirmed"),
+      onConfirm: () => {
+        deleteTopicHandler();
+      },
     });
   };
+  // if (!data) return <div>Loading...</div>;
+
   return (
     <Container
       fluid

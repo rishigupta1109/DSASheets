@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { SheetCard } from "../Components/SheetCard/SheetCard";
 import {
   Button,
@@ -11,6 +11,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import FormModal from "../Components/UI/Admin/FormModal";
 import { useForm } from "@mantine/form";
+import globalContext from "../Components/Context/GlobalContext";
+import { createSheet, customisedNotification } from "../Services";
 
 const Admin = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -19,14 +21,36 @@ const Admin = () => {
       title: "",
       description: "",
     },
-
     validate: {
       title: (value) => value.trim().length > 0,
       description: (value) => value.trim().length > 0,
     },
   });
+  const { sheets, setSheets } = useContext(globalContext);
+  const createSheetSubmitHandler = async () => {
+    console.log(form);
+    if (form.errors.title || form.errors.description) {
+      customisedNotification("error", "Invalid form details");
+      return;
+    }
+    try {
+      const res = await createSheet(form.values);
+
+      customisedNotification(
+        "success",
+        "Sheet created successfully",
+        "success"
+      );
+      form.reset();
+      setSheets((prev) => [...prev, res.data]);
+      close();
+    } catch (err) {
+      customisedNotification("error", "Something went wrong");
+      console.log(err);
+    }
+  };
   const formHTML = (
-    <form onSubmit={form.onSubmit(() => {})}>
+    <form>
       <Stack>
         <TextInput
           required
@@ -50,7 +74,13 @@ const Admin = () => {
           error={form.errors.description && "Invalid description"}
           radius="md"
         />
-        <Button type="submit" variant="gradient" color="blue">
+        <Button
+          onClick={() => {
+            createSheetSubmitHandler();
+          }}
+          variant="gradient"
+          color="blue"
+        >
           Submit
         </Button>
       </Stack>
@@ -90,60 +120,37 @@ const Admin = () => {
             Add Sheet
           </Button>
         </Container>
-        <Grid>
-          <Grid.Col xxs={9} xs={7} sm={6} md={4} lg={3} span={3}>
-            <SheetCard
-              link={"striver"}
-              completed={10}
-              total={150}
-              description={"Striver ki sheet"}
-              title={"striver"}
-              started={true}
-            />
-          </Grid.Col>
-
-          <Grid.Col xxs={9} xs={7} sm={6} md={4} lg={3} span={3}>
-            <SheetCard
-              link={"striver"}
-              completed={10}
-              total={150}
-              description={"Striver ki sheet"}
-              title={"striver"}
-              started={true}
-            />
-          </Grid.Col>
-
-          <Grid.Col xxs={9} xs={7} sm={6} md={4} lg={3} span={3}>
-            <SheetCard
-              link={"striver"}
-              completed={10}
-              total={150}
-              description={"Striver ki sheet"}
-              title={"striver"}
-              started={true}
-            />
-          </Grid.Col>
-
-          <Grid.Col xxs={9} xs={7} sm={6} md={4} lg={3} span={3}>
-            <SheetCard
-              link={"striver"}
-              completed={10}
-              total={150}
-              description={"Striver ki sheet"}
-              title={"striver"}
-              started={true}
-            />
-          </Grid.Col>
-          <Grid.Col xxs={9} xs={7} sm={6} md={4} lg={3} span={3}>
-            <SheetCard
-              link={"striver"}
-              completed={10}
-              total={150}
-              description={"Striver ki sheet"}
-              title={"striver"}
-              started={true}
-            />
-          </Grid.Col>
+        <Grid
+          sx={{
+            width: "100%",
+          }}
+        >
+          {sheets.length > 0 &&
+            sheets.map((sheet) => {
+              let completed =
+                sheet?.questions?.filter((question) => question.isCompleted)
+                  ?.length || 0;
+              return (
+                <Grid.Col
+                  xxs={9}
+                  xs={7}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  span={3}
+                  key={sheet._id}
+                >
+                  <SheetCard
+                    link={`${sheet._id}`}
+                    total={sheet?.questions?.length}
+                    description={sheet.description}
+                    title={sheet.title}
+                    completed={completed}
+                    started={completed > 0}
+                  />
+                </Grid.Col>
+              );
+            })}
         </Grid>
       </Container>
     </div>

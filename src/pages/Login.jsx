@@ -72,7 +72,7 @@ export function AuthenticationForm(props) {
       );
       form.reset();
       globalCtx.setToken(data.token);
-      globalCtx.setUser(data.user);
+      globalCtx.setUser(data);
       globalCtx.setIsUserLoggedIn(true);
       console.log(data?.isAdmin);
       globalCtx.setIsUserAdmin(data?.isAdmin || false);

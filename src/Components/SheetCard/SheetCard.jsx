@@ -11,12 +11,12 @@ import {
 // import { IconUpload } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 export function SheetCard({
-  title ,
-  description ,
-  completed ,
-  total ,
+  title,
+  description,
+  completed,
+  total,
   started,
-  link
+  link,
 }) {
   const navigate = useNavigate();
   return (
@@ -28,10 +28,24 @@ export function SheetCard({
       }}
       onClick={() => navigate(link)}
     >
-      <Card withBorder padding="lg" radius="md">
+      <Card
+        sx={{
+          height: "220px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "baseline",
+        }}
+        withBorder
+        padding="lg"
+        radius="md"
+      >
         <Group position="apart">
           {/* <MantineLogo type="mark" size="2rem" /> */}
-          {!started&&<Badge>Not Started Yet</Badge>}
+          {!started && <Badge>Start Now!</Badge>}
+        </Group>
+        <Group position="apart">
+          {/* <MantineLogo type="mark" size="2rem" /> */}
+          {started && <Badge>Solve Now!</Badge>}
         </Group>
 
         <Text fz="lg" fw={500} mt="md">
@@ -41,41 +55,73 @@ export function SheetCard({
           {description}
         </Text>
 
-        <Text c="dimmed" fz="sm" mt="md">
-          Questions completed:{" "}
-          <Text
-            span
-            fw={500}
-            sx={(theme) => ({
-              color: theme.colorScheme === "dark" ? theme.white : theme.black,
-            })}
-          >
-            {completed}/{total}
+        {started && (
+          <Text c="dimmed" fz="sm" mt="md">
+            Questions completed:{" "}
+            <Text
+              span
+              fw={500}
+              sx={(theme) => ({
+                color: theme.colorScheme === "dark" ? theme.white : theme.black,
+              })}
+            >
+              {completed}/{total}
+            </Text>
           </Text>
-        </Text>
-        <Text
-          c="dimmed"
-          fz="sm"
-          mt="md"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          {total-completed}  More to go{" "}
+        )}
+        {!started && (
           <Text
-            span
-            fw={500}
-            sx={(theme) => ({
-              color: theme.colorScheme === "dark" ? theme.white : theme.black,
-            })}
+            c="dimmed"
+            fz="sm"
+            mt="md"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingTop: "2rem",
+            }}
           >
-            {((completed/total) * 100).toFixed(0)}% Completed
+            Not Started Yet
+            <Text
+              span
+              fw={500}
+              sx={(theme) => ({
+                color: theme.colorScheme === "dark" ? theme.white : theme.black,
+              })}
+            >
+              {total || 0} Questions to go{" "}
+            </Text>
           </Text>
-        </Text>
+        )}
 
-        <Progress value={(completed/total) * 100} mt={5} />
+        {started && (
+          <>
+            <Text
+              c="dimmed"
+              fz="sm"
+              mt="md"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              {total - completed} More to go{" "}
+              <Text
+                span
+                fw={500}
+                sx={(theme) => ({
+                  color:
+                    theme.colorScheme === "dark" ? theme.white : theme.black,
+                })}
+              >
+                {((completed / total) * 100).toFixed(0)}% Completed
+              </Text>
+            </Text>
+
+            <Progress value={(completed / total) * 100} mt={5} />
+          </>
+        )}
       </Card>
     </div>
   );
