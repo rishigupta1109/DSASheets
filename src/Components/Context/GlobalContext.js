@@ -29,7 +29,7 @@ export const GlobalContextProvider = ({ children }) => {
       try {
         const res = await getSheet(user?.userId);
         const data = res?.data;
-        // console.log(data.sheets);
+        console.log(data.sheets);
         setSheets(data?.sheets);
       } catch (err) {
         customisedNotification("Error", "Something went wrong");

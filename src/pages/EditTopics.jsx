@@ -163,7 +163,8 @@ export default function EditTopics() {
           topics?.map((topic) => {
             const sheet = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
             const completed = sheet?.questions?.filter(
-              (question) => question?.isCompleted
+              (question) =>
+                question?.isCompleted && question?.topicId?.includes(topic?._id)
             ).length;
             const total = sheet?.questions?.filter((ques) =>
               ques?.topicId?.includes(topic?._id)
