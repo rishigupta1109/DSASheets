@@ -1,59 +1,95 @@
-import React from 'react'
-import { Container, Select, Title } from '@mantine/core'
-import  CustomTable  from '../Components/UI/Table/Table'
-import { LeaderBoardTable } from '../Components/UI/Table/LeaderBoardTable'
+import React, { useContext, useEffect, useState } from "react";
+import { Container, Select, Title } from "@mantine/core";
+import CustomTable from "../Components/UI/Table/Table";
+import { LeaderBoardTable } from "../Components/UI/Table/LeaderBoardTable";
+import globalContext from "../Components/Context/GlobalContext";
+import { getLeaderboard } from "../Services";
 
 const LeaderBoard = () => {
-    
-   const data=[
-          {
-            "name": "Rishi Gupta",
-            "sheet": "Striver SDE Sheet",
-            "questions": 200,
-            "completed": 150
-          },
-          
-        ]
-      
-return (
-  <Container
-    fluid
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      gap: "1rem",
-      alignItems: "center",
-      flexWrap: "wrap",
-      overflow: "auto",
-    }}
-  >
-    <Title align="center">LeaderBoard</Title>
-    <Container sx={{
-        width: "100%",
+  const [sheet, setSheet] = useState("");
+  const [duration, setDuration] = useState("");
+  const [data, setData] = useState([]);
+
+  const { sheets, user } = useContext(globalContext);
+  const sheetOptions = sheets.map((sheet) => ({
+    label: sheet.title,
+    value: sheet._id,
+  }));
+  const sheetSelected = sheets.find((s) => s?._id === sheet);
+  useEffect(() => {
+    console.log(sheet, duration);
+    const fetchData = async () => {
+      if (sheet && duration && sheet.trim().length > 0) {
+        try {
+          const res = await getLeaderboard(user?.userId, sheet, duration);
+          console.log(res);
+          const data = res?.data?.leaderboard?.map((d) => ({
+            ...d,
+            sheet: sheetSelected?.title,
+            completed: d?.questions,
+            questions: sheetSelected?.questions?.length,
+          }));
+          setData(data?.sort((a, b) => b?.completed - a?.completed));
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    };
+    fetchData();
+  }, [sheet, duration]);
+  return (
+    <Container
+      fluid
+      sx={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         gap: "1rem",
         alignItems: "center",
         flexWrap: "wrap",
-        justifyContent: "space-evenly",
-    }} >
-    <Select
-      label="Sheet"
-      placeholder="Pick one"
-      searchable
-      nothingFound="No options"
-      data={['Striver', '450', 'Svelte', 'Vue']}
-    />
-    <Select
-      label="Duration"
-      placeholder="Pick one"
-      nothingFound="No options"
-      data={['Today', 'This week', 'This month', 'All time']}
-    />
+        overflow: "auto",
+      }}
+    >
+      <Title align="center">LeaderBoard</Title>
+      <Container
+        sx={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "row",
+          gap: "1rem",
+          alignItems: "center",
+          flexWrap: "wrap",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <Select
+          label="Sheet"
+          placeholder="Pick one"
+          searchable
+          nothingFound="No options"
+          data={sheetOptions}
+          defaultValue={sheetOptions[0]?.label}
+          defaultChecked={sheetOptions[0]}
+          onChange={(event) => {
+            setSheet(event);
+          }}
+        />
+        <Select
+          label="Duration"
+          placeholder="Pick one"
+          nothingFound="No options"
+          defaultValue={"Today"}
+          defaultChecked={{ label: "Today", value: 0 }}
+          onChange={(event) => setDuration(event)}
+          data={[
+            { label: "Today", value: 1 },
+            { label: "This Week", value: 7 },
+            { label: "This Month", value: 31 },
+          ]}
+        />
+      </Container>
+      <LeaderBoardTable data={data} />
     </Container>
-    <LeaderBoardTable data={data} />
-    </Container>
-)
-}
+  );
+};
 
-export default LeaderBoard
+export default LeaderBoard;

@@ -15,6 +15,9 @@ import {
   IconPlus,
   IconUserPlus,
 } from "@tabler/icons-react";
+import globalContext from "../../Context/GlobalContext";
+import { useContext } from "react";
+import { customisedNotification, toggleFriend } from "../../../Services";
 
 const useStyles = createStyles((theme) => ({
   progressBar: {
@@ -28,18 +31,47 @@ const useStyles = createStyles((theme) => ({
 
 export function FriendsTable({ data }) {
   const { classes, theme } = useStyles();
-
+  const { user, setUser } = useContext(globalContext);
+  const toggleFriendHandler = async (id) => {
+    console.log(id);
+    try {
+      const res = await toggleFriend(user?.userId, id);
+      console.log(res);
+      if (!user?.friends.includes(id)) {
+        setUser((prev) => ({
+          ...prev,
+          friends: [id, ...prev.friends],
+        }));
+      } else {
+        setUser((prev) => ({
+          ...prev,
+          friends: prev.friends.filter((f) => f !== id),
+        }));
+      }
+    } catch (err) {
+      customisedNotification("error", "Something went wrong");
+      console.log(err);
+    }
+  };
   const rows = data.map((row) => {
+    const isFriend = user.friends.includes(row._id);
     return (
       <tr key={row.name}>
         <td>{row.username}</td>
         <td>{row.name}</td>
-
-        <td>{row.sheets}</td>
-        <td>{Intl.NumberFormat().format(row.completed)}</td>
         <td>
-          <IconUserPlus style={{ cursor: "pointer" }} />
-          <IconUserMinus style={{ cursor: "pointer" }} />
+          {!isFriend && (
+            <IconUserPlus
+              onClick={toggleFriendHandler.bind(null, row._id)}
+              style={{ cursor: "pointer" }}
+            />
+          )}
+          {isFriend && (
+            <IconUserMinus
+              onClick={toggleFriendHandler.bind(null, row._id)}
+              style={{ cursor: "pointer" }}
+            />
+          )}
         </td>
       </tr>
     );
@@ -52,8 +84,6 @@ export function FriendsTable({ data }) {
           <tr>
             <th>User Name</th>
             <th>Name</th>
-            <th>Total Sheets</th>
-            <th>Completed Question</th>
             <th>Action</th>
           </tr>
         </thead>

@@ -197,7 +197,56 @@ const createProgress = async (questionId, userId, topicId, sheetId) => {
   );
   return data;
 };
+const findUser = async (query) => {
+  const data = await axios.post(
+    "api/user/find-friends",
+    {
+      query: query,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  return data;
+};
+const toggleFriend = async (userId, friendId) => {
+  const data = await axios.post(
+    "api/user/toggle-friend",
+    {
+      userId: userId,
+      friendId: friendId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  return data;
+};
+const getLeaderboard = async (userId, sheetId, duration) => {
+  const data = await axios.post(
+    "api/user/leaderboard",
+    {
+      userId: userId,
+      sheetId: sheetId,
+      duration: duration,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  return data;
+};
+
 export {
+  getLeaderboard,
+  toggleFriend,
+  findUser,
   createProgress,
   createNote,
   signup,

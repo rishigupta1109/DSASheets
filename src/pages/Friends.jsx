@@ -1,28 +1,31 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Container, Title, useMantineTheme } from "@mantine/core";
 import { FriendsTable } from "../Components/UI/Table/FriendsTable";
 import { TextInput, ActionIcon } from "@mantine/core";
 import { IconSearch, IconArrowRight, IconArrowLeft } from "@tabler/icons-react";
+import { useTimeout } from "@mantine/hooks";
+import { customisedNotification, findUser } from "../Services";
+import globalContext from "../Components/Context/GlobalContext";
 const Friends = () => {
   const theme = useMantineTheme();
-  const data = [
-    {
-      username: "rishigupta1109",
-      name: "Rishi Gupta",
-      sheets: 5,
-      questions: 200,
-      completed: 150,
-    },
-
-    {
-      username: "pjain0510",
-      name: "Pranav Jain",
-      sheets: 0,
-      questions: 200,
-      completed: 0,
-    },
-  ];
-
+  const { user } = useContext(globalContext);
+  const [tout, setTout] = useState(null);
+  const [users, setUsers] = useState([]);
+  const searchHandler = async (event) => {
+    if (tout) clearTimeout(tout);
+    console.log(event.target.value);
+    const t = setTimeout(async () => {
+      try {
+        const res = await findUser(event.target.value);
+        console.log(res);
+        setUsers(res.data.users.filter((u) => u?._id !== user?.userId));
+      } catch (err) {
+        customisedNotification("error", "Something went wrong");
+        console.log(err);
+      }
+    }, 1000);
+    setTout(t);
+  };
   return (
     <Container
       fluid
@@ -68,11 +71,12 @@ const Friends = () => {
               )}
             </ActionIcon>
           }
-          placeholder="Search Friend"
+          placeholder="Search Friend using username"
           rightSectionWidth={42}
+          onChange={searchHandler}
         />
       </Container>
-      <FriendsTable data={data} />
+      <FriendsTable data={users} />
     </Container>
   );
 };
