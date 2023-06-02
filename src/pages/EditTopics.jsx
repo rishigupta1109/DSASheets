@@ -165,6 +165,9 @@ export default function EditTopics() {
             const completed = sheet?.questions?.filter(
               (question) => question?.isCompleted
             ).length;
+            const total = sheet?.questions?.filter((ques) =>
+              ques?.topicId?.includes(topic?._id)
+            )?.length;
             return (
               <Grid.Col
                 key={topic?._id}
@@ -180,7 +183,7 @@ export default function EditTopics() {
                   completed={completed}
                   title={topic?.name}
                   started={completed > 0}
-                  total={sheet?.questions?.length}
+                  total={total}
                 />
               </Grid.Col>
             );

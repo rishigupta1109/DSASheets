@@ -322,7 +322,10 @@ export const EditQuestions = () => {
         close={closeMultiple}
         form={formHTMLMultiple}
       />
-      <Title align="center">Edit Questions - Arrays</Title>
+      <Title align="center">
+        Edit Questions -{" "}
+        {sheets?.topics?.find((topic) => topic._id === topic_id)?.name}
+      </Title>
       <Container
         size={"xl"}
         sx={{
