@@ -178,6 +178,7 @@ export function Navbar({ links }) {
                       display: "block",
                       margin: "1rem auto",
                     }}
+                    onClick={() => navigate("/login")}
                   >
                     Log in
                   </Button>
@@ -186,6 +187,7 @@ export function Navbar({ links }) {
                       margin: "1rem auto",
                       display: "block",
                     }}
+                    onClick={() => navigate("/register")}
                   >
                     Sign up
                   </Button>
