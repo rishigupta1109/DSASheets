@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 // import { MantineLogo } from "@mantine/ds";
-import logo from "../../../logo.svg";
+import logo from "../../../Sheet Hub.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import { SegmentedToggle } from "./Toggle";
 import globalContext from "../../Context/GlobalContext";
@@ -131,7 +131,7 @@ export function Navbar({ links }) {
     <Header height={HEADER_HEIGHT} mb={20} className={classes.root}>
       <Container className={classes.header}>
         {/* <MantineLogo size={28} /> */}
-        <img src={logo} alt="logo" height={50} />
+        <img src={logo} alt="logo" height={80} />
         <Group spacing={5} className={classes.links}>
           {items}
           {!globalCtx.isUserLoggedIn && (
