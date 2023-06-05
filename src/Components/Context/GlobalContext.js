@@ -14,6 +14,10 @@ const globalContext = React.createContext({
   setIsUserAdmin: () => {},
   token: null,
   setToken: () => {},
+  sheets: [],
+  setSheets: () => {},
+  loading: false,
+  setLoading: () => {},
 });
 
 export default globalContext;
@@ -24,9 +28,11 @@ export const GlobalContextProvider = ({ children }) => {
   const [isUserAdmin, setIsUserAdmin] = useState(false);
   const [token, setToken] = useState(null);
   const [sheets, setSheets] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchSheets = async () => {
       try {
+        setLoading(true);
         const res = await getSheet(user?.userId);
         const data = res?.data;
         console.log(data.sheets);
@@ -35,12 +41,14 @@ export const GlobalContextProvider = ({ children }) => {
         customisedNotification("Error", "Something went wrong");
         console.log(err);
       }
+      setLoading(false);
     };
     fetchSheets();
   }, [user]);
   useEffect(() => {
     const validateUserSession = async () => {
       try {
+        setLoading(true);
         const res = await validateSession();
         if (res.status === 200) {
           // console.log(res.data);
@@ -57,6 +65,7 @@ export const GlobalContextProvider = ({ children }) => {
         setUser(null);
         console.log(err);
       }
+      setLoading(false);
     };
     validateUserSession();
   }, []);
@@ -73,6 +82,8 @@ export const GlobalContextProvider = ({ children }) => {
         setToken,
         sheets,
         setSheets,
+        loading,
+        setLoading,
       }}
     >
       {children}

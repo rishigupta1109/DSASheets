@@ -27,6 +27,7 @@ import { Notifications } from "@mantine/notifications";
 import globalContext from "./Components/Context/GlobalContext";
 import { useContext, useEffect } from "react";
 import { validateSession } from "./Services";
+import CustomLoader from "./Components/UI/CustomLoader";
 const routerAdmin = createBrowserRouter([
   {
     path: "/",
@@ -253,7 +254,7 @@ function App() {
     defaultValue: "light",
     getInitialValueInEffect: true,
   });
-  const { isUserAdmin, isUserLoggedIn } = useContext(globalContext);
+  const { isUserAdmin, isUserLoggedIn, loading } = useContext(globalContext);
 
   const toggleColorScheme = (value) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
@@ -282,6 +283,7 @@ function App() {
         >
           <ModalsProvider>
             <Notifications position="top-right" zIndex={2077} />
+            {loading && <CustomLoader />}
             <RouterProvider
               router={
                 isUserLoggedIn

@@ -11,11 +11,13 @@ const Friends = () => {
   const { user } = useContext(globalContext);
   const [tout, setTout] = useState(null);
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const searchHandler = async (event) => {
     if (tout) clearTimeout(tout);
     console.log(event.target.value);
     const t = setTimeout(async () => {
       try {
+        setLoading(true);
         const res = await findUser(event.target.value);
         console.log(res);
         setUsers(res.data.users.filter((u) => u?._id !== user?.userId));
@@ -23,6 +25,7 @@ const Friends = () => {
         customisedNotification("error", "Something went wrong");
         console.log(err);
       }
+      setLoading(false);
     }, 1000);
     setTout(t);
   };
@@ -76,7 +79,7 @@ const Friends = () => {
           onChange={searchHandler}
         />
       </Container>
-      <FriendsTable data={users} />
+      <FriendsTable loading={loading} data={users} />
     </Container>
   );
 };

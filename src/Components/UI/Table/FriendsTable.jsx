@@ -7,6 +7,7 @@ import {
   Group,
   ScrollArea,
   rem,
+  Loader,
 } from "@mantine/core";
 import { IconUserMinus } from "@tabler/icons-react";
 import {
@@ -29,7 +30,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function FriendsTable({ data }) {
+export function FriendsTable({ data, loading }) {
   const { classes, theme } = useStyles();
   const { user, setUser } = useContext(globalContext);
   const toggleFriendHandler = async (id) => {
@@ -87,7 +88,21 @@ export function FriendsTable({ data }) {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>{rows}</tbody>
+        {loading && (
+          <tr
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <td colSpan={3}>
+              <Loader />
+            </td>
+          </tr>
+        )}
+
+        {!loading && <tbody>{rows}</tbody>}
       </Table>
     </ScrollArea>
   );

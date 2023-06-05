@@ -10,7 +10,7 @@ const LeaderBoard = () => {
   const [duration, setDuration] = useState("");
   const [data, setData] = useState([]);
 
-  const { sheets, user } = useContext(globalContext);
+  const { sheets, user, setLoading } = useContext(globalContext);
   const sheetOptions = sheets.map((sheet) => ({
     label: sheet.title,
     value: sheet._id,
@@ -21,6 +21,7 @@ const LeaderBoard = () => {
     const fetchData = async () => {
       if (sheet && duration && sheet.trim().length > 0) {
         try {
+          setLoading(true);
           const res = await getLeaderboard(user?.userId, sheet, duration);
           console.log(res);
           const data = res?.data?.leaderboard?.map((d) => ({
@@ -33,6 +34,7 @@ const LeaderBoard = () => {
         } catch (err) {
           console.log(err);
         }
+        setLoading(false);
       }
     };
     fetchData();

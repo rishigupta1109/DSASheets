@@ -53,7 +53,9 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
   const { classes, cx } = useStyles();
   const [search, setSearch] = useState("");
   const [data, setData] = useState(questionData);
-  const [filteredData, setFilteredData] = useState(questionData);
+  const [filteredData, setFilteredData] = useState(
+    questionData?.sort((a, b) => a?.isCompleted - b?.isCompleted)
+  );
   const [selection, setSelection] = useState(["1"]);
   const { sheets, setSheets, user } = useContext(globalContext);
   const { topic_id, sheet_id } = useParams();
@@ -104,7 +106,12 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
           <Checkbox
             checked={item?.isCompleted || false}
             onChange={() => toggleRow(item._id)}
-            transitionDuration={0}
+            transitionDuration={1}
+            style={{
+              "& input": {
+                cursor: "pointer",
+              },
+            }}
           />
         </td>
         <td>{item.title}</td>

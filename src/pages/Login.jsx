@@ -54,11 +54,18 @@ export function AuthenticationForm(props) {
         val.length <= 6
           ? "Password should include at least 6 characters"
           : null,
+      terms: (val) =>
+        type === "login"
+          ? null
+          : val === false
+          ? "You should accept terms"
+          : null,
     },
   });
   const handleLogin = async () => {
     console.log(form.values);
     try {
+      globalCtx.setLoading(true);
       const res = await login({
         email: form.values.email,
         password: form.values.password,
@@ -82,9 +89,12 @@ export function AuthenticationForm(props) {
       customisedNotification("Error", err?.response?.data?.message);
       console.log(err);
     }
+    globalCtx.setLoading(false);
   };
   const handleRegister = async () => {
+    console.log(form.values);
     try {
+      globalCtx.setLoading(true);
       const data = await signup({
         email: form.values.email,
         password: form.values.password,
@@ -103,6 +113,7 @@ export function AuthenticationForm(props) {
       customisedNotification("Error", err?.response?.data?.message);
       console.log(err);
     }
+    globalCtx.setLoading(false);
   };
   return (
     <Container size={"xs"}>
@@ -133,6 +144,10 @@ export function AuthenticationForm(props) {
                   form.setFieldValue("name", event.currentTarget.value)
                 }
                 radius="md"
+                error={
+                  form.errors.name &&
+                  "Name should include at least 3 characters"
+                }
               />
             )}
             {type === "register" && (
@@ -144,12 +159,17 @@ export function AuthenticationForm(props) {
                   form.setFieldValue("username", event.currentTarget.value)
                 }
                 radius="md"
+                error={
+                  form.errors.username &&
+                  "Username should include at least 3 characters"
+                }
               />
             )}
 
             <TextInput
               required
               label="Email"
+              type="email"
               placeholder="hello@mantine.dev"
               value={form.values.email}
               onChange={(event) =>
@@ -181,6 +201,7 @@ export function AuthenticationForm(props) {
                 onChange={(event) =>
                   form.setFieldValue("terms", event.currentTarget.checked)
                 }
+                error={form.errors.terms}
               />
             )}
           </Stack>
