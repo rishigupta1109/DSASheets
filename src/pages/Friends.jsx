@@ -41,7 +41,9 @@ const Friends = () => {
         overflow: "auto",
       }}
     >
-      <Title align="center">Friends</Title>
+      <Title align="center" order={1} italic>
+        Friends
+      </Title>
       <Container
         sx={{
           width: "100%",

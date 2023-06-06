@@ -16,7 +16,6 @@ import {
 // import { GoogleButton, TwitterButton } from '../SocialButtons/SocialButtons';
 import { useLocation, useNavigate } from "react-router-dom";
 import { customisedNotification, login, signup } from "../Services";
-import { notifications } from "@mantine/notifications";
 import { useContext } from "react";
 import globalContext from "../Components/Context/GlobalContext";
 

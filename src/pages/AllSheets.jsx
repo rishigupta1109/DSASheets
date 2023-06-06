@@ -19,7 +19,9 @@ export default function AllSheets() {
         flexWrap: "wrap",
       }}
     >
-      <Title align="center">AllSheets</Title>
+      <Title align="center" order={1} italic>
+        AllSheets
+      </Title>
 
       <Grid
         sx={{

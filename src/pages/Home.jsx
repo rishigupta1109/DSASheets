@@ -24,7 +24,9 @@ export default function Home() {
         flexWrap: "wrap",
       }}
     >
-      <Title align="center">Home</Title>
+      <Title align="center" order={1} italic>
+        Home
+      </Title>
 
       <Grid
         sx={{

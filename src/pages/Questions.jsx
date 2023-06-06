@@ -11,6 +11,7 @@ import QuestionTable from "../Components/UI/Table/Table";
 import { useParams } from "react-router-dom";
 import globalContext from "../Components/Context/GlobalContext";
 import { IconCheck } from "@tabler/icons-react";
+import { BackBtn } from "../Components/UI/BackBtn";
 
 export const Questions = () => {
   const { sheet_id, topic_id } = useParams();
@@ -31,15 +32,18 @@ export const Questions = () => {
     <Container
       fluid
       sx={{
+        width: "100%",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         gap: "1rem",
         alignItems: "center",
         flexWrap: "wrap",
-        overflow: "auto",
+        justifyContent: "center",
+        position: "relative",
       }}
     >
-      <Title align="center" order={2} italic>
+      <BackBtn />
+      <Title align="center" order={1} italic>
         {" "}
         {topic?.name}
       </Title>

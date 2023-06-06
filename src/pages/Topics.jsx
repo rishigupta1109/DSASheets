@@ -12,6 +12,7 @@ import {
 import { useParams } from "react-router-dom";
 import globalContext from "../Components/Context/GlobalContext";
 import { IconCheck } from "@tabler/icons-react";
+import { BackBtn } from "../Components/UI/BackBtn";
 export default function Topics() {
   let { sheet_id } = useParams();
   const { sheets } = useContext(globalContext);
@@ -26,14 +27,24 @@ export default function Topics() {
     <Container
       fluid
       sx={{
+        width: "100%",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         gap: "1rem",
         alignItems: "center",
         flexWrap: "wrap",
+        justifyContent: "center",
+        position: "relative",
       }}
     >
-      <Title align="center">Topics</Title>
+      <BackBtn />
+      <Title align="center" italic order={1}>
+        {
+          sheets.find((sheet) => {
+            return sheet._id === sheet_id;
+          })?.title
+        }
+      </Title>
       <div
         style={{
           width: "100%",

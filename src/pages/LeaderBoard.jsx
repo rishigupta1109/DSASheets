@@ -51,7 +51,9 @@ const LeaderBoard = () => {
         overflow: "auto",
       }}
     >
-      <Title align="center">LeaderBoard</Title>
+      <Title align="center" order={1} italic>
+        LeaderBoard
+      </Title>
       <Container
         sx={{
           width: "100%",
