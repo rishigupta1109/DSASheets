@@ -39,7 +39,10 @@ export const Questions = () => {
         overflow: "auto",
       }}
     >
-      <Title align="center">Questions - {topic?.name}</Title>
+      <Title align="center" order={2} italic>
+        {" "}
+        {topic?.name}
+      </Title>
       <div
         style={{
           width: "100%",
@@ -80,17 +83,25 @@ export const Questions = () => {
             gap: "1rem",
             alignItems: "baseline",
             justifyContent: "baseline",
-            backgroundColor: "#add8e66b",
             padding: "1rem 3rem",
             borderRadius: "1rem",
           }}
         >
-          <Text color="blue" align="center" weight={700} size="xl">
-            Total : {total}
-          </Text>
-          <Text color="blue" align="center" weight={700} size="xl">
-            Completed : {completed}
-          </Text>
+          {total - completed !== 0 && (
+            <Text color="green" align="center" weight={500} italic size="xl">
+              {completed} completed
+            </Text>
+          )}
+          {total - completed !== 0 && (
+            <Text color="blue" align="center" weight={500} italic size="xl">
+              {total - completed} more to go
+            </Text>
+          )}
+          {total - completed === 0 && (
+            <Text color="teal" align="center" weight={500} italic size="xl">
+              All Done!
+            </Text>
+          )}
         </div>
       </div>
       <QuestionTable questionData={data} />

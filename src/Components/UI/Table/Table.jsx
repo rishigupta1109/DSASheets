@@ -8,7 +8,10 @@ import {
   TextInput,
   Anchor,
 } from "@mantine/core";
-
+import leetcode from "../../../Images/LeetCode_logo_black.png";
+import CN from "../../../Images/download-removebg-preview.png";
+import gfg from "../../../Images/gfg_200x200-min.png";
+import spoj from "../../../Images/B1rm7i-y_400x400-removebg-preview.png";
 import { keys } from "@mantine/utils";
 import { useDisclosure } from "@mantine/hooks";
 import CreateNoteModal from "./CreateNoteModal";
@@ -18,6 +21,7 @@ import {
   IconCross,
   IconCrossFilled,
   IconEditCircle,
+  IconLink,
   IconMedicalCrossFilled,
   IconNote,
 } from "@tabler/icons-react";
@@ -32,8 +36,8 @@ const useStyles = createStyles((theme) => ({
   rowSelected: {
     backgroundColor:
       theme.colorScheme === "dark"
-        ? theme.fn.rgba(theme.colors[theme.primaryColor][7], 0.2)
-        : theme.colors[theme.primaryColor][0],
+        ? theme.fn.rgba(theme.colors["green"][5], 0.2)
+        : theme.colors["green"][0],
   },
 }));
 
@@ -62,40 +66,72 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
   const toggleRow = async (id) => {
     console.log({ id });
     if (user) {
+      const newSheets = sheets.map((sheet) => {
+        if (sheet?._id === sheet_id) {
+          const newQuestions = sheet?.questions?.map((question) => {
+            if (question?._id === id) {
+              return {
+                ...question,
+                isCompleted: !question.isCompleted,
+              };
+            }
+            return question;
+          });
+          return {
+            ...sheet,
+            questions: newQuestions,
+          };
+        }
+
+        return sheet;
+      });
+      setSheets(newSheets);
       try {
         console.log({ id, user, topic_id, sheet_id });
         const res = await createProgress(id, user?.userId, topic_id, sheet_id);
         console.log({ res });
       } catch (e) {
+        const newSheets = sheets.map((sheet) => {
+          if (sheet?._id === sheet_id) {
+            const newQuestions = sheet?.questions?.map((question) => {
+              if (question?._id === id) {
+                return {
+                  ...question,
+                  isCompleted: !question.isCompleted,
+                };
+              }
+              return question;
+            });
+            return {
+              ...sheet,
+              questions: newQuestions,
+            };
+          }
+
+          return sheet;
+        });
+        setSheets(newSheets);
         customisedNotification("Error", "Something went wrong");
       }
     }
-    const newSheets = sheets.map((sheet) => {
-      if (sheet?._id === sheet_id) {
-        const newQuestions = sheet?.questions?.map((question) => {
-          if (question?._id === id) {
-            return {
-              ...question,
-              isCompleted: !question.isCompleted,
-            };
-          }
-          return question;
-        });
-        return {
-          ...sheet,
-          questions: newQuestions,
-        };
-      }
-
-      return sheet;
-    });
-    setSheets(newSheets);
   };
   useEffect(() => {
     setFilteredData(questionData);
     setData(questionData);
   }, [questionData]);
   console.log({ questionData, filteredData, data });
+  const getLinkType = (link) => {
+    if (link.includes("leetcode")) {
+      return <img src={leetcode} height={30} />;
+    } else if (link.includes("geeksforgeeks")) {
+      return <img src={gfg} height={30} />;
+    } else if (link.includes("codingninjas")) {
+      return <img src={CN} height={30} />;
+    } else if (link.includes("spoj")) {
+      return <img src={spoj} height={50} />;
+    }
+    return <IconLink />;
+  };
   const rows = filteredData?.map((item) => {
     return (
       <tr
@@ -126,7 +162,8 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <IconBrandLeetcode />
+                  {getLinkType(link)}
+                  {/* <IconBrandLeetcode /> */}
                 </Anchor>
               );
             })}

@@ -34,10 +34,17 @@ export function SheetCard({
           display: "flex",
           flexDirection: "column",
           justifyContent: "baseline",
+          backgroundColor: started
+            ? completed === total
+              ? "#90ee9057"
+              : "#add8e661"
+            : "white",
+          color: "black",
         }}
         withBorder
         padding="lg"
         radius="md"
+        color={started ? (completed === total ? "teal" : "blue") : "gray"}
       >
         <Group position="apart">
           {/* <MantineLogo type="mark" size="2rem" /> */}
@@ -45,7 +52,19 @@ export function SheetCard({
         </Group>
         <Group position="apart">
           {/* <MantineLogo type="mark" size="2rem" /> */}
-          {started && <Badge>Solve Now!</Badge>}
+          {started && completed !== total && (
+            <Badge
+              bg={"blue"}
+              sx={{
+                color: "white",
+              }}
+            >
+              Solve Now!
+            </Badge>
+          )}
+          {started && completed === total && (
+            <Badge color="green">Well Done!</Badge>
+          )}
         </Group>
 
         <Text fz="lg" fw={500} mt="md">
@@ -94,7 +113,7 @@ export function SheetCard({
           </Text>
         )}
 
-        {started && (
+        {started && completed !== total && (
           <>
             <Text
               c="dimmed"
@@ -120,6 +139,34 @@ export function SheetCard({
             </Text>
 
             <Progress value={(completed / total) * 100} mt={5} />
+          </>
+        )}
+        {started && completed === total && (
+          <>
+            <Text
+              c="dimmed"
+              fz="sm"
+              mt="md"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              Well Done!{" "}
+              <Text
+                span
+                fw={500}
+                sx={(theme) => ({
+                  color:
+                    theme.colorScheme === "dark" ? theme.white : theme.black,
+                })}
+              >
+                {((completed / total) * 100).toFixed(0)}% Completed
+              </Text>
+            </Text>
+
+            <Progress color="green" value={(completed / total) * 100} mt={5} />
           </>
         )}
       </Card>

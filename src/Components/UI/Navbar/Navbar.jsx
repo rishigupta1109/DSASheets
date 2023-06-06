@@ -131,7 +131,17 @@ export function Navbar({ links }) {
     <Header height={HEADER_HEIGHT} mb={20} className={classes.root}>
       <Container className={classes.header}>
         {/* <MantineLogo size={28} /> */}
-        <img src={logo} alt="logo" height={80} />
+        <img
+          style={{
+            cursor: "pointer",
+            borderRadius: "50%",
+            objectFit: "cover",
+          }}
+          onClick={() => navigate("/")}
+          src={logo}
+          alt="logo"
+          height={60}
+        />
         <Group spacing={5} className={classes.links}>
           {items}
           {!globalCtx.isUserLoggedIn && (
