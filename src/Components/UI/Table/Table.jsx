@@ -65,6 +65,12 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
   const { topic_id, sheet_id } = useParams();
   const toggleRow = async (id) => {
     console.log({ id });
+    if (!user)
+      return customisedNotification(
+        "Error",
+        "Please login to continue",
+        "warning"
+      );
     if (user) {
       const newSheets = sheets.map((sheet) => {
         if (sheet?._id === sheet_id) {

@@ -38,9 +38,10 @@ export default function AllSheets() {
                 xxs={9}
                 xs={7}
                 sm={6}
-                md={4}
-                lg={3}
-                span={3}
+                md={5}
+                lg={4}
+                xl={3}
+                span={4}
                 key={sheet._id}
               >
                 <SheetCard

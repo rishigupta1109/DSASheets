@@ -6,8 +6,8 @@ import globalContext from "../Components/Context/GlobalContext";
 import { getLeaderboard } from "../Services";
 
 const LeaderBoard = () => {
-  const [sheet, setSheet] = useState("");
-  const [duration, setDuration] = useState("");
+  const [sheet, setSheet] = useState("ALL");
+  const [duration, setDuration] = useState(1);
   const [data, setData] = useState([]);
 
   const { sheets, user, setLoading } = useContext(globalContext);
@@ -15,30 +15,32 @@ const LeaderBoard = () => {
     label: sheet.title,
     value: sheet._id,
   }));
+  sheetOptions.unshift({ label: "All", value: "ALL" });
   const sheetSelected = sheets.find((s) => s?._id === sheet);
+  const fetchData = async () => {
+    if (duration) {
+      try {
+        setLoading(true);
+        const res = await getLeaderboard(user?.userId, sheet, duration);
+        console.log(res);
+        const data = res?.data?.leaderboard?.map((d) => ({
+          ...d,
+          sheet: sheetSelected?.title,
+          completed: d?.questions,
+          questions: sheetSelected?.questions?.length,
+        }));
+        setData(data?.sort((a, b) => b?.completed - a?.completed));
+      } catch (err) {
+        console.log(err);
+      }
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     console.log(sheet, duration);
-    const fetchData = async () => {
-      if (sheet && duration && sheet.trim().length > 0) {
-        try {
-          setLoading(true);
-          const res = await getLeaderboard(user?.userId, sheet, duration);
-          console.log(res);
-          const data = res?.data?.leaderboard?.map((d) => ({
-            ...d,
-            sheet: sheetSelected?.title,
-            completed: d?.questions,
-            questions: sheetSelected?.questions?.length,
-          }));
-          setData(data?.sort((a, b) => b?.completed - a?.completed));
-        } catch (err) {
-          console.log(err);
-        }
-        setLoading(false);
-      }
-    };
     fetchData();
   }, [sheet, duration]);
+
   return (
     <Container
       fluid
@@ -71,8 +73,7 @@ const LeaderBoard = () => {
           searchable
           nothingFound="No options"
           data={sheetOptions}
-          defaultValue={sheetOptions[0]?.label}
-          defaultChecked={sheetOptions[0]}
+          value={sheet}
           onChange={(event) => {
             setSheet(event);
           }}
@@ -81,8 +82,7 @@ const LeaderBoard = () => {
           label="Duration"
           placeholder="Pick one"
           nothingFound="No options"
-          defaultValue={"Today"}
-          defaultChecked={{ label: "Today", value: 0 }}
+          value={duration}
           onChange={(event) => setDuration(event)}
           data={[
             { label: "Today", value: 1 },
@@ -91,7 +91,7 @@ const LeaderBoard = () => {
           ]}
         />
       </Container>
-      <LeaderBoardTable data={data} />
+      <LeaderBoardTable sheet={sheet} data={data} />
     </Container>
   );
 };

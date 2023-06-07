@@ -6,6 +6,7 @@ import {
   Badge,
   Group,
   ActionIcon,
+  useMantineColorScheme,
 } from "@mantine/core";
 // import { MantineLogo } from "@mantine/ds";
 // import { IconUpload } from "@tabler/icons-react";
@@ -19,6 +20,8 @@ export function SheetCard({
   link,
 }) {
   const navigate = useNavigate();
+  const { colorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
   return (
     <div
       style={{
@@ -34,12 +37,17 @@ export function SheetCard({
           display: "flex",
           flexDirection: "column",
           justifyContent: "baseline",
-          backgroundColor: started
+          backgroundColor: !dark
+            ? started
+              ? completed === total
+                ? "#00ff3e1c"
+                : "#add8e661"
+              : "white"
+            : started
             ? completed === total
-              ? "#90ee9057"
-              : "#add8e661"
-            : "white",
-          color: "black",
+              ? "#00ff8936"
+              : "#05bdf942"
+            : "#2a2a2a",
         }}
         withBorder
         padding="lg"

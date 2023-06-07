@@ -35,6 +35,24 @@ const customisedNotification = (title, message, type = "error") => {
         },
       }),
     });
+  } else if (type === "warning") {
+    return notifications.show({
+      title: title,
+      message: message,
+      styles: (theme) => ({
+        root: {
+          backgroundColor: theme.colors.yellow[6],
+          borderColor: theme.colors.yellow[6],
+          "&::before": { backgroundColor: theme.white },
+        },
+        title: { color: theme.white },
+        description: { color: theme.white },
+        closeButton: {
+          color: theme.white,
+          "&:hover": { backgroundColor: theme.colors.blue[7] },
+        },
+      }),
+    });
   }
   return notifications.show({
     title: title,
