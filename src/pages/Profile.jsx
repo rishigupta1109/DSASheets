@@ -15,13 +15,14 @@ import globalContext from "../Components/Context/GlobalContext";
 import { customisedNotification, updateUserData } from "../Services";
 
 export const Profile = () => {
-  const { user, setUser } = useContext(globalContext);
+  const { user, setUser, setLoading } = useContext(globalContext);
   const [name, setName] = React.useState(user?.name || "");
   const [dailyGoal, setDailyGoal] = React.useState(user?.dailyGoal || "");
   const [revisitDays, setRevisitDays] = React.useState(user?.revisitDays || "");
   const updateHandler = async () => {
     console.log(name, dailyGoal, revisitDays);
     try {
+      setLoading(true);
       const res = await updateUserData(
         user?.userId,
         name,
@@ -43,6 +44,7 @@ export const Profile = () => {
       customisedNotification("error", "Something went wrong");
       console.log(err);
     }
+    setLoading(false);
   };
 
   return (
