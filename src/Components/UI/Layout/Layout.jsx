@@ -167,6 +167,11 @@ export default function Layout({ children }) {
               : `Daily Goal ${quesCompleted}/${dailyGoalQues}`
           }
           size="xl"
+          style={{
+            position: "sticky",
+            zIndex: 1,
+            top: "4rem",
+          }}
           value={Math.min(percentage, 100)}
         />
       )}
