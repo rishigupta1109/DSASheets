@@ -31,6 +31,7 @@ import {
   createNote,
   createProgress,
   customisedNotification,
+  toggleRevisited,
 } from "../../../Services";
 const useStyles = createStyles((theme) => ({
   rowSelected: {
@@ -51,7 +52,7 @@ function filterData(data, search) {
   );
 }
 
-export default function CustomTable({ questionData, onEdit, onDelete }) {
+export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
   const { classes, cx } = useStyles();
@@ -122,6 +123,66 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
       }
     }
   };
+  const toggleRevisitedHandler = async (id) => {
+    console.log({ id });
+    if (!user)
+      return customisedNotification(
+        "Error",
+        "Please login to continue",
+        "warning"
+      );
+    if (user) {
+      const newSheets = sheets.map((sheet) => {
+        if (sheet?._id === sheet_id) {
+          const newQuestions = sheet?.questions?.map((question) => {
+            if (question?._id === id) {
+              if (question?.revisited === undefined) question.revisited = false;
+              return {
+                ...question,
+                revisited: !question?.revisited,
+              };
+            }
+            return question;
+          });
+          return {
+            ...sheet,
+            questions: newQuestions,
+          };
+        }
+
+        return sheet;
+      });
+      setSheets(newSheets);
+      try {
+        console.log({ id, user, topic_id, sheet_id });
+        const res = await toggleRevisited(id, user?.userId, topic_id, sheet_id);
+        console.log({ res });
+      } catch (e) {
+        const newSheets = sheets.map((sheet) => {
+          if (sheet?._id === sheet_id) {
+            const newQuestions = sheet?.questions?.map((question) => {
+              if (question?._id === id) {
+                return {
+                  ...question,
+                  isRevisited: !question.isRevisited,
+                };
+              }
+              return question;
+            });
+            return {
+              ...sheet,
+              questions: newQuestions,
+            };
+          }
+
+          return sheet;
+        });
+        setSheets(newSheets);
+        customisedNotification("Error", "Something went wrong");
+      }
+    }
+  };
+
   useEffect(() => {
     setFilteredData(questionData);
     setData(questionData);
@@ -143,12 +204,22 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
     return (
       <tr
         key={item?._id}
-        className={cx({ [classes.rowSelected]: item?.isCompleted })}
+        className={cx({
+          [classes.rowSelected]:
+            mode === "0" ? item?.isCompleted : item?.revisited,
+        })}
       >
         <td>
           <Checkbox
-            checked={item?.isCompleted || false}
-            onChange={() => toggleRow(item._id)}
+            checked={
+              mode === "0"
+                ? item?.isCompleted || false
+                : item?.revisited || false
+            }
+            onChange={() => {
+              if (mode === "0") toggleRow(item._id);
+              else toggleRevisitedHandler(item._id);
+            }}
             transitionDuration={1}
             style={{
               "& input": {

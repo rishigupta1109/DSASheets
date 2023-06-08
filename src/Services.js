@@ -278,7 +278,25 @@ const updateUserData = async (userId, name, dailyGoal, revisitDays) => {
   );
   return data;
 };
+const toggleRevisited = async (questionId, userId, topicId, sheetId) => {
+  const data = await axios.post(
+    "api/data/revisited/",
+    {
+      questionId: questionId,
+      userId: userId,
+      topicId: topicId,
+      sheetId: sheetId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  return data;
+};
 export {
+  toggleRevisited,
   updateUserData,
   getLeaderboard,
   toggleFriend,

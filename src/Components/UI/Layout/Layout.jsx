@@ -70,7 +70,7 @@ export default function Layout({ children }) {
         if (!question?.isCompleted) return;
         const date = new Date(question?.completedAt);
         const today = new Date();
-        console.log(date, today);
+        // console.log(date, today);
         if (
           date.getDate() === today.getDate() &&
           date.getMonth() === today.getMonth() &&
