@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import React, { useContext } from "react";
 import QuestionTable from "../Components/UI/Table/Table";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import globalContext from "../Components/Context/GlobalContext";
 import { IconCheck } from "@tabler/icons-react";
 import { BackBtn } from "../Components/UI/BackBtn";
@@ -20,7 +20,11 @@ export const Questions = () => {
 
   const sheet = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
   const topic = sheet?.topics.filter((topic) => topic._id === topic_id)[0];
+  const navigate = useNavigate();
   // console.log(sheet, topic);
+  if (sheets.length > 0 && !topic) {
+    navigate("/");
+  }
   const data = sheet?.questions.filter((question) =>
     question?.topicId?.includes(topic_id)
   );

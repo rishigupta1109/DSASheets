@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { SheetCard } from "../Components/SheetCard/SheetCard";
 import {
   Center,
@@ -9,13 +9,14 @@ import {
   ThemeIcon,
   Title,
 } from "@mantine/core";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import globalContext from "../Components/Context/GlobalContext";
 import { IconCheck } from "@tabler/icons-react";
 import { BackBtn } from "../Components/UI/BackBtn";
 export default function Topics() {
   let { sheet_id } = useParams();
   const { sheets } = useContext(globalContext);
+  const sheetExists = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
   const topics = sheets?.filter((sheet) => sheet._id === sheet_id)[0]?.topics;
   // console.log(topics);
   const completed = sheets
@@ -23,6 +24,13 @@ export default function Topics() {
     ?.questions?.filter((question) => question?.isCompleted)?.length;
   const total = sheets?.filter((sheet) => sheet._id === sheet_id)[0]?.questions
     ?.length;
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sheetExists && sheets.length > 0) {
+      navigate("/");
+    }
+  }, []);
+
   return (
     <Container
       fluid
