@@ -16,6 +16,7 @@ import logo from "../../../Sheet Hub.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import { SegmentedToggle } from "./Toggle";
 import globalContext from "../../Context/GlobalContext";
+import UserMenu from "./UserMenu";
 const HEADER_HEIGHT = rem(80);
 
 const useStyles = createStyles((theme) => ({
@@ -128,7 +129,7 @@ export function Navbar({ links }) {
   ));
 
   return (
-    <Header height={HEADER_HEIGHT} mb={20} className={classes.root}>
+    <Header height={HEADER_HEIGHT} className={classes.root}>
       <Container className={classes.header}>
         {/* <MantineLogo size={28} /> */}
         <img
@@ -144,6 +145,20 @@ export function Navbar({ links }) {
         />
         <Group spacing={5} className={classes.links}>
           {items}
+
+          {globalCtx.isUserLoggedIn && (
+            <UserMenu
+              onLogout={() => {
+                navigate("/");
+                globalCtx.setIsUserLoggedIn(false);
+                globalCtx.setToken(null);
+                globalCtx.setUser(null);
+                globalCtx.setIsUserAdmin(false);
+
+                localStorage.removeItem("token");
+              }}
+            />
+          )}
           {!globalCtx.isUserLoggedIn && (
             <Group spacing={5} className={classes.links}>
               <Button onClick={() => navigate("/login")} variant="default">
@@ -152,7 +167,7 @@ export function Navbar({ links }) {
               <Button onClick={() => navigate("/register")}>Sign up</Button>
             </Group>
           )}
-          {globalCtx.isUserLoggedIn && (
+          {/* {globalCtx.isUserLoggedIn && (
             <Button
               onClick={() => {
                 navigate("/");
@@ -166,7 +181,7 @@ export function Navbar({ links }) {
             >
               Logout
             </Button>
-          )}
+          )} */}
         </Group>
         <SegmentedToggle />
 
@@ -178,8 +193,37 @@ export function Navbar({ links }) {
         />
         <Transition transition="pop-top-right" duration={200} mounted={opened}>
           {(styles) => (
-            <Paper className={classes.dropdown} withBorder style={styles}>
+            <Paper
+              className={classes.dropdown}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+                alignItems: "center",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                padding: "1rem",
+              }}
+              withBorder
+              style={styles}
+            >
               {items}
+              {globalCtx?.isUserLoggedIn && (
+                <NavLink
+                  key={"/profile"}
+                  to={"/profile"}
+                  className={cx(classes.link, {
+                    [classes.linkActive]: active === "/profile",
+                  })}
+                  onClick={(event) => {
+                    // event.preventDefault();
+                    setActive("/profile");
+                    close();
+                  }}
+                >
+                  Profile
+                </NavLink>
+              )}
               {!globalCtx.isUserLoggedIn && (
                 <>
                   <Button
@@ -188,7 +232,10 @@ export function Navbar({ links }) {
                       display: "block",
                       margin: "1rem auto",
                     }}
-                    onClick={() => navigate("/login")}
+                    onClick={() => {
+                      toggle();
+                      navigate("/login");
+                    }}
                   >
                     Log in
                   </Button>
@@ -197,7 +244,10 @@ export function Navbar({ links }) {
                       margin: "1rem auto",
                       display: "block",
                     }}
-                    onClick={() => navigate("/register")}
+                    onClick={() => {
+                      toggle();
+                      navigate("/register");
+                    }}
                   >
                     Sign up
                   </Button>
@@ -211,7 +261,7 @@ export function Navbar({ links }) {
                     globalCtx.setToken(null);
                     globalCtx.setUser(null);
                     globalCtx.setIsUserAdmin(false);
-
+                    toggle();
                     localStorage.removeItem("token");
                   }}
                 >

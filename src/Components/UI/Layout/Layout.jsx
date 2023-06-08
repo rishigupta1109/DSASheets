@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Navbar } from "../Navbar/Navbar";
 import globalContext from "../../Context/GlobalContext";
-import { Anchor, Breadcrumbs, Container, Text } from "@mantine/core";
+import { Anchor, Breadcrumbs, Container, Progress, Text } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { IconArrowLeft, IconArrowLeftBar } from "@tabler/icons-react";
 export default function Layout({ children }) {
@@ -57,6 +57,33 @@ export default function Layout({ children }) {
   ];
   const globalCtx = useContext(globalContext);
   let topics = [];
+  const [quesCompleted, setQuesCompleted] = React.useState(0);
+  let dailyGoalQues = globalCtx?.user?.dailyGoal || 0;
+  useEffect(() => {
+    if (globalCtx.user?.dailyGoal) {
+      dailyGoalQues = globalCtx.user?.dailyGoal;
+    }
+    let quesCompletedToday = 0;
+
+    globalCtx?.sheets?.forEach((sheet) => {
+      sheet?.questions?.forEach((question) => {
+        if (!question?.isCompleted) return;
+        const date = new Date(question?.completedAt);
+        const today = new Date();
+        console.log(date, today);
+        if (
+          date.getDate() === today.getDate() &&
+          date.getMonth() === today.getMonth() &&
+          date.getFullYear() === today.getFullYear()
+        ) {
+          quesCompletedToday += 1;
+        }
+      });
+    });
+    setQuesCompleted(quesCompletedToday);
+    console.log(quesCompletedToday, dailyGoalQues);
+  }, [globalCtx, globalCtx.sheets]);
+  const percentage = (quesCompleted / dailyGoalQues) * 100;
   // globalCtx.sheets.forEach((sheet) => {
   //   topics.push(...sheet.topics.map((topic) => topic._id));
   // });
@@ -130,6 +157,19 @@ export default function Layout({ children }) {
             : linkGuest
         }
       />
+      {dailyGoalQues !== 0 && (
+        <Progress
+          striped
+          color={percentage >= 100 ? "green  " : "indigo"}
+          label={
+            percentage >= 100
+              ? "Daily Goal Completed"
+              : `Daily Goal ${quesCompleted}/${dailyGoalQues}`
+          }
+          size="xl"
+          value={Math.min(percentage, 100)}
+        />
+      )}
       {/* <Container
         sx={{
           width: "100%",

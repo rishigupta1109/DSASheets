@@ -78,7 +78,8 @@ export default function CustomTable({ questionData, onEdit, onDelete }) {
             if (question?._id === id) {
               return {
                 ...question,
-                isCompleted: !question.isCompleted,
+                isCompleted: !question?.isCompleted,
+                completedAt: new Date(),
               };
             }
             return question;

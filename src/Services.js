@@ -261,7 +261,25 @@ const getLeaderboard = async (userId, sheetId, duration) => {
   return data;
 };
 
+const updateUserData = async (userId, name, dailyGoal, revisitDays) => {
+  const data = await axios.patch(
+    "api/user/update",
+    {
+      userId: userId,
+      name: name,
+      dailyGoal: dailyGoal,
+      revisitDays: revisitDays,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  return data;
+};
 export {
+  updateUserData,
   getLeaderboard,
   toggleFriend,
   findUser,

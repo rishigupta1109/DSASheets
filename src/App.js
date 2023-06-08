@@ -28,6 +28,7 @@ import globalContext from "./Components/Context/GlobalContext";
 import { useContext, useEffect } from "react";
 import { validateSession } from "./Services";
 import CustomLoader from "./Components/UI/CustomLoader";
+import { Profile } from "./pages/Profile";
 const routerAdmin = createBrowserRouter([
   {
     path: "/",
@@ -119,6 +120,14 @@ const routerAdmin = createBrowserRouter([
     ),
   },
   {
+    path: "/profile",
+    element: (
+      <Layout>
+        <Profile />
+      </Layout>
+    ),
+  },
+  {
     path: "/*",
     element: (
       <Layout>
@@ -175,6 +184,14 @@ const routerUser = createBrowserRouter([
     element: (
       <Layout>
         <Friends />
+      </Layout>
+    ),
+  },
+  {
+    path: "/profile",
+    element: (
+      <Layout>
+        <Profile />
       </Layout>
     ),
   },

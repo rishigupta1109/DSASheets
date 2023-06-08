@@ -69,6 +69,7 @@ export const GlobalContextProvider = ({ children }) => {
     };
     validateUserSession();
   }, []);
+  console.log(sheets);
   return (
     <globalContext.Provider
       value={{
