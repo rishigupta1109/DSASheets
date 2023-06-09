@@ -15,7 +15,7 @@ import { IconCheck } from "@tabler/icons-react";
 import { BackBtn } from "../Components/UI/BackBtn";
 export default function Topics() {
   let { sheet_id } = useParams();
-  const { sheets } = useContext(globalContext);
+  const { sheets, user } = useContext(globalContext);
   const sheetExists = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
   const topics = sheets?.filter((sheet) => sheet._id === sheet_id)[0]?.topics;
   // console.log(topics);
@@ -129,6 +129,26 @@ export default function Topics() {
             const total = sheet?.questions?.filter((ques) =>
               ques?.topicId?.includes(topic?._id)
             )?.length;
+            const toRevisit = sheet?.questions?.filter((ques) => {
+              if (!ques?.topicId?.includes(topic?._id)) return false;
+              if (!ques?.isCompleted) return false;
+              const date = new Date(ques?.completedAt);
+              const today = new Date();
+              const revisitDays = user?.revisitDays || 0;
+
+              if (
+                today.getTime() - date.getTime() >=
+                revisitDays * 24 * 60 * 60 * 1000
+              ) {
+                return ques;
+              }
+            });
+            const revisited = sheet?.questions?.filter(
+              (question) =>
+                question.topicId.includes(topic?._id) &&
+                question.revisited &&
+                question.isCompleted
+            )?.length;
             return (
               <Grid.Col
                 key={topic?._id}
@@ -145,6 +165,8 @@ export default function Topics() {
                   title={topic?.name}
                   started={completed > 0}
                   total={total}
+                  toRevisit={toRevisit?.length}
+                  revisited={revisited}
                 />
               </Grid.Col>
             );

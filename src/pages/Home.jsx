@@ -5,7 +5,7 @@ import globalContext from "../Components/Context/GlobalContext";
 import { Link } from "react-router-dom";
 
 export default function Home() {
-  const { sheets } = useContext(globalContext);
+  const { sheets, user } = useContext(globalContext);
   const startedSheets = sheets.filter((sheet) => {
     let completed =
       sheet?.questions?.filter((question) => question.isCompleted)?.length || 0;
@@ -70,6 +70,22 @@ export default function Home() {
             let completed =
               sheet?.questions?.filter((question) => question.isCompleted)
                 ?.length || 0;
+            const toRevisit = sheet?.questions?.filter((ques) => {
+              if (!ques?.isCompleted) return false;
+              const date = new Date(ques?.completedAt);
+              const today = new Date();
+              const revisitDays = user?.revisitDays || 0;
+
+              if (
+                today.getTime() - date.getTime() >=
+                revisitDays * 24 * 60 * 60 * 1000
+              ) {
+                return ques;
+              }
+            });
+            const revisited = sheet?.questions?.filter(
+              (question) => question.revisited && question.isCompleted
+            )?.length;
             return (
               <Grid.Col
                 xxs={9}
@@ -87,6 +103,8 @@ export default function Home() {
                   title={sheet.title}
                   completed={completed}
                   started={completed > 0}
+                  toRevisit={toRevisit?.length}
+                  revisited={revisited}
                 />
               </Grid.Col>
             );

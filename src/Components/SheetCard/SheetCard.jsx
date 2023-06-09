@@ -18,6 +18,8 @@ export function SheetCard({
   total,
   started,
   link,
+  toRevisit,
+  revisited,
 }) {
   const navigate = useNavigate();
   const { colorScheme } = useMantineColorScheme();
@@ -71,7 +73,24 @@ export function SheetCard({
             </Badge>
           )}
           {started && completed === total && (
-            <Badge color="green">Well Done!</Badge>
+            <Badge
+              bg={"green"}
+              sx={{
+                color: "white",
+              }}
+            >
+              Well Done!
+            </Badge>
+          )}
+          {toRevisit > 0 && toRevisit !== revisited && (
+            <Badge
+              bg={"red"}
+              sx={{
+                color: "white",
+              }}
+            >
+              {toRevisit - revisited} to Revisit!
+            </Badge>
           )}
         </Group>
 
@@ -149,6 +168,29 @@ export function SheetCard({
             <Progress value={(completed / total) * 100} mt={5} />
           </>
         )}
+        {/* {toRevisit > 0 && toRevisit !== revisited && (
+          <Text
+            c="dimmed"
+            fz="sm"
+            mt="md"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            {toRevisit} Questions to Revisit{" "}
+            <Text
+              span
+              fw={500}
+              sx={(theme) => ({
+                color: theme.colorScheme === "dark" ? theme.white : theme.black,
+              })}
+            >
+              {((revisited / toRevisit) * 100).toFixed(0)}% Revisited
+            </Text>
+          </Text>
+        )} */}
         {started && completed === total && (
           <>
             <Text
