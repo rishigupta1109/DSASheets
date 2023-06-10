@@ -296,6 +296,7 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
           {item?.links?.length > 0 &&
             item?.links?.map((link, index) => {
               if (link?.trim()?.length === 0) return;
+              if (link === "#") return;
               return (
                 <Anchor
                   key={index}

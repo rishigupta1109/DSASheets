@@ -151,12 +151,12 @@ export const Questions = () => {
               All Done!
             </Text>
           )}
-          {total === 0 && mode === "1" && (
+          {total === 0 && mode === "1" && !showBookmarked && (
             <Text color="red" align="center" weight={500} italic size="xl">
               No questions to revisit yet
             </Text>
           )}
-          {total === 0 && mode === "0" && (
+          {total === 0 && mode === "0" && !showBookmarked && (
             <Text color="red" align="center" weight={500} italic size="xl">
               No questions to show yet
             </Text>
