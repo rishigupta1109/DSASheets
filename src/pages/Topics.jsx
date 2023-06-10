@@ -43,6 +43,7 @@ export default function Topics() {
         flexWrap: "wrap",
         justifyContent: "center",
         position: "relative",
+        minHeight: "62vh",
       }}
     >
       <BackBtn />

@@ -4,6 +4,7 @@ import CustomTable from "../Components/UI/Table/Table";
 import { LeaderBoardTable } from "../Components/UI/Table/LeaderBoardTable";
 import globalContext from "../Components/Context/GlobalContext";
 import { getLeaderboard } from "../Services";
+import { useNavigate } from "react-router-dom";
 
 const LeaderBoard = () => {
   const [sheet, setSheet] = useState("ALL");
@@ -11,6 +12,7 @@ const LeaderBoard = () => {
   const [data, setData] = useState([]);
 
   const { sheets, user, setLoading } = useContext(globalContext);
+  const navigate = useNavigate();
   const sheetOptions = sheets.map((sheet) => ({
     label: sheet.title,
     value: sheet._id,
@@ -18,7 +20,7 @@ const LeaderBoard = () => {
   sheetOptions.unshift({ label: "All", value: "ALL" });
   const sheetSelected = sheets.find((s) => s?._id === sheet);
   const fetchData = async () => {
-    if (duration) {
+    if (duration && user) {
       try {
         setLoading(true);
         const res = await getLeaderboard(user?.userId, sheet, duration);
@@ -41,6 +43,9 @@ const LeaderBoard = () => {
     fetchData();
   }, [sheet, duration]);
 
+  if (window.location.pathname !== "/leaderboard") {
+    navigate("/leaderboard");
+  }
   return (
     <Container
       fluid
@@ -51,6 +56,8 @@ const LeaderBoard = () => {
         alignItems: "center",
         flexWrap: "wrap",
         overflow: "auto",
+        minHeight: "62vh",
+        padding: "1rem",
       }}
     >
       <Title align="center" order={1} italic>

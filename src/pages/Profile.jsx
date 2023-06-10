@@ -13,6 +13,7 @@ import {
 import React, { useContext } from "react";
 import globalContext from "../Components/Context/GlobalContext";
 import { customisedNotification, updateUserData } from "../Services";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
   const { user, setUser, setLoading } = useContext(globalContext);
@@ -46,9 +47,18 @@ export const Profile = () => {
     }
     setLoading(false);
   };
-
+  const navigate = useNavigate();
+  if (window.location.pathname !== "/profile") {
+    navigate("/profile");
+  }
   return (
-    <Container size={420} my={40}>
+    <Container
+      size={420}
+      my={40}
+      sx={{
+        minHeight: "62vh",
+      }}
+    >
       <Title
         align="center"
         sx={(theme) => ({

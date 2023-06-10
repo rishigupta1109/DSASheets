@@ -22,6 +22,8 @@ export default function Home() {
         gap: "1rem",
         alignItems: "center",
         flexWrap: "wrap",
+        padding: "1rem",
+        minHeight: "62vh",
       }}
     >
       <Title align="center" order={1} italic>
@@ -97,7 +99,7 @@ export default function Home() {
                 key={sheet._id}
               >
                 <SheetCard
-                  link={`/${sheet._id}`}
+                  link={`/sheet/${sheet._id}`}
                   total={sheet?.questions?.length}
                   description={sheet.description}
                   title={sheet.title}

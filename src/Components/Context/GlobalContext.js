@@ -76,8 +76,8 @@ export const GlobalContextProvider = ({ children }) => {
         setToken(null);
         setUser(null);
         console.log(err);
+        setLoading(false);
       }
-      setLoading(false);
     };
     validateUserSession();
   }, []);

@@ -115,7 +115,13 @@ export function AuthenticationForm(props) {
     globalCtx.setLoading(false);
   };
   return (
-    <Container size={"xs"}>
+    <Container
+      size={"xs"}
+      sx={{
+        minHeight: "80vh",
+        paddingTop: "5rem",
+      }}
+    >
       <Paper radius="md" p="xl" withBorder {...props}>
         <Text size="lg" weight={500}>
           Welcome to SheetHub , {type} with

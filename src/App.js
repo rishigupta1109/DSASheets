@@ -40,7 +40,7 @@ const routerAdmin = createBrowserRouter([
     ),
   },
   {
-    path: "/:sheet_id",
+    path: "/sheet/:sheet_id",
     element: (
       <Layout>
         <Topics />
@@ -48,7 +48,7 @@ const routerAdmin = createBrowserRouter([
     ),
   },
   {
-    path: "/:sheet_id/:topic_id/questions",
+    path: "/sheet/:sheet_id/:topic_id/questions",
     element: (
       <Layout>
         <Questions />
@@ -147,7 +147,7 @@ const routerUser = createBrowserRouter([
     ),
   },
   {
-    path: "/:sheet_id",
+    path: "/sheet/:sheet_id",
     element: (
       <Layout>
         <Topics />
@@ -155,7 +155,7 @@ const routerUser = createBrowserRouter([
     ),
   },
   {
-    path: "/:sheet_id/:topic_id/questions",
+    path: "/sheet/:sheet_id/:topic_id/questions",
     element: (
       <Layout>
         <Questions />
@@ -199,7 +199,7 @@ const routerUser = createBrowserRouter([
     path: "/*",
     element: (
       <Layout>
-        <Navigate to={"/"} />
+        <Navigate to={"/"} replace={true} />
       </Layout>
     ),
   },
@@ -215,7 +215,7 @@ const routerGuest = createBrowserRouter([
     ),
   },
   {
-    path: "/:sheet_id",
+    path: "/sheet/:sheet_id",
     element: (
       <Layout>
         <Topics />
@@ -223,7 +223,7 @@ const routerGuest = createBrowserRouter([
     ),
   },
   {
-    path: "/:sheet_id/:topic_id/questions",
+    path: "/sheet/:sheet_id/:topic_id/questions",
     element: (
       <Layout>
         <Questions />
@@ -259,7 +259,7 @@ const routerGuest = createBrowserRouter([
     path: "/*",
     element: (
       <Layout>
-        <Navigate to={"/"} />
+        <Navigate to={"/"} replace={true} />
       </Layout>
     ),
   },
@@ -277,6 +277,7 @@ function App() {
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
+
   return (
     <div>
       <ColorSchemeProvider

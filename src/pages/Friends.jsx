@@ -6,6 +6,7 @@ import { IconSearch, IconArrowRight, IconArrowLeft } from "@tabler/icons-react";
 import { useTimeout } from "@mantine/hooks";
 import { customisedNotification, findUser } from "../Services";
 import globalContext from "../Components/Context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 const Friends = () => {
   const theme = useMantineTheme();
   const { user } = useContext(globalContext);
@@ -29,6 +30,11 @@ const Friends = () => {
     }, 1000);
     setTout(t);
   };
+  const navigate = useNavigate();
+
+  if (window.location.pathname !== "/friends") {
+    navigate("/friends");
+  }
   return (
     <Container
       fluid
@@ -39,6 +45,8 @@ const Friends = () => {
         alignItems: "center",
         flexWrap: "wrap",
         overflow: "auto",
+        minHeight: "62vh",
+        padding: "1rem",
       }}
     >
       <Title align="center" order={1} italic>

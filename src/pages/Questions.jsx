@@ -84,6 +84,8 @@ export const Questions = () => {
         flexWrap: "wrap",
         justifyContent: "center",
         position: "relative",
+        minHeight: "62vh",
+        padding: "1rem",
       }}
     >
       <BackBtn />

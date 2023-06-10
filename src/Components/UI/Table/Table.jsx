@@ -313,6 +313,12 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
 
         <td
           onClick={() => {
+            if (!user)
+              return customisedNotification(
+                "Error",
+                "Please login to continue",
+                "warning"
+              );
             open();
             console.log({ item });
             setSelectedQuestion(item);
@@ -327,6 +333,12 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
           {!item?.bookmarked && (
             <IconBookmark
               onClick={() => {
+                if (!user)
+                  return customisedNotification(
+                    "Error",
+                    "Please login to continue",
+                    "warning"
+                  );
                 toggleBookmarkHandler(item?._id);
               }}
               style={{
@@ -337,6 +349,12 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
           {item?.bookmarked && (
             <IconBookmarkFilled
               onClick={() => {
+                if (!user)
+                  return customisedNotification(
+                    "Error",
+                    "Please login to continue",
+                    "warning"
+                  );
                 toggleBookmarkHandler(item?._id);
               }}
               style={{

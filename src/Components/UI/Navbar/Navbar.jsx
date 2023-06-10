@@ -22,7 +22,7 @@ const HEADER_HEIGHT = rem(80);
 const useStyles = createStyles((theme) => ({
   root: {
     position: "sticky",
-    zIndex: 1,
+    zIndex: 2,
     top: 0,
   },
 
@@ -160,14 +160,14 @@ export function Navbar({ links }) {
               }}
             />
           )}
-          {!globalCtx.isUserLoggedIn && (
+          {/* {!globalCtx.isUserLoggedIn && (
             <Group spacing={5} className={classes.links}>
               <Button onClick={() => navigate("/login")} variant="default">
                 Log in
               </Button>
               <Button onClick={() => navigate("/register")}>Sign up</Button>
             </Group>
-          )}
+          )} */}
           {/* {globalCtx.isUserLoggedIn && (
             <Button
               onClick={() => {
@@ -225,7 +225,7 @@ export function Navbar({ links }) {
                   Profile
                 </NavLink>
               )}
-              {!globalCtx.isUserLoggedIn && (
+              {/* {!globalCtx.isUserLoggedIn && (
                 <>
                   <Button
                     variant="default"
@@ -253,7 +253,7 @@ export function Navbar({ links }) {
                     Sign up
                   </Button>
                 </>
-              )}
+              )} */}
               {globalCtx.isUserLoggedIn && (
                 <Button
                   onClick={() => {

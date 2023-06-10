@@ -1,9 +1,17 @@
 import React, { useContext, useEffect } from "react";
 import { Navbar } from "../Navbar/Navbar";
 import globalContext from "../../Context/GlobalContext";
-import { Anchor, Breadcrumbs, Container, Progress, Text } from "@mantine/core";
+import {
+  Anchor,
+  Breadcrumbs,
+  Container,
+  Progress,
+  Text,
+  Transition,
+} from "@mantine/core";
 import { Link } from "react-router-dom";
 import { IconArrowLeft, IconArrowLeftBar } from "@tabler/icons-react";
+import { Footer } from "../Navbar/Footer";
 export default function Layout({ children }) {
   const linkGuest = [
     {
@@ -13,6 +21,14 @@ export default function Layout({ children }) {
     {
       label: "All Sheets",
       link: "/allsheets",
+    },
+    {
+      label: "Login",
+      link: "/login",
+    },
+    {
+      label: "Register",
+      link: "/register",
     },
   ];
   const linkUser = [
@@ -157,23 +173,32 @@ export default function Layout({ children }) {
             : linkGuest
         }
       />
-      {dailyGoalQues !== 0 && (
-        <Progress
-          striped
-          color={percentage >= 100 ? "green  " : "indigo"}
-          label={
-            percentage >= 100
-              ? "Daily Goal Completed"
-              : `Daily Goal ${quesCompleted}/${dailyGoalQues}`
-          }
-          size="xl"
-          style={{
-            position: "sticky",
-            zIndex: 1,
-            top: "4rem",
-          }}
-          value={Math.min(percentage, 100)}
-        />
+      {dailyGoalQues !== 0 && percentage > 0 && (
+        <Transition
+          transition={"slide-right"}
+          duration={500}
+          mounted={percentage > 0 && dailyGoalQues !== 0}
+        >
+          {(styles) => (
+            <Progress
+              striped
+              color={percentage >= 100 ? "green  " : "indigo"}
+              label={
+                percentage >= 100
+                  ? "Daily Goal Completed"
+                  : `Daily Goal ${quesCompleted}/${dailyGoalQues}`
+              }
+              size="xl"
+              style={{
+                position: "sticky",
+                zIndex: 2,
+                top: "4rem",
+                ...styles,
+              }}
+              value={Math.min(percentage, 100)}
+            />
+          )}
+        </Transition>
       )}
       {/* <Container
         sx={{
@@ -185,6 +210,7 @@ export default function Layout({ children }) {
       </Container> */}
 
       {children}
+      <Footer />
     </div>
   );
 }
