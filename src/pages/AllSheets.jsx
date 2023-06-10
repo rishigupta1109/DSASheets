@@ -6,7 +6,15 @@ import globalContext from "../Components/Context/GlobalContext";
 
 export default function AllSheets() {
   const { sheets, user } = useContext(globalContext);
-
+  sheets?.sort((a, b) => {
+    let starteda = 0,
+      startedb = 0;
+    starteda =
+      a?.questions?.filter((question) => question.isCompleted)?.length > 0 || 0;
+    startedb =
+      b?.questions?.filter((question) => question.isCompleted)?.length > 0 || 0;
+    return startedb - starteda;
+  });
   // console.log(sheets);
   return (
     <Container
