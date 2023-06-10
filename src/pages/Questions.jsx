@@ -23,7 +23,7 @@ export const Questions = () => {
   const topic = sheet?.topics.filter((topic) => topic._id === topic_id)[0];
   const navigate = useNavigate();
   // console.log(sheet, topic);
-  if (sheets.length > 0 && !topic) {
+  if (sheets?.length > 0 && !topic) {
     navigate("/");
   }
   let data = sheet?.questions.filter((question) =>
@@ -31,9 +31,9 @@ export const Questions = () => {
   );
   const { user } = useContext(globalContext);
   if (mode === "1") {
-    data = data.filter((question) => question?.isCompleted);
+    data = data?.filter((question) => question?.isCompleted);
     console.log(data);
-    data = data.filter((ques) => {
+    data = data?.filter((ques) => {
       const date = new Date(ques?.completedAt);
       const today = new Date();
       const revisitDays = user?.revisitDays || 0;
@@ -87,19 +87,19 @@ export const Questions = () => {
           justifyContent: "center",
         }}
       >
-        {!isNaN(((completed / total) * 100).toFixed(0)) &&
-          ((completed / total) * 100).toFixed(0) != 100 && (
+        {!isNaN(((completed / total) * 100)?.toFixed(0)) &&
+          ((completed / total) * 100)?.toFixed(0) != 100 && (
             <RingProgress
               sections={[{ value: (completed / total) * 100, color: "blue" }]}
               label={
                 <Text color="blue" weight={700} align="center" size="xl">
-                  {((completed / total) * 100).toFixed(0)}%
+                  {((completed / total) * 100)?.toFixed(0)}%
                 </Text>
               }
             />
           )}
 
-        {((completed / total) * 100).toFixed(0) == 100 && (
+        {((completed / total) * 100)?.toFixed(0) == 100 && (
           <RingProgress
             sections={[{ value: 100, color: "teal" }]}
             label={

@@ -132,7 +132,7 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
         "warning"
       );
     if (user) {
-      const newSheets = sheets.map((sheet) => {
+      const newSheets = sheets?.map((sheet) => {
         if (sheet?._id === sheet_id) {
           const newQuestions = sheet?.questions?.map((question) => {
             if (question?._id === id) {
@@ -158,13 +158,13 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
         const res = await toggleRevisited(id, user?.userId, topic_id, sheet_id);
         console.log({ res });
       } catch (e) {
-        const newSheets = sheets.map((sheet) => {
+        const newSheets = sheets?.map((sheet) => {
           if (sheet?._id === sheet_id) {
             const newQuestions = sheet?.questions?.map((question) => {
               if (question?._id === id) {
                 return {
                   ...question,
-                  isRevisited: !question.isRevisited,
+                  isRevisited: !question?.isRevisited,
                 };
               }
               return question;
@@ -189,13 +189,13 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
   }, [questionData]);
   console.log({ questionData, filteredData, data });
   const getLinkType = (link) => {
-    if (link.includes("leetcode")) {
+    if (link?.includes("leetcode")) {
       return <img src={leetcode} height={30} />;
-    } else if (link.includes("geeksforgeeks")) {
+    } else if (link?.includes("geeksforgeeks")) {
       return <img src={gfg} height={30} />;
-    } else if (link.includes("codingninjas")) {
+    } else if (link?.includes("codingninjas")) {
       return <img src={CN} height={30} />;
-    } else if (link.includes("spoj")) {
+    } else if (link?.includes("spoj")) {
       return <img src={spoj} height={50} />;
     }
     return <IconLink />;
@@ -228,7 +228,7 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
             }}
           />
         </td>
-        <td>{item.title}</td>
+        <td>{item?.title}</td>
         <td>
           {item?.links?.length > 0 &&
             item?.links?.map((link, index) => {
