@@ -196,9 +196,9 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
     } else if (link?.includes("codingninjas")) {
       return <img src={CN} height={30} />;
     } else if (link?.includes("spoj")) {
-      return <img src={spoj} height={50} />;
+      return <img src={spoj} height={30} />;
     }
-    return <IconLink />;
+    return <IconLink height={30} />;
   };
   const rows = filteredData?.map((item) => {
     return (
