@@ -1,4 +1,5 @@
 import {
+  Button,
   Center,
   Container,
   RingProgress,
@@ -11,7 +12,11 @@ import React, { useContext, useState } from "react";
 import QuestionTable from "../Components/UI/Table/Table";
 import { useNavigate, useParams } from "react-router-dom";
 import globalContext from "../Components/Context/GlobalContext";
-import { IconCheck } from "@tabler/icons-react";
+import {
+  IconBookmark,
+  IconBookmarkFilled,
+  IconCheck,
+} from "@tabler/icons-react";
 import { BackBtn } from "../Components/UI/BackBtn";
 
 export const Questions = () => {
@@ -19,6 +24,7 @@ export const Questions = () => {
   // console.log(sheet_id, topic_id);
   const { sheets } = useContext(globalContext);
   const [mode, setMode] = useState("0");
+  const [showBookmarked, setShowBookmarked] = useState(false);
   const sheet = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
   const topic = sheet?.topics.filter((topic) => topic._id === topic_id)[0];
   const navigate = useNavigate();
@@ -57,6 +63,14 @@ export const Questions = () => {
   if (mode === "1") {
     completed = data?.filter((question) => question?.revisited)?.length;
   }
+  if (showBookmarked) {
+    data = data?.filter((question) => question?.bookmarked);
+    completed = data?.filter((question) => question?.isCompleted)?.length;
+    if (mode === "1") {
+      completed = data?.filter((question) => question?.revisited)?.length;
+    }
+  }
+
   const total = data?.length;
   return (
     <Container
@@ -145,21 +159,56 @@ export const Questions = () => {
         </div>
       </div>
       <div>
-        <SegmentedControl
-          value={mode}
-          onChange={(value) => {
-            console.log(value);
-            setMode(value);
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            gap: "1rem",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
-          data={[
-            { label: "First visit", value: "0" },
-            { label: "Revisit", value: "1" },
-          ]}
-          sx={{
-            margin: "1rem",
-            marginLeft: "auto",
-          }}
-        />
+        >
+          <SegmentedControl
+            value={mode}
+            onChange={(value) => {
+              console.log(value);
+              setMode(value);
+            }}
+            data={[
+              { label: "First visit", value: "0" },
+              { label: "Revisit", value: "1" },
+            ]}
+            sx={{
+              margin: "1rem",
+            }}
+          />
+          <Button
+            onClick={() => {
+              setShowBookmarked(!showBookmarked);
+            }}
+            variant={showBookmarked ? "outline" : "gradient"}
+            color={showBookmarked ? "blue" : "green"}
+            leftIcon={
+              showBookmarked ? (
+                <IconBookmark size="1rem" />
+              ) : (
+                <IconBookmarkFilled size="1rem" color="white" />
+              )
+            }
+          >
+            {
+              <Text
+                color={showBookmarked ? "blue" : "white"}
+                weight={500}
+                align="center"
+                size="sm"
+              >
+                {showBookmarked ? "Show All" : "Show Bookmarked"}
+              </Text>
+            }
+          </Button>
+        </div>
         <QuestionTable questionData={data} mode={mode} />
       </div>
     </Container>

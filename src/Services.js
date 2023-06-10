@@ -295,7 +295,25 @@ const toggleRevisited = async (questionId, userId, topicId, sheetId) => {
   );
   return data;
 };
+const toggleBookmark = async (questionId, userId, topicId, sheetId) => {
+  const data = await axios.post(
+    "api/data/bookmark/",
+    {
+      questionId: questionId,
+      userId: userId,
+      topicId: topicId,
+      sheetId: sheetId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  return data;
+};
 export {
+  toggleBookmark,
   toggleRevisited,
   updateUserData,
   getLeaderboard,

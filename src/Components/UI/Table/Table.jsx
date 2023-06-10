@@ -17,6 +17,8 @@ import { useDisclosure } from "@mantine/hooks";
 import CreateNoteModal from "./CreateNoteModal";
 import {
   IconBadgeTm,
+  IconBookmark,
+  IconBookmarkFilled,
   IconBrandLeetcode,
   IconCross,
   IconCrossFilled,
@@ -24,6 +26,10 @@ import {
   IconLink,
   IconMedicalCrossFilled,
   IconNote,
+  IconStar,
+  IconStarFilled,
+  IconStarHalfFilled,
+  IconStarOff,
 } from "@tabler/icons-react";
 import globalContext from "../../Context/GlobalContext";
 import { useParams } from "react-router-dom";
@@ -31,6 +37,7 @@ import {
   createNote,
   createProgress,
   customisedNotification,
+  toggleBookmark,
   toggleRevisited,
 } from "../../../Services";
 const useStyles = createStyles((theme) => ({
@@ -200,6 +207,55 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
     }
     return <IconLink height={30} />;
   };
+  const toggleBookmarkHandler = async (id) => {
+    try {
+      const mod = sheets?.map((sheet) => {
+        if (sheet?._id === sheet_id) {
+          const newQuestions = sheet?.questions?.map((question) => {
+            if (question?._id === id) {
+              return {
+                ...question,
+                bookmarked: !question?.bookmarked,
+              };
+            }
+            return question;
+          });
+          return {
+            ...sheet,
+            questions: newQuestions,
+          };
+        }
+
+        return sheet;
+      });
+      setSheets(mod);
+      const res = await toggleBookmark(id, user?.userId, topic_id, sheet_id);
+      console.log({ res });
+    } catch (err) {
+      console.log({ err });
+      const mod = sheets?.map((sheet) => {
+        if (sheet?._id === sheet_id) {
+          const newQuestions = sheet?.questions?.map((question) => {
+            if (question?._id === id) {
+              return {
+                ...question,
+                bookmarked: !question?.bookmarked,
+              };
+            }
+            return question;
+          });
+          return {
+            ...sheet,
+            questions: newQuestions,
+          };
+        }
+
+        return sheet;
+      });
+      setSheets(mod);
+      customisedNotification("Error", "Something went wrong");
+    }
+  };
   const rows = filteredData?.map((item) => {
     return (
       <tr
@@ -229,7 +285,14 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
           />
         </td>
         <td>{item?.title}</td>
-        <td>
+        <td
+          style={{
+            display: "flex",
+            gap: "1rem",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           {item?.links?.length > 0 &&
             item?.links?.map((link, index) => {
               if (link?.trim()?.length === 0) return;
@@ -258,6 +321,28 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
           }}
         >
           <IconNote />
+        </td>
+        <td>
+          {!item?.bookmarked && (
+            <IconBookmark
+              onClick={() => {
+                toggleBookmarkHandler(item?._id);
+              }}
+              style={{
+                cursor: "pointer",
+              }}
+            />
+          )}
+          {item?.bookmarked && (
+            <IconBookmarkFilled
+              onClick={() => {
+                toggleBookmarkHandler(item?._id);
+              }}
+              style={{
+                cursor: "pointer",
+              }}
+            />
+          )}
         </td>
         {onEdit && (
           <td>
@@ -348,6 +433,7 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
             <th>Question</th>
             <th>Links</th>
             <th>Note </th>
+            <th>Bookmark</th>
             {onEdit && <th>Action</th>}
           </tr>
         </thead>
