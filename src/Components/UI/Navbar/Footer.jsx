@@ -31,8 +31,10 @@ const useStyles = createStyles((theme) => ({
     paddingTop: theme.spacing.xl,
     paddingBottom: theme.spacing.xl,
 
-    [theme.fn.smallerThan("xs")]: {
+    [theme.fn.smallerThan("md")]: {
       flexDirection: "column",
+      alignItems: "center",
+      gap: "1rem",
     },
   },
 
@@ -95,7 +97,7 @@ export function Footer() {
         </Group>
         <Group spacing={0} className={classes.links} position="right" noWrap>
           <Title order={5} weight={500}>
-            CopyRight © 2023
+            Copyright © 2023
           </Title>
         </Group>
       </Container>

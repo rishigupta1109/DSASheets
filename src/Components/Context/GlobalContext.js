@@ -18,6 +18,7 @@ const globalContext = React.createContext({
   setSheets: () => {},
   loading: false,
   setLoading: () => {},
+  validateUserSession: () => {},
 });
 
 export default globalContext;
@@ -49,36 +50,52 @@ export const GlobalContextProvider = ({ children }) => {
             return remainingb - remaininga;
           })
         );
+        setLoading(false);
       } catch (err) {
+        setLoading(false);
         customisedNotification("Error", "Something went wrong");
         console.log(err);
       }
-      setLoading(false);
     };
-    fetchSheets();
+    if (!localStorage.getItem("token")) {
+      fetchSheets();
+    }
   }, [user]);
-  useEffect(() => {
-    const validateUserSession = async () => {
-      try {
-        setLoading(true);
-        const res = await validateSession();
-        if (res.status === 200) {
-          // console.log(res.data);
-          setIsUserAdmin(res.data.isAdmin);
-          setIsUserLoggedIn(true);
-          setToken(res.data.token);
-          setUser(res.data);
-        }
-      } catch (err) {
-        localStorage.removeItem("token");
-        setIsUserAdmin(false);
-        setIsUserLoggedIn(false);
-        setToken(null);
-        setUser(null);
-        console.log(err);
-        setLoading(false);
+  const validateUserSession = async () => {
+    try {
+      setLoading(true);
+      const res = await validateSession();
+      if (res.status === 200) {
+        // console.log(res.data);
+        setIsUserAdmin(res.data.isAdmin);
+        setIsUserLoggedIn(true);
+        setToken(res.data.token);
+        setUser(res.data);
+        setSheets(
+          res.data?.sheets?.sort((a, b) => {
+            let completeda =
+              a?.questions?.filter((question) => question.isCompleted)
+                ?.length || 0;
+            let remaininga = a?.questions?.length - completeda;
+            let completedb =
+              b?.questions?.filter((question) => question.isCompleted)
+                ?.length || 0;
+            let remainingb = b?.questions?.length - completedb;
+            return remainingb - remaininga;
+          })
+        );
       }
-    };
+    } catch (err) {
+      localStorage.removeItem("token");
+      setIsUserAdmin(false);
+      setIsUserLoggedIn(false);
+      setToken(null);
+      setUser(null);
+      console.log(err);
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
     validateUserSession();
   }, []);
   console.log(sheets);
@@ -97,6 +114,7 @@ export const GlobalContextProvider = ({ children }) => {
         setSheets,
         loading,
         setLoading,
+        validateUserSession,
       }}
     >
       {children}

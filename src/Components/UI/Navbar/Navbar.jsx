@@ -264,6 +264,7 @@ export function Navbar({ links }) {
                     globalCtx.setIsUserAdmin(false);
                     toggle();
                     localStorage.removeItem("token");
+                    window.location.reload();
                   }}
                 >
                   Logout

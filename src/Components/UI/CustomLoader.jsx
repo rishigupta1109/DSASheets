@@ -14,7 +14,7 @@ function CustomLoader() {
         left: 0,
         zIndex: 9999,
         background: "#ffffff45",
-        backdropFilter: "blur(1px)",
+        backdropFilter: "blur(3px)",
       }}
     >
       <Loader size="xl" variant="bars" />

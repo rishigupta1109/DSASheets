@@ -77,13 +77,14 @@ export function AuthenticationForm(props) {
         "success"
       );
       form.reset();
-      globalCtx.setToken(data.token);
-      globalCtx.setUser(data);
-      globalCtx.setIsUserLoggedIn(true);
-      console.log(data?.isAdmin);
-      globalCtx.setIsUserAdmin(data?.isAdmin || false);
+      // globalCtx.setToken(data.token);
+      // globalCtx.setUser(data);
+      // globalCtx.setIsUserLoggedIn(true);
+      // console.log(data?.isAdmin);
+      // globalCtx.setIsUserAdmin(data?.isAdmin || false);
       window.localStorage.setItem("token", data.token);
       navigate("/");
+      globalCtx.validateUserSession();
     } catch (err) {
       customisedNotification("Error", err?.response?.data?.message);
       console.log(err);
