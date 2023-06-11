@@ -89,12 +89,52 @@ export default function CustomTable({
       );
     if (user) {
       toggle(id);
+      setSheets((prev) => {
+        return prev?.map((sheet) => {
+          if (sheet._id === sheet_id) {
+            if (sheet.completedToday.includes(id)) {
+              return {
+                ...sheet,
+                completedToday: sheet.completedToday.filter(
+                  (ques) => ques !== id
+                ),
+              };
+            } else {
+              return {
+                ...sheet,
+                completedToday: [...sheet.completedToday, id],
+              };
+            }
+          }
+          return sheet;
+        });
+      });
       try {
         console.log({ id, user, topic_id, sheet_id });
         const res = await createProgress(id, user?.userId, topic_id, sheet_id);
         console.log({ res });
       } catch (e) {
         toggle(id);
+        setSheets((prev) => {
+          return prev?.map((sheet) => {
+            if (sheet._id === sheet_id) {
+              if (sheet.completedToday.includes(id)) {
+                return {
+                  ...sheet,
+                  completedToday: sheet.completedToday.filter(
+                    (ques) => ques !== id
+                  ),
+                };
+              } else {
+                return {
+                  ...sheet,
+                  completedToday: [...sheet.completedToday, id],
+                };
+              }
+            }
+            return sheet;
+          });
+        });
         customisedNotification("Error", "Something went wrong");
       }
     }
