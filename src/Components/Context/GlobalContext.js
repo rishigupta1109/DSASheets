@@ -30,37 +30,33 @@ export const GlobalContextProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [sheets, setSheets] = useState([]);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const fetchSheets = async () => {
-      try {
-        setLoading(true);
-        const res = await getSheet(user?.userId);
-        const data = res?.data;
-        console.log(data.sheets);
-        setSheets(
-          data?.sheets?.sort((a, b) => {
-            let completeda =
-              a?.questions?.filter((question) => question.isCompleted)
-                ?.length || 0;
-            let remaininga = a?.questions?.length - completeda;
-            let completedb =
-              b?.questions?.filter((question) => question.isCompleted)
-                ?.length || 0;
-            let remainingb = b?.questions?.length - completedb;
-            return remainingb - remaininga;
-          })
-        );
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-        customisedNotification("Error", "Something went wrong");
-        console.log(err);
-      }
-    };
-    if (!localStorage.getItem("token")) {
-      fetchSheets();
+  const fetchSheets = async () => {
+    try {
+      setLoading(true);
+      const res = await getSheet(user?.userId);
+      const data = res?.data;
+      console.log(data.sheets);
+      setSheets(
+        data?.sheets?.sort((a, b) => {
+          let completeda =
+            a?.questions?.filter((question) => question.isCompleted)?.length ||
+            0;
+          let remaininga = a?.questions?.length - completeda;
+          let completedb =
+            b?.questions?.filter((question) => question.isCompleted)?.length ||
+            0;
+          let remainingb = b?.questions?.length - completedb;
+          return remainingb - remaininga;
+        })
+      );
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      customisedNotification("Error", "Something went wrong");
+      console.log(err);
     }
-  }, [user]);
+  };
+  useEffect(() => {}, [user]);
   const validateUserSession = async () => {
     try {
       setLoading(true);
@@ -87,6 +83,7 @@ export const GlobalContextProvider = ({ children }) => {
       }
     } catch (err) {
       localStorage.removeItem("token");
+      fetchSheets();
       setIsUserAdmin(false);
       setIsUserLoggedIn(false);
       setToken(null);
@@ -96,7 +93,11 @@ export const GlobalContextProvider = ({ children }) => {
     setLoading(false);
   };
   useEffect(() => {
-    validateUserSession();
+    if (!localStorage.getItem("token")) {
+      fetchSheets();
+    } else {
+      validateUserSession();
+    }
   }, []);
   console.log(sheets);
   return (
