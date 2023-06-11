@@ -150,7 +150,7 @@ export function Navbar({ links }) {
           {globalCtx.isUserLoggedIn && (
             <UserMenu
               onLogout={() => {
-                navigate("/");
+                navigate("/login");
                 globalCtx.setIsUserLoggedIn(false);
                 globalCtx.setToken(null);
                 globalCtx.setUser(null);

@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export default function AllSheets() {
   const { sheets, user } = useContext(globalContext);
   const navigate = useNavigate();
-  if (window.location.pathname !== "/allsheets") {
+  if (window.location.pathname === "/login") {
     navigate("/allsheets");
   }
   // console.log(sheets);

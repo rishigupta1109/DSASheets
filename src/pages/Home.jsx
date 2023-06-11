@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { SheetCard } from "../Components/SheetCard/SheetCard";
 import { Button, Container, Grid, Title } from "@mantine/core";
 import globalContext from "../Components/Context/GlobalContext";
@@ -10,9 +10,11 @@ export default function Home() {
     return sheet?.completed > 0;
   });
   const navigate = useNavigate();
-  if (window.location.pathname !== "/") {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (window.location.pathname === "/login") {
+      navigate("/");
+    }
+  }, []);
   console.log(sheets);
   return (
     <Container

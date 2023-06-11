@@ -72,22 +72,6 @@ const routerAdmin = createBrowserRouter([
     ),
   },
   {
-    path: "/login",
-    element: (
-      <Layout>
-        <AuthenticationForm />
-      </Layout>
-    ),
-  },
-  {
-    path: "/register",
-    element: (
-      <Layout>
-        <AuthenticationForm />
-      </Layout>
-    ),
-  },
-  {
     path: "/friends",
     element: (
       <Layout>
