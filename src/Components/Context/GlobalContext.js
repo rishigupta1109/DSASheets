@@ -36,19 +36,7 @@ export const GlobalContextProvider = ({ children }) => {
       const res = await getSheet(user?.userId);
       const data = res?.data;
       console.log(data.sheets);
-      setSheets(
-        data?.sheets?.sort((a, b) => {
-          let completeda =
-            a?.questions?.filter((question) => question.isCompleted)?.length ||
-            0;
-          let remaininga = a?.questions?.length - completeda;
-          let completedb =
-            b?.questions?.filter((question) => question.isCompleted)?.length ||
-            0;
-          let remainingb = b?.questions?.length - completedb;
-          return remainingb - remaininga;
-        })
-      );
+      setSheets(data?.sheets);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -67,19 +55,7 @@ export const GlobalContextProvider = ({ children }) => {
         setIsUserLoggedIn(true);
         setToken(res.data.token);
         setUser(res.data);
-        setSheets(
-          res.data?.sheets?.sort((a, b) => {
-            let completeda =
-              a?.questions?.filter((question) => question.isCompleted)
-                ?.length || 0;
-            let remaininga = a?.questions?.length - completeda;
-            let completedb =
-              b?.questions?.filter((question) => question.isCompleted)
-                ?.length || 0;
-            let remainingb = b?.questions?.length - completedb;
-            return remainingb - remaininga;
-          })
-        );
+        setSheets(res.data?.sheets);
       }
     } catch (err) {
       localStorage.removeItem("token");

@@ -8,7 +8,7 @@ import {
   ThemeIcon,
   Title,
 } from "@mantine/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import QuestionTable from "../Components/UI/Table/Table";
 import { useNavigate, useParams } from "react-router-dom";
 import globalContext from "../Components/Context/GlobalContext";
@@ -18,11 +18,13 @@ import {
   IconCheck,
 } from "@tabler/icons-react";
 import { BackBtn } from "../Components/UI/BackBtn";
+import { customisedNotification, getQuestions } from "../Services";
 
 export const Questions = () => {
   const { sheet_id, topic_id } = useParams();
   // console.log(sheet_id, topic_id);
   const { sheets } = useContext(globalContext);
+  const [questions, setQuestions] = useState([]);
   const [mode, setMode] = useState("0");
   const [showBookmarked, setShowBookmarked] = useState(false);
   const sheet = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
@@ -32,10 +34,8 @@ export const Questions = () => {
   if (sheets?.length > 0 && !topic) {
     navigate("/");
   }
-  let data = sheet?.questions.filter((question) =>
-    question?.topicId?.includes(topic_id)
-  );
-  const { user } = useContext(globalContext);
+  let data = questions;
+  const { user, setLoading } = useContext(globalContext);
   if (mode === "1") {
     data = data?.filter((question) => question?.isCompleted);
     console.log(data);
@@ -72,6 +72,58 @@ export const Questions = () => {
   }
 
   const total = data?.length;
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      setLoading(true);
+      try {
+        const res = await getQuestions(topic_id);
+        setQuestions(res.data.questions);
+        console.log(res.data.questions);
+      } catch (err) {
+        console.log(err);
+        customisedNotification("error", "Something went wrong");
+      }
+      setLoading(false);
+    };
+    fetchQuestions();
+    if (window.location.pathname === "/login") {
+      navigate("/sheet/" + sheet_id + "/" + topic_id + "/questions");
+    }
+  }, []);
+  const toggleBookmark = async (id) => {
+    setQuestions((prev) => {
+      return prev.map((question) => {
+        if (question._id === id) {
+          return { ...question, bookmarked: !question.bookmarked };
+        }
+        return question;
+      });
+    });
+  };
+  const toggleCompleted = async (id) => {
+    setQuestions((prev) => {
+      return prev.map((question) => {
+        if (question._id === id) {
+          return {
+            ...question,
+            isCompleted: !question.isCompleted,
+            completedAt: new Date(),
+          };
+        }
+        return question;
+      });
+    });
+  };
+  const toggleRevisited = async (id) => {
+    setQuestions((prev) => {
+      return prev.map((question) => {
+        if (question._id === id) {
+          return { ...question, revisited: !question.revisited };
+        }
+        return question;
+      });
+    });
+  };
   return (
     <Container
       fluid
@@ -221,7 +273,12 @@ export const Questions = () => {
             }
           </Button>
         </div>
-        <QuestionTable questionData={data} mode={mode} />
+        <QuestionTable
+          questionData={data}
+          mode={mode}
+          toggle={mode === "0" ? toggleCompleted : toggleRevisited}
+          toggleBookmarked={toggleBookmark}
+        />
       </div>
     </Container>
   );

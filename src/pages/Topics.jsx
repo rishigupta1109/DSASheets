@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SheetCard } from "../Components/SheetCard/SheetCard";
 import {
   Center,
@@ -13,21 +13,48 @@ import { useNavigate, useParams } from "react-router-dom";
 import globalContext from "../Components/Context/GlobalContext";
 import { IconCheck } from "@tabler/icons-react";
 import { BackBtn } from "../Components/UI/BackBtn";
+import { customisedNotification, getTopic } from "../Services";
 export default function Topics() {
   let { sheet_id } = useParams();
-  const { sheets, user } = useContext(globalContext);
-  const sheetExists = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
-  const topics = sheets?.filter((sheet) => sheet._id === sheet_id)[0]?.topics;
-  // console.log(topics);
-  const completed = sheets
-    ?.filter((sheet) => sheet._id === sheet_id)[0]
-    ?.questions?.filter((question) => question?.isCompleted)?.length;
-  const total = sheets?.filter((sheet) => sheet._id === sheet_id)[0]?.questions
-    ?.length;
+  const { sheets, setLoading } = useContext(globalContext);
+  const [topics, setTopics] = useState([]);
+  // const sheetExists = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
+  // const topics = sheets?.filter((sheet) => sheet._id === sheet_id)[0]?.topics;
+  // // console.log(topics);
+  // const completed = sheets
+  //   ?.filter((sheet) => sheet._id === sheet_id)[0]
+  //   ?.questions?.filter((question) => question?.isCompleted)?.length;
+  // const total = sheets?.filter((sheet) => sheet._id === sheet_id)[0]?.questions
+  //   ?.length;
+  // const navigate = useNavigate();
+  const completed =
+    sheets?.find((s) => {
+      return s._id === sheet_id;
+    })?.completed || 0;
+  const total =
+    sheets?.find((s) => {
+      return s._id === sheet_id;
+    })?.questions || 0;
+  // console.log(sheets);
+  console.log(topics);
   const navigate = useNavigate();
   useEffect(() => {
-    if (!sheetExists && sheets.length > 0) {
-      navigate("/");
+    const fetchTopics = async () => {
+      setLoading(true);
+      try {
+        const res = await getTopic(sheet_id);
+        setTopics(res.data.topics);
+        console.log(res.data.topics);
+      } catch (err) {
+        console.log(err);
+        customisedNotification("error", "Something went wrong");
+      }
+
+      setLoading(false);
+    };
+    fetchTopics();
+    if (window.location.pathname === "/login") {
+      navigate("/sheet/" + sheet_id);
     }
   }, []);
 
@@ -122,34 +149,11 @@ export default function Topics() {
       >
         {topics?.length > 0 &&
           topics?.map((topic) => {
-            const sheet = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
-            const completed = sheet?.questions?.filter(
-              (question) =>
-                question?.isCompleted && question?.topicId?.includes(topic?._id)
-            ).length;
-            const total = sheet?.questions?.filter((ques) =>
-              ques?.topicId?.includes(topic?._id)
-            )?.length;
-            const toRevisit = sheet?.questions?.filter((ques) => {
-              if (!ques?.topicId?.includes(topic?._id)) return false;
-              if (!ques?.isCompleted) return false;
-              const date = new Date(ques?.completedAt);
-              const today = new Date();
-              const revisitDays = user?.revisitDays || 0;
+            const completedTopic = topic?.completedQuestions || 0;
+            const totalTopic = topic?.questions || 0;
 
-              if (
-                today.getTime() - date.getTime() >=
-                revisitDays * 24 * 60 * 60 * 1000
-              ) {
-                return ques;
-              }
-            });
-            const revisited = sheet?.questions?.filter(
-              (question) =>
-                question.topicId.includes(topic?._id) &&
-                question.revisited &&
-                question.isCompleted
-            )?.length;
+            const toRevisit = topic?.toRevisit || 0;
+            console.log(topic);
             return (
               <Grid.Col
                 key={topic?._id}
@@ -162,12 +166,11 @@ export default function Topics() {
               >
                 <SheetCard
                   link={topic?._id + "/questions"}
-                  completed={completed}
+                  completed={completedTopic}
                   title={topic?.name}
-                  started={completed > 0}
-                  total={total}
-                  toRevisit={toRevisit?.length}
-                  revisited={revisited}
+                  started={completedTopic > 0}
+                  total={totalTopic}
+                  toRevisit={toRevisit}
                 />
               </Grid.Col>
             );

@@ -141,7 +141,11 @@ const deleteTopic = async (topicId) => {
   return data;
 };
 const getTopic = async (sheetId) => {
-  const data = await axios.get("api/data/topic/" + sheetId);
+  const data = await axios.get("api/data/topics/" + sheetId, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
   return data;
 };
 const createQuestion = async (body) => {
@@ -154,11 +158,10 @@ const createQuestion = async (body) => {
   });
   return data;
 };
-const getQuestions = async (topicId, userId) => {
-  const data = await axios.get("api/data/question/", {
-    params: {
-      topicId: topicId,
-      userId: userId,
+const getQuestions = async (topicId) => {
+  const data = await axios.get("api/data/questions/" + topicId, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
   return data;

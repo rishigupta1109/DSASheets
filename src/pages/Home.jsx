@@ -2,16 +2,17 @@ import React, { useContext } from "react";
 import { SheetCard } from "../Components/SheetCard/SheetCard";
 import { Button, Container, Grid, Title } from "@mantine/core";
 import globalContext from "../Components/Context/GlobalContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Home() {
   const { sheets, user } = useContext(globalContext);
   const startedSheets = sheets.filter((sheet) => {
-    let completed =
-      sheet?.questions?.filter((question) => question.isCompleted)?.length || 0;
-    return completed > 0;
+    return sheet?.completed > 0;
   });
-
+  const navigate = useNavigate();
+  if (window.location.pathname !== "/") {
+    navigate("/");
+  }
   console.log(sheets);
   return (
     <Container
@@ -69,25 +70,9 @@ export default function Home() {
         )}
         {startedSheets.length > 0 &&
           startedSheets.map((sheet) => {
-            let completed =
-              sheet?.questions?.filter((question) => question.isCompleted)
-                ?.length || 0;
-            const toRevisit = sheet?.questions?.filter((ques) => {
-              if (!ques?.isCompleted) return false;
-              const date = new Date(ques?.completedAt);
-              const today = new Date();
-              const revisitDays = user?.revisitDays || 0;
+            let completed = sheet?.completed || 0;
+            const toRevisit = sheet?.toRevisit?.length;
 
-              if (
-                today.getTime() - date.getTime() >=
-                revisitDays * 24 * 60 * 60 * 1000
-              ) {
-                return ques;
-              }
-            });
-            const revisited = sheet?.questions?.filter(
-              (question) => question.revisited && question.isCompleted
-            )?.length;
             return (
               <Grid.Col
                 xxs={9}
@@ -100,13 +85,12 @@ export default function Home() {
               >
                 <SheetCard
                   link={`/sheet/${sheet._id}`}
-                  total={sheet?.questions?.length}
+                  total={sheet?.questions}
                   description={sheet.description}
                   title={sheet.title}
                   completed={completed}
                   started={completed > 0}
-                  toRevisit={toRevisit?.length}
-                  revisited={revisited}
+                  toRevisit={toRevisit}
                 />
               </Grid.Col>
             );

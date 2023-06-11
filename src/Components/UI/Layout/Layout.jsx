@@ -15,14 +15,6 @@ import { Footer } from "../Navbar/Footer";
 export default function Layout({ children }) {
   const linkGuest = [
     {
-      label: "Home",
-      link: "/",
-    },
-    {
-      label: "All Sheets",
-      link: "/allsheets",
-    },
-    {
       label: "Login",
       link: "/login",
     },
@@ -82,19 +74,7 @@ export default function Layout({ children }) {
     let quesCompletedToday = 0;
 
     globalCtx?.sheets?.forEach((sheet) => {
-      sheet?.questions?.forEach((question) => {
-        if (!question?.isCompleted) return;
-        const date = new Date(question?.completedAt);
-        const today = new Date();
-        // console.log(date, today);
-        if (
-          date.getDate() === today.getDate() &&
-          date.getMonth() === today.getMonth() &&
-          date.getFullYear() === today.getFullYear()
-        ) {
-          quesCompletedToday += 1;
-        }
-      });
+      quesCompletedToday += sheet?.completedToday?.length || 0;
     });
     setQuesCompleted(quesCompletedToday);
     console.log(quesCompletedToday, dailyGoalQues);

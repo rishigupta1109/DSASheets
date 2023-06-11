@@ -19,7 +19,6 @@ export function SheetCard({
   started,
   link,
   toRevisit,
-  revisited,
 }) {
   const navigate = useNavigate();
   const { colorScheme } = useMantineColorScheme();
@@ -82,14 +81,14 @@ export function SheetCard({
               Well Done!
             </Badge>
           )}
-          {toRevisit > 0 && toRevisit !== revisited && (
+          {toRevisit > 0 && (
             <Badge
               bg={"red"}
               sx={{
                 color: "white",
               }}
             >
-              {toRevisit - revisited} to Revisit!
+              {toRevisit} to Revisit!
             </Badge>
           )}
         </Group>

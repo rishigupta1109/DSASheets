@@ -206,40 +206,6 @@ const routerUser = createBrowserRouter([
 ]);
 const routerGuest = createBrowserRouter([
   {
-    path: "/",
-    element: (
-      <Layout>
-        {" "}
-        <Home />
-      </Layout>
-    ),
-  },
-  {
-    path: "/sheet/:sheet_id",
-    element: (
-      <Layout>
-        <Topics />
-      </Layout>
-    ),
-  },
-  {
-    path: "/sheet/:sheet_id/:topic_id/questions",
-    element: (
-      <Layout>
-        <Questions />
-      </Layout>
-    ),
-  },
-  {
-    path: "/allsheets",
-    element: (
-      <Layout>
-        <AllSheets />
-      </Layout>
-    ),
-  },
-
-  {
     path: "/login",
     element: (
       <Layout>
@@ -259,7 +225,7 @@ const routerGuest = createBrowserRouter([
     path: "/*",
     element: (
       <Layout>
-        <Navigate to={"/"} replace={true} />
+        <Navigate to={"/login"} replace={true} />
       </Layout>
     ),
   },

@@ -60,7 +60,14 @@ function filterData(data, search) {
   );
 }
 
-export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
+export default function CustomTable({
+  questionData,
+  onEdit,
+  onDelete,
+  mode,
+  toggle,
+  toggleBookmarked,
+}) {
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
   const { classes, cx } = useStyles();
@@ -81,52 +88,13 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
         "warning"
       );
     if (user) {
-      const newSheets = sheets.map((sheet) => {
-        if (sheet?._id === sheet_id) {
-          const newQuestions = sheet?.questions?.map((question) => {
-            if (question?._id === id) {
-              return {
-                ...question,
-                isCompleted: !question?.isCompleted,
-                completedAt: new Date(),
-              };
-            }
-            return question;
-          });
-          return {
-            ...sheet,
-            questions: newQuestions,
-          };
-        }
-
-        return sheet;
-      });
-      setSheets(newSheets);
+      toggle(id);
       try {
         console.log({ id, user, topic_id, sheet_id });
         const res = await createProgress(id, user?.userId, topic_id, sheet_id);
         console.log({ res });
       } catch (e) {
-        const newSheets = sheets.map((sheet) => {
-          if (sheet?._id === sheet_id) {
-            const newQuestions = sheet?.questions?.map((question) => {
-              if (question?._id === id) {
-                return {
-                  ...question,
-                  isCompleted: !question.isCompleted,
-                };
-              }
-              return question;
-            });
-            return {
-              ...sheet,
-              questions: newQuestions,
-            };
-          }
-
-          return sheet;
-        });
-        setSheets(newSheets);
+        toggle(id);
         customisedNotification("Error", "Something went wrong");
       }
     }
@@ -140,52 +108,13 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
         "warning"
       );
     if (user) {
-      const newSheets = sheets?.map((sheet) => {
-        if (sheet?._id === sheet_id) {
-          const newQuestions = sheet?.questions?.map((question) => {
-            if (question?._id === id) {
-              if (question?.revisited === undefined) question.revisited = false;
-              return {
-                ...question,
-                revisited: !question?.revisited,
-              };
-            }
-            return question;
-          });
-          return {
-            ...sheet,
-            questions: newQuestions,
-          };
-        }
-
-        return sheet;
-      });
-      setSheets(newSheets);
+      toggle(id);
       try {
         console.log({ id, user, topic_id, sheet_id });
         const res = await toggleRevisited(id, user?.userId, topic_id, sheet_id);
         console.log({ res });
       } catch (e) {
-        const newSheets = sheets?.map((sheet) => {
-          if (sheet?._id === sheet_id) {
-            const newQuestions = sheet?.questions?.map((question) => {
-              if (question?._id === id) {
-                return {
-                  ...question,
-                  isRevisited: !question?.isRevisited,
-                };
-              }
-              return question;
-            });
-            return {
-              ...sheet,
-              questions: newQuestions,
-            };
-          }
-
-          return sheet;
-        });
-        setSheets(newSheets);
+        toggle(id);
         customisedNotification("Error", "Something went wrong");
       }
     }
@@ -210,50 +139,13 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
   };
   const toggleBookmarkHandler = async (id) => {
     try {
-      const mod = sheets?.map((sheet) => {
-        if (sheet?._id === sheet_id) {
-          const newQuestions = sheet?.questions?.map((question) => {
-            if (question?._id === id) {
-              return {
-                ...question,
-                bookmarked: !question?.bookmarked,
-              };
-            }
-            return question;
-          });
-          return {
-            ...sheet,
-            questions: newQuestions,
-          };
-        }
-
-        return sheet;
-      });
-      setSheets(mod);
+      toggleBookmarked(id);
       const res = await toggleBookmark(id, user?.userId, topic_id, sheet_id);
       console.log({ res });
     } catch (err) {
       console.log({ err });
-      const mod = sheets?.map((sheet) => {
-        if (sheet?._id === sheet_id) {
-          const newQuestions = sheet?.questions?.map((question) => {
-            if (question?._id === id) {
-              return {
-                ...question,
-                bookmarked: !question?.bookmarked,
-              };
-            }
-            return question;
-          });
-          return {
-            ...sheet,
-            questions: newQuestions,
-          };
-        }
 
-        return sheet;
-      });
-      setSheets(mod);
+      toggleBookmark(id);
       customisedNotification("Error", "Something went wrong");
     }
   };
