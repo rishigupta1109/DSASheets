@@ -69,9 +69,7 @@ export const GlobalContextProvider = ({ children }) => {
     setLoading(false);
   };
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      fetchSheets();
-    } else {
+    if (localStorage.getItem("token")) {
       validateUserSession();
     }
   }, []);
