@@ -7,6 +7,7 @@ import {
   Group,
   ActionIcon,
   useMantineColorScheme,
+  Tooltip,
 } from "@mantine/core";
 // import { MantineLogo } from "@mantine/ds";
 // import { IconUpload } from "@tabler/icons-react";
@@ -50,6 +51,7 @@ export function SheetCard({
               ? "#00ff8936"
               : "#05bdf942"
             : "#2a2a2a",
+          overflow: "visible",
         }}
         withBorder
         padding="lg"
@@ -102,10 +104,21 @@ export function SheetCard({
             </Badge>
           )}
         </Group>
-
-        <Text fz="lg" fw={700} mt="md" color={dark ? "white" : "black"}>
-          {title.toUpperCase()}
-        </Text>
+        <Tooltip label={title.toUpperCase()}>
+          <Text
+            fz="lg"
+            fw={700}
+            mt="md"
+            color={dark ? "white" : "black"}
+            sx={{
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {title.toUpperCase()}
+          </Text>
+        </Tooltip>
         <Text fz="sm" mt={4} c="dimmed" weight={500}>
           {description}
         </Text>

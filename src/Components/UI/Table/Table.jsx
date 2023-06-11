@@ -13,6 +13,8 @@ import leetcode from "../../../Images/LeetCode_logo_black.png";
 import CN from "../../../Images/download-removebg-preview.png";
 import gfg from "../../../Images/gfg_200x200-min.png";
 import spoj from "../../../Images/B1rm7i-y_400x400-removebg-preview.png";
+import yt from "../../../Images/yt.png";
+import tuf from "../../../Images/tuf.png";
 import { keys } from "@mantine/utils";
 import { useDisclosure } from "@mantine/hooks";
 import CreateNoteModal from "./CreateNoteModal";
@@ -157,6 +159,10 @@ export default function CustomTable({
       return <img src={CN} height={30} />;
     } else if (link?.includes("spoj")) {
       return <img src={spoj} height={30} />;
+    } else if (link?.includes("you")) {
+      return <img src={yt} height={30} />;
+    } else if (link?.includes("take")) {
+      return <img src={tuf} height={30} />;
     }
     return <IconLink height={30} />;
   };
