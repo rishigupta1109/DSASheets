@@ -231,6 +231,7 @@ export const Questions = () => {
             gap: "1rem",
             alignItems: "center",
             justifyContent: "space-between",
+            overflow: "auto",
           }}
         >
           <SegmentedControl
