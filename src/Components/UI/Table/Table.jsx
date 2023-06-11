@@ -79,7 +79,7 @@ export default function CustomTable({
   const [selection, setSelection] = useState(["1"]);
   const { sheets, setSheets, user } = useContext(globalContext);
   const { topic_id, sheet_id } = useParams();
-  const toggleRow = async (id) => {
+  const toggleRow = async (id, checked) => {
     console.log({ id });
     if (!user)
       return customisedNotification(
@@ -92,16 +92,20 @@ export default function CustomTable({
       setSheets((prev) => {
         return prev?.map((sheet) => {
           if (sheet._id === sheet_id) {
-            if (sheet.completedToday.includes(id)) {
+            if (sheet.completedToday.includes(id) && checked) {
               return {
                 ...sheet,
+
+                completed: sheet.completed - 1,
                 completedToday: sheet.completedToday.filter(
                   (ques) => ques !== id
                 ),
               };
-            } else {
+            } else if (!checked) {
               return {
                 ...sheet,
+
+                completed: sheet.completed + 1,
                 completedToday: [...sheet.completedToday, id],
               };
             }
@@ -118,16 +122,19 @@ export default function CustomTable({
         setSheets((prev) => {
           return prev?.map((sheet) => {
             if (sheet._id === sheet_id) {
-              if (sheet.completedToday.includes(id)) {
+              if (sheet.completedToday.includes(id) && checked) {
                 return {
                   ...sheet,
+                  completed: sheet.completed - 1,
                   completedToday: sheet.completedToday.filter(
                     (ques) => ques !== id
                   ),
                 };
-              } else {
+              } else if (!checked) {
                 return {
                   ...sheet,
+
+                  completed: sheet.completed + 1,
                   completedToday: [...sheet.completedToday, id],
                 };
               }
@@ -207,7 +214,7 @@ export default function CustomTable({
                 : item?.revisited || false
             }
             onChange={() => {
-              if (mode === "0") toggleRow(item._id);
+              if (mode === "0") toggleRow(item._id, item?.isCompleted);
               else toggleRevisitedHandler(item._id);
             }}
             transitionDuration={1}
