@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SheetCard } from "../Components/SheetCard/SheetCard";
 import {
   Button,
@@ -14,15 +14,35 @@ import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import FormModal from "../Components/UI/Admin/FormModal";
 import globalContext from "../Components/Context/GlobalContext";
-import { createTopic, customisedNotification, deleteSheet } from "../Services";
+import {
+  createTopic,
+  customisedNotification,
+  deleteSheet,
+  getTopic,
+} from "../Services";
 import { modals } from "@mantine/modals";
 export default function EditTopics() {
   let { sheet_id } = useParams();
   const [opened, { open, close }] = useDisclosure(false);
-  const { setSheets, user, sheets } = useContext(globalContext);
-  const topics = sheets?.filter((sheet) => sheet._id === sheet_id)[0]?.topics;
+  const { setSheets, sheets, setLoading } = useContext(globalContext);
+  const [topics, setTopics] = useState([]);
   const navigate = useNavigate();
+  useEffect(() => {
+    const fetchTopics = async () => {
+      setLoading(true);
+      try {
+        const res = await getTopic(sheet_id);
+        setTopics(res.data.topics);
+        console.log(res.data.topics);
+      } catch (err) {
+        console.log(err);
+        customisedNotification("error", "Something went wrong");
+      }
 
+      setLoading(false);
+    };
+    fetchTopics();
+  }, []);
   const form = useForm({
     initialValues: {
       title: "",
@@ -39,6 +59,7 @@ export default function EditTopics() {
       return;
     }
     try {
+      setLoading(true);
       const res = await createTopic(form.values.title, sheet_id);
       customisedNotification(
         "success",
@@ -47,6 +68,7 @@ export default function EditTopics() {
       );
       form.reset();
       console.log({ res });
+      window.location.reload();
       setSheets((prev) => {
         return prev?.map((sheet) => {
           if (sheet?._id === sheet_id) {
@@ -60,6 +82,7 @@ export default function EditTopics() {
       customisedNotification("error", "Something went wrong");
       console.log(err);
     }
+    setLoading(false);
   };
 
   const formHTML = (
@@ -85,6 +108,7 @@ export default function EditTopics() {
   );
   const deleteSheetHandler = async () => {
     try {
+      setLoading(true);
       const res = await deleteSheet(sheet_id);
       console.log({ res });
       customisedNotification(
@@ -98,6 +122,7 @@ export default function EditTopics() {
       customisedNotification("error", "Something went wrong");
       console.log(err);
     }
+    setLoading(false);
   };
   return (
     <Container
@@ -108,6 +133,7 @@ export default function EditTopics() {
         gap: "1rem",
         alignItems: "center",
         flexWrap: "wrap",
+        minHeight: "80vh",
       }}
     >
       <Title align="center">Edit Topics</Title>
@@ -162,13 +188,9 @@ export default function EditTopics() {
         {topics?.length > 0 &&
           topics?.map((topic) => {
             const sheet = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
-            const completed = sheet?.questions?.filter(
-              (question) =>
-                question?.isCompleted && question?.topicId?.includes(topic?._id)
-            ).length;
-            const total = sheet?.questions?.filter((ques) =>
-              ques?.topicId?.includes(topic?._id)
-            )?.length;
+            const completed = topic?.completedQuestions;
+            const total = topic?.questions;
+            console.log({ topic });
             return (
               <Grid.Col
                 key={topic?._id}

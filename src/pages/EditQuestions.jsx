@@ -20,18 +20,30 @@ import {
   createQuestion,
   customisedNotification,
   deleteTopic,
+  getQuestions,
 } from "../Services";
 export const EditQuestions = () => {
   const { sheet_id, topic_id } = useParams();
   // console.log(sheet_id, topic_id);
-  const { sheets, setSheets } = useContext(globalContext);
-
-  const sheet = sheets?.filter((sheet) => sheet._id === sheet_id)[0];
-  const topic = sheet?.topics?.filter((topic) => topic._id === topic_id)[0];
+  const { sheets, setSheets, setLoading } = useContext(globalContext);
+  const [questions, setQuestions] = useState([]);
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      setLoading(true);
+      try {
+        const res = await getQuestions(topic_id);
+        setQuestions(res.data.questions);
+        console.log(res.data.questions);
+      } catch (err) {
+        console.log(err);
+        customisedNotification("error", "Something went wrong");
+      }
+      setLoading(false);
+    };
+    fetchQuestions();
+  }, []);
   // console.log(sheet, topic);
-  const data = sheet?.questions?.filter((question) =>
-    question?.topicId?.includes(topic_id)
-  );
+  const data = questions;
 
   const navigate = useNavigate();
   // console.log(data);
@@ -78,19 +90,25 @@ export const EditQuestions = () => {
   }, [selectedQuestion, sheets]);
   const createMultipleQuestionsHandler = async () => {
     const { data } = form2.values;
-    let questions = JSON.parse(data);
-    console.log(questions);
-    if (!Array.isArray(questions)) {
+    let ques;
+    try {
+      ques = JSON.parse(data);
+    } catch (err) {
+      console.log(err);
+      return customisedNotification("error", "Invalid JSON");
+    }
+    console.log(ques);
+    if (!Array.isArray(ques)) {
       customisedNotification("error", "Invalid JSON");
       form2.setErrors({ data: "Invalid JSON" });
       return;
-    } else if (questions.length === 0) {
-      customisedNotification("error", "No questions found");
-      form2.setErrors({ data: "No questions found" });
+    } else if (ques.length === 0) {
+      customisedNotification("error", "No ques found");
+      form2.setErrors({ data: "No ques found" });
       return;
     }
     let hasError = false;
-    questions.forEach((question) => {
+    ques.forEach((question) => {
       if (!question.title || !question.links || !question.links[0]) {
         hasError = true;
       }
@@ -100,21 +118,15 @@ export const EditQuestions = () => {
       form2.setErrors({ data: "Invalid JSON" });
       return;
     }
-    questions = questions.map((question) => {
+    ques = ques.map((question) => {
       return { ...question, topicId: [topic_id] };
     });
 
     try {
-      const res = await createMultipleQuestion(questions);
+      setLoading(true);
+      const res = await createMultipleQuestion(ques);
       console.log(res);
-      setSheets((prev) => {
-        const newSheets = [...prev];
-        const sheetIndex = newSheets.findIndex(
-          (sheet) => sheet._id === sheet_id
-        );
-        newSheets[sheetIndex].questions.push(...res.data.createdQuestions);
-        return newSheets;
-      });
+      setQuestions((prev) => [...prev, ...ques]);
 
       customisedNotification(
         "success",
@@ -125,13 +137,14 @@ export const EditQuestions = () => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
   const formHTMLMultiple = (
     <form>
       <Stack>
         <JsonInput
           label="Write in JSON format"
-          placeholder="Textarea will autosize to fit the content"
+          placeholder="Format : [{'title': 'title', 'links': ['link1', 'link2']}]"
           validationError="Invalid JSON"
           formatOnBlur
           autosize
@@ -163,18 +176,14 @@ export const EditQuestions = () => {
       topicId: [topic_id],
     };
     try {
+      setLoading(true);
       const res = await createQuestion(question);
       console.log(res);
       question.isCompleted = false;
       question.notes = "";
-      setSheets((prev) => {
-        const newSheets = [...prev];
-        const sheetIndex = newSheets.findIndex(
-          (sheet) => sheet._id === sheet_id
-        );
-        newSheets[sheetIndex].questions.push(res.data);
-        return newSheets;
-      });
+      question._id = res.data.questionId;
+      window.location.reload();
+      setQuestions((prev) => [...prev, question]);
       customisedNotification(
         "success",
         "Question created successfully",
@@ -184,6 +193,7 @@ export const EditQuestions = () => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
   const formHTML = (
     <form>
@@ -255,6 +265,7 @@ export const EditQuestions = () => {
   };
   const deleteTopicHandler = async () => {
     try {
+      setLoading(true);
       const res = await deleteTopic(topic_id);
       console.log(res);
       setSheets((prev) => {
@@ -279,6 +290,7 @@ export const EditQuestions = () => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
   const openDeleteConfirm = () => {
     return modals.openConfirmModal({
@@ -298,6 +310,9 @@ export const EditQuestions = () => {
   };
   // if (!data) return <div>Loading...</div>;
 
+  const addQuestionHandler = (questions) => {
+    setQuestions((prev) => [...prev, ...questions]);
+  };
   return (
     <Container
       fluid

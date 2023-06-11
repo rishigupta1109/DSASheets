@@ -26,7 +26,7 @@ const Admin = () => {
       description: (value) => value.trim().length > 0,
     },
   });
-  const { sheets, setSheets } = useContext(globalContext);
+  const { sheets, setSheets, setLoading } = useContext(globalContext);
   const createSheetSubmitHandler = async () => {
     console.log(form);
     if (form.errors.title || form.errors.description) {
@@ -34,6 +34,7 @@ const Admin = () => {
       return;
     }
     try {
+      setLoading(true);
       const res = await createSheet(form.values);
 
       customisedNotification(
@@ -42,12 +43,26 @@ const Admin = () => {
         "success"
       );
       form.reset();
-      setSheets((prev) => [...prev, res.data]);
+      window.location.reload();
+      setSheets((prev) => [
+        ...prev,
+        {
+          title: form.values.title,
+          description: form.values.description,
+          _id: res.data.sheetId,
+          completed: 0,
+          questions: 0,
+          topics: [],
+          toRevisit: [],
+          completedToday: [],
+        },
+      ]);
       close();
     } catch (err) {
       customisedNotification("error", "Something went wrong");
       console.log(err);
     }
+    setLoading(false);
   };
   const formHTML = (
     <form>
@@ -102,6 +117,7 @@ const Admin = () => {
           gap: "1rem",
           alignItems: "center",
           flexWrap: "wrap",
+          minHeight: "80vh",
         }}
       >
         <Title align="center">Admin</Title>
@@ -127,9 +143,7 @@ const Admin = () => {
         >
           {sheets.length > 0 &&
             sheets.map((sheet) => {
-              let completed =
-                sheet?.questions?.filter((question) => question.isCompleted)
-                  ?.length || 0;
+              let completed = sheet?.completed || 0;
               return (
                 <Grid.Col
                   xxs={9}
@@ -142,7 +156,7 @@ const Admin = () => {
                 >
                   <SheetCard
                     link={`${sheet._id}`}
-                    total={sheet?.questions?.length}
+                    total={sheet?.questions}
                     description={sheet.description}
                     title={sheet.title}
                     completed={completed}
