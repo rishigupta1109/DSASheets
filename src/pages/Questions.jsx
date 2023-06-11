@@ -222,7 +222,11 @@ export const Questions = () => {
           )}
         </div>
       </div>
-      <div>
+      <div
+        style={{
+          overflow: "auto",
+        }}
+      >
         <div
           style={{
             width: "100%",
