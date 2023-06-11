@@ -14,7 +14,7 @@ import CN from "../../../Images/download-removebg-preview.png";
 import gfg from "../../../Images/gfg_200x200-min.png";
 import spoj from "../../../Images/B1rm7i-y_400x400-removebg-preview.png";
 import yt from "../../../Images/yt.png";
-import tuf from "../../../Images/tuf.png";
+import tuf from "../../../Images/tufpng.png";
 import { keys } from "@mantine/utils";
 import { useDisclosure } from "@mantine/hooks";
 import CreateNoteModal from "./CreateNoteModal";
