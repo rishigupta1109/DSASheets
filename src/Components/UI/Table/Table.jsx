@@ -7,6 +7,7 @@ import {
   rem,
   TextInput,
   Anchor,
+  useMantineColorScheme,
 } from "@mantine/core";
 import leetcode from "../../../Images/LeetCode_logo_black.png";
 import CN from "../../../Images/download-removebg-preview.png";
@@ -256,6 +257,7 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
       customisedNotification("Error", "Something went wrong");
     }
   };
+  const { colorScheme } = useMantineColorScheme();
   const rows = filteredData?.map((item) => {
     return (
       <tr
@@ -327,7 +329,11 @@ export default function CustomTable({ questionData, onEdit, onDelete, mode }) {
             cursor: "pointer",
           }}
         >
-          <IconNote />
+          {item?.notes?.trim().length > 0 ? (
+            <IconNote fill={colorScheme === "dark" ? "white" : "black"} />
+          ) : (
+            <IconNote />
+          )}
         </td>
         <td>
           {!item?.bookmarked && (
