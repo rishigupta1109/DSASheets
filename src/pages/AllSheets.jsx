@@ -8,9 +8,11 @@ import { useNavigate } from "react-router-dom";
 export default function AllSheets() {
   const { sheets, user } = useContext(globalContext);
   const navigate = useNavigate();
-  if (window.location.pathname === "/login") {
-    navigate("/allsheets");
-  }
+  useEffect(() => {
+    if (window.location.pathname === "/login") {
+      navigate("/allsheets");
+    }
+  }, [user]);
   // console.log(sheets);
   return (
     <Container
