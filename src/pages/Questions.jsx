@@ -124,6 +124,19 @@ export const Questions = () => {
       });
     });
   };
+  const saveNoteHandler = (id, content) => {
+    setQuestions((prev) => {
+      return prev.map((ques) => {
+        if (ques._id === id) {
+          return {
+            ...ques,
+            notes: content,
+          };
+        }
+        return ques;
+      });
+    });
+  };
   return (
     <Container
       fluid
@@ -136,7 +149,7 @@ export const Questions = () => {
         flexWrap: "wrap",
         justifyContent: "center",
         position: "relative",
-        minHeight: "62vh",
+        minHeight: "80vh",
         padding: "1rem",
       }}
     >
@@ -206,18 +219,18 @@ export const Questions = () => {
             </Text>
           )}
           {total === 0 && mode === "1" && !showBookmarked && (
-            <Text color="red" align="center" weight={500} italic size="xl">
-              No questions to revisit yet
+            <Text color="blue" align="center" weight={500} italic size="xl">
+              No questions to revisit
             </Text>
           )}
           {total === 0 && mode === "0" && !showBookmarked && (
-            <Text color="red" align="center" weight={500} italic size="xl">
-              No questions to show yet
+            <Text color="blue" align="center" weight={500} italic size="xl">
+              No questions to show
             </Text>
           )}
           {total === 0 && showBookmarked && (
-            <Text color="red" align="center" weight={500} italic size="xl">
-              No questions Bookmarked yet
+            <Text color="blue" align="center" weight={500} italic size="xl">
+              No questions Bookmarked
             </Text>
           )}
         </div>
@@ -230,6 +243,8 @@ export const Questions = () => {
         <div
           style={{
             width: "100%",
+            minWidth: "80vw",
+
             display: "flex",
             flexDirection: "row",
             gap: "1rem",
@@ -278,12 +293,15 @@ export const Questions = () => {
             }
           </Button>
         </div>
-        <QuestionTable
-          questionData={data}
-          mode={mode}
-          toggle={mode === "0" ? toggleCompleted : toggleRevisited}
-          toggleBookmarked={toggleBookmark}
-        />
+        {data.length > 0 && (
+          <QuestionTable
+            saveNote={saveNoteHandler}
+            questionData={data}
+            mode={mode}
+            toggle={mode === "0" ? toggleCompleted : toggleRevisited}
+            toggleBookmarked={toggleBookmark}
+          />
+        )}
       </div>
     </Container>
   );

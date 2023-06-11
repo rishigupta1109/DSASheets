@@ -56,7 +56,7 @@ export const Profile = () => {
       size={420}
       my={40}
       sx={{
-        minHeight: "62vh",
+        minHeight: "80vh",
       }}
     >
       <Title

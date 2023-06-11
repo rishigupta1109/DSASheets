@@ -31,6 +31,7 @@ export default function Topics() {
     sheets?.find((s) => {
       return s._id === sheet_id;
     })?.completed || 0;
+  console.log(sheets);
   const total =
     sheets?.find((s) => {
       return s._id === sheet_id;
@@ -62,15 +63,16 @@ export default function Topics() {
     <Container
       fluid
       sx={{
+        paddingTop: "1rem",
         width: "100%",
         display: "flex",
-        flexDirection: "row",
-        gap: "1rem",
+        flexDirection: "column",
         alignItems: "center",
         flexWrap: "wrap",
-        justifyContent: "center",
+        justifyContent: "flex-start",
+        gap: "1rem",
         position: "relative",
-        minHeight: "62vh",
+        minHeight: "80vh",
       }}
     >
       <BackBtn />

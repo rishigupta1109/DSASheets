@@ -67,6 +67,7 @@ export default function CustomTable({
   mode,
   toggle,
   toggleBookmarked,
+  saveNote,
 }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
@@ -92,19 +93,17 @@ export default function CustomTable({
       setSheets((prev) => {
         return prev?.map((sheet) => {
           if (sheet._id === sheet_id) {
-            if (sheet.completedToday.includes(id) && checked) {
+            if (checked) {
               return {
                 ...sheet,
-
                 completed: sheet.completed - 1,
-                completedToday: sheet.completedToday.filter(
-                  (ques) => ques !== id
-                ),
+                completedToday: sheet.completedToday.includes(id)
+                  ? sheet.completedToday.filter((ques) => ques !== id)
+                  : sheet.completedToday,
               };
             } else if (!checked) {
               return {
                 ...sheet,
-
                 completed: sheet.completed + 1,
                 completedToday: [...sheet.completedToday, id],
               };
@@ -119,29 +118,6 @@ export default function CustomTable({
         console.log({ res });
       } catch (e) {
         toggle(id);
-        setSheets((prev) => {
-          return prev?.map((sheet) => {
-            if (sheet._id === sheet_id) {
-              if (sheet.completedToday.includes(id) && checked) {
-                return {
-                  ...sheet,
-                  completed: sheet.completed - 1,
-                  completedToday: sheet.completedToday.filter(
-                    (ques) => ques !== id
-                  ),
-                };
-              } else if (!checked) {
-                return {
-                  ...sheet,
-
-                  completed: sheet.completed + 1,
-                  completedToday: [...sheet.completedToday, id],
-                };
-              }
-            }
-            return sheet;
-          });
-        });
         customisedNotification("Error", "Something went wrong");
       }
     }
@@ -346,26 +322,7 @@ export default function CustomTable({
         return;
       }
     }
-    const newSheets = sheets.map((sheet) => {
-      if (sheet._id === sheet_id) {
-        const newQuestions = sheet.questions.map((question) => {
-          if (question._id === questionId) {
-            return {
-              ...question,
-              notes: note,
-            };
-          }
-          return question;
-        });
-        return {
-          ...sheet,
-          questions: newQuestions,
-        };
-      }
-
-      return sheet;
-    });
-    setSheets(newSheets);
+    saveNote(questionId, note);
   };
 
   return (
@@ -395,7 +352,13 @@ export default function CustomTable({
               /> */}
             </th>
             <th>Question</th>
-            <th>Links</th>
+            <th
+              style={{
+                textAlign: "center",
+              }}
+            >
+              Links
+            </th>
             <th>Note </th>
             <th>Bookmark</th>
             {onEdit && <th>Action</th>}

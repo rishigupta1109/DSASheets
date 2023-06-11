@@ -33,6 +33,7 @@ export function SheetCard({
       onClick={() => navigate(link)}
     >
       <Card
+        variant="gradient"
         sx={{
           height: "220px",
           display: "flex",
@@ -57,7 +58,16 @@ export function SheetCard({
       >
         <Group position="apart">
           {/* <MantineLogo type="mark" size="2rem" /> */}
-          {!started && <Badge>Start Now!</Badge>}
+          {!started && (
+            <Badge
+              bg={"blue"}
+              sx={{
+                color: "white",
+              }}
+            >
+              Start Now!
+            </Badge>
+          )}
         </Group>
         <Group position="apart">
           {/* <MantineLogo type="mark" size="2rem" /> */}
@@ -93,15 +103,15 @@ export function SheetCard({
           )}
         </Group>
 
-        <Text fz="lg" fw={500} mt="md">
-          {title}
+        <Text fz="lg" fw={700} mt="md" color={dark ? "white" : "black"}>
+          {title.toUpperCase()}
         </Text>
-        <Text fz="sm" c="dimmed" mt={5}>
+        <Text fz="sm" mt={4} c="dimmed" weight={500}>
           {description}
         </Text>
 
         {started && (
-          <Text c="dimmed" fz="sm" mt="md">
+          <Text fz="sm" fw={500} mt="md">
             Questions completed:{" "}
             <Text
               span
@@ -116,7 +126,7 @@ export function SheetCard({
         )}
         {!started && (
           <Text
-            c="dimmed"
+            fw={500}
             fz="sm"
             mt="md"
             sx={{
@@ -142,7 +152,7 @@ export function SheetCard({
         {started && completed !== total && (
           <>
             <Text
-              c="dimmed"
+              fw={500}
               fz="sm"
               mt="md"
               sx={{
@@ -164,7 +174,7 @@ export function SheetCard({
               </Text>
             </Text>
 
-            <Progress value={(completed / total) * 100} mt={5} />
+            <Progress value={(completed / total) * 100} mt={5} bg={"white"} />
           </>
         )}
         {/* {toRevisit > 0 && toRevisit !== revisited && (
@@ -193,7 +203,7 @@ export function SheetCard({
         {started && completed === total && (
           <>
             <Text
-              c="dimmed"
+              fw={500}
               fz="sm"
               mt="md"
               sx={{

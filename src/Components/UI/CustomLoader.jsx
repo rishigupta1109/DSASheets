@@ -1,6 +1,8 @@
-import { Loader } from "@mantine/core";
+import { Loader, useMantineColorScheme } from "@mantine/core";
 
 function CustomLoader() {
+  const { colorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
   return (
     <div
       style={{
@@ -13,7 +15,7 @@ function CustomLoader() {
         top: 0,
         left: 0,
         zIndex: 9999,
-        background: "white",
+        background: dark ? "#1A1B1E" : "white",
       }}
     >
       <Loader size="xl" variant="bars" />

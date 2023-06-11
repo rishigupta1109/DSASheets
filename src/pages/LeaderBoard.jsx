@@ -56,7 +56,7 @@ const LeaderBoard = () => {
         alignItems: "center",
         flexWrap: "wrap",
         overflow: "auto",
-        minHeight: "62vh",
+        minHeight: "80vh",
         padding: "1rem",
       }}
     >

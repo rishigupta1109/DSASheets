@@ -237,6 +237,7 @@ function App() {
         <MantineProvider
           theme={{
             colorScheme,
+
             breakpoints: {
               xs: 0,
               sm: 768,

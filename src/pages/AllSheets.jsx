@@ -25,7 +25,7 @@ export default function AllSheets() {
         flexWrap: "wrap",
 
         padding: "1rem",
-        minHeight: "62vh",
+        minHeight: "80vh",
       }}
     >
       <Title align="center" order={1} italic>
