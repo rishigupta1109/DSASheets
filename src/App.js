@@ -29,6 +29,7 @@ import { useContext, useEffect } from "react";
 import { validateSession } from "./Services";
 import CustomLoader from "./Components/UI/CustomLoader";
 import { Profile } from "./pages/Profile";
+import { ForgotPassword } from "./pages/ResetPassword";
 const routerAdmin = createBrowserRouter([
   {
     path: "/",
@@ -202,6 +203,14 @@ const routerGuest = createBrowserRouter([
     element: (
       <Layout>
         <AuthenticationForm />
+      </Layout>
+    ),
+  },
+  {
+    path: "/forgot-password",
+    element: (
+      <Layout>
+        <ForgotPassword />
       </Layout>
     ),
   },

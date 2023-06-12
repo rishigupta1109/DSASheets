@@ -315,7 +315,23 @@ const toggleBookmark = async (questionId, userId, topicId, sheetId) => {
   );
   return data;
 };
+const ResetPassword = async (email) => {
+  const data = await axios.post("api/user/reset", {
+    email: email,
+  });
+  return data;
+};
+const ResetPasswordVerify = async (email, password, otp) => {
+  const data = await axios.post("api/user/otpverify", {
+    otp: otp,
+    email: email,
+    password: password,
+  });
+  return data;
+};
 export {
+  ResetPassword,
+  ResetPasswordVerify,
   toggleBookmark,
   toggleRevisited,
   updateUserData,

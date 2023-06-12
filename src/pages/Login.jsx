@@ -226,10 +226,28 @@ export function AuthenticationForm(props) {
                 ? "Already have an account? Login"
                 : "Don't have an account? Register"}
             </Anchor>
-            <Button type="submit" radius="xl">
-              {upperFirst(type)}
-            </Button>
+            <Anchor
+              component="button"
+              type="button"
+              color="dimmed"
+              onClick={() => {
+                navigate("/forgot-password");
+              }}
+              size="xs"
+            >
+              Forgot password?
+            </Anchor>
           </Group>
+          <Button
+            sx={{
+              width: "100%",
+              marginTop: "1rem",
+            }}
+            type="submit"
+            radius="xl"
+          >
+            {upperFirst(type)}
+          </Button>
         </form>
       </Paper>
     </Container>
