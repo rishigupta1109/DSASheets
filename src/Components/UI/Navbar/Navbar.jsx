@@ -9,10 +9,13 @@ import {
   Transition,
   rem,
   Button,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 // import { MantineLogo } from "@mantine/ds";
-import logo from "../../../Sheet Hub.png";
+import logoDark from "../../../Images/sheetcode_dark.png";
+import logoLight from "../../../Images/sheetcode_light.png";
+
 import { NavLink, useNavigate } from "react-router-dom";
 import { SegmentedToggle } from "./Toggle";
 import globalContext from "../../Context/GlobalContext";
@@ -112,6 +115,7 @@ export function Navbar({ links }) {
   const { classes, cx } = useStyles();
   const navigate = useNavigate();
   const globalCtx = useContext(globalContext);
+  const { colorScheme } = useMantineColorScheme();
   const items = links.map((link) => (
     <NavLink
       key={link.label}
@@ -136,13 +140,12 @@ export function Navbar({ links }) {
         <img
           style={{
             cursor: "pointer",
-            borderRadius: "50%",
             objectFit: "cover",
           }}
           onClick={() => navigate("/")}
-          src={logo}
+          src={colorScheme === "dark" ? logoDark : logoLight}
           alt="logo"
-          height={60}
+          height={50}
         />
         <Group spacing={5} className={classes.links}>
           {items}

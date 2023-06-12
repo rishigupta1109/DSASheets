@@ -125,7 +125,7 @@ export function AuthenticationForm(props) {
     >
       <Paper radius="md" p="xl" withBorder {...props}>
         <Text size="lg" weight={500}>
-          Welcome to SheetHub , {type} with
+          Welcome to Sheet Code , {type} with
         </Text>
         {/* 
       <Group grow mb="md" mt="md">

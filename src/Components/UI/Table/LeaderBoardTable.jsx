@@ -7,6 +7,7 @@ import {
   Group,
   ScrollArea,
   rem,
+  Title,
 } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
@@ -30,14 +31,10 @@ export function LeaderBoardTable({ data, sheet }) {
       <tr key={row.name}>
         <td>{index + 1}</td>
         <td>
-          <Anchor component="button" fz="sm">
-            {row.username}
-          </Anchor>
+          <Text fz="sm">{row.username}</Text>
         </td>
         <td>
-          <Anchor component="button" fz="sm">
-            {row.name}
-          </Anchor>
+          <Text fz="sm">{row.name}</Text>
         </td>
         {row?.sheet && <td>{row.sheet}</td>}
         {row?.questions && <td>{row.questions}</td>}

@@ -14,7 +14,10 @@ import {
   IconBrandInstagram,
 } from "@tabler/icons-react";
 // import { MantineLogo } from "@mantine/ds";
-import logo from "../../../Sheet Hub.png";
+// import logo from "../../../Sheet Hub.png";
+
+import logoDark from "../../../Images/sheetcode_dark.png";
+import logoLight from "../../../Images/sheetcode_light.png";
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -66,16 +69,12 @@ export function Footer() {
           noWrap
         >
           <img
-            src={logo}
-            height={50}
+            src={colorScheme === "dark" ? logoDark : logoLight}
+            height={60}
             style={{
               cursor: "pointer",
-              borderRadius: "50%",
             }}
           />
-          <Title order={5} weight={500}>
-            Sheet Hub
-          </Title>
         </Group>
         <Group spacing={0} className={classes.links} position="right" noWrap>
           Developed by{" "}
