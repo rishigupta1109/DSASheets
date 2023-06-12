@@ -11,9 +11,9 @@ export const BackBtn = () => {
       style={{
         cursor: "pointer",
         position: "absolute",
-        top: "0.5rem",
+        top: "1.5rem",
         left: "2rem",
-        zIndex: 100,
+        zIndex: 1,
       }}
       onClick={() => navigate(-1)}
     />
