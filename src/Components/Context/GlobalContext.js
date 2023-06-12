@@ -51,6 +51,7 @@ export const GlobalContextProvider = ({ children }) => {
       const res = await validateSession();
       if (res.status === 200) {
         // console.log(res.data);
+
         setIsUserAdmin(res.data.isAdmin);
         setIsUserLoggedIn(true);
         setToken(res.data.token);

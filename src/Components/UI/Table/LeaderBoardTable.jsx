@@ -9,6 +9,8 @@ import {
   rem,
   Title,
 } from "@mantine/core";
+import globalContext from "../../Context/GlobalContext";
+import { useContext } from "react";
 
 const useStyles = createStyles((theme) => ({
   progressBar: {
@@ -23,8 +25,12 @@ const useStyles = createStyles((theme) => ({
 export function LeaderBoardTable({ data, sheet }) {
   const { classes, theme } = useStyles();
   const specificData = !(sheet === "ALL");
+  const { sheets } = useContext(globalContext);
+
+  const sheetSelected = sheets.filter((s) => s?._id === sheet);
+  console.log({ data, sheets, sheetSelected });
   const rows = data.map((row, index) => {
-    const totalQuestions = row.questions;
+    const totalQuestions = sheetSelected[0]?.questions;
     const completed = (row.completed / totalQuestions) * 100;
     const remaining = 100 - completed;
     return (
@@ -37,9 +43,9 @@ export function LeaderBoardTable({ data, sheet }) {
           <Text fz="sm">{row.name}</Text>
         </td>
         {row?.sheet && <td>{row.sheet}</td>}
-        {row?.questions && <td>{row.questions}</td>}
+        {totalQuestions && <td>{totalQuestions}</td>}
         <td>{Intl.NumberFormat().format(row.completed)}</td>
-        {row?.questions && (
+        {totalQuestions && (
           <td>
             <Group position="apart">
               <Text fz="xs" c="teal" weight={700}>

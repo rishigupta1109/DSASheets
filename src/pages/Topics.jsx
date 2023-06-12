@@ -151,9 +151,9 @@ export default function Topics() {
       >
         {topics?.length > 0 &&
           topics?.map((topic) => {
+            console.log(topic);
             const completedTopic = topic?.completedQuestions || 0;
             const totalTopic = topic?.questions || 0;
-
             const toRevisit = topic?.toRevisit || 0;
             console.log(topic);
             return (
