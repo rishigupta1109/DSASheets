@@ -4,6 +4,7 @@ import {
   getSheet,
   validateSession,
 } from "../../Services";
+import { useNavigate } from "react-router-dom";
 
 const globalContext = React.createContext({
   user: null,
@@ -18,7 +19,7 @@ const globalContext = React.createContext({
   setSheets: () => {},
   loading: false,
   setLoading: () => {},
-  validateUserSession: () => {},
+  validateUserSession: async () => {},
 });
 
 export default globalContext;
@@ -44,7 +45,6 @@ export const GlobalContextProvider = ({ children }) => {
       console.log(err);
     }
   };
-  useEffect(() => {}, [user]);
   const validateUserSession = async () => {
     try {
       setLoading(true);

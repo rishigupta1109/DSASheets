@@ -83,8 +83,8 @@ export function AuthenticationForm(props) {
       // console.log(data?.isAdmin);
       // globalCtx.setIsUserAdmin(data?.isAdmin || false);
       window.localStorage.setItem("token", data.token);
+      await globalCtx.validateUserSession();
       navigate("/");
-      globalCtx.validateUserSession();
     } catch (err) {
       customisedNotification("Error", err?.response?.data?.message);
       console.log(err);
