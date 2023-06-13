@@ -30,6 +30,7 @@ import { validateSession } from "./Services";
 import CustomLoader from "./Components/UI/CustomLoader";
 import { Profile } from "./pages/Profile";
 import { ForgotPassword } from "./pages/ResetPassword";
+import { Analytics } from "@vercel/analytics/react";
 const routerAdmin = createBrowserRouter([
   {
     path: "/",
@@ -261,6 +262,8 @@ function App() {
         >
           <ModalsProvider>
             <Notifications position="top-right" zIndex={2077} />
+            <Analytics />
+
             {loading && <CustomLoader />}
             <RouterProvider
               router={
