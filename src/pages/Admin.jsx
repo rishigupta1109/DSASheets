@@ -28,7 +28,7 @@ const Admin = () => {
   });
   const { sheets, setSheets, setLoading } = useContext(globalContext);
   const createSheetSubmitHandler = async () => {
-    console.log(form);
+    // console.log(form);
     if (form.errors.title || form.errors.description) {
       customisedNotification("error", "Invalid form details");
       return;

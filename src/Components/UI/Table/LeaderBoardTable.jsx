@@ -28,7 +28,7 @@ export function LeaderBoardTable({ data, sheet }) {
   const { sheets } = useContext(globalContext);
 
   const sheetSelected = sheets.filter((s) => s?._id === sheet);
-  console.log({ data, sheets, sheetSelected });
+  // console.log({ data, sheets, sheetSelected });
   const rows = data.map((row, index) => {
     const totalQuestions = sheetSelected[0]?.questions;
     const completed = (row.completed / totalQuestions) * 100;

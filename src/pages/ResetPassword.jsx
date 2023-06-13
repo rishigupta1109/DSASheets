@@ -51,13 +51,13 @@ export function ForgotPassword() {
   const [otp, setOtp] = useState("");
   const [toggleOtpSection, setToggleOtpSection] = useState(false);
   const submitHandler = async () => {
-    console.log(email);
+    // console.log(email);
     if (email.trim() === "")
       return customisedNotification("error", "Email is required", "warning");
     try {
       const res = await ResetPassword(email);
       setToggleOtpSection(true);
-      console.log(res);
+      // console.log(res);
     } catch (err) {
       console.log(err);
       customisedNotification("error", "Something went wrong");
@@ -86,7 +86,7 @@ export function ForgotPassword() {
     console.log(email, password, otp);
     try {
       const res = await ResetPasswordVerify(email, password, otp);
-      console.log(res);
+      // console.log(res);
       customisedNotification(
         "success",
         "Password reset successfully",
@@ -117,7 +117,7 @@ export function ForgotPassword() {
       <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
         <TextInput
           onChange={(e) => {
-            console.log(e.target.value);
+            // console.log(e.target.value);
             setEmail(e.target.value);
           }}
           disabled={toggleOtpSection}

@@ -34,10 +34,10 @@ export function FriendsTable({ data, loading }) {
   const { classes, theme } = useStyles();
   const { user, setUser } = useContext(globalContext);
   const toggleFriendHandler = async (id) => {
-    console.log(id);
+    // console.log(id);
     try {
       const res = await toggleFriend(user?.userId, id);
-      console.log(res);
+      // console.log(res);
       if (!user?.friends.includes(id)) {
         setUser((prev) => ({
           ...prev,

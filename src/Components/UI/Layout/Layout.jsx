@@ -77,7 +77,7 @@ export default function Layout({ children }) {
       quesCompletedToday += sheet?.completedToday?.length || 0;
     });
     setQuesCompleted(quesCompletedToday);
-    console.log(quesCompletedToday, dailyGoalQues);
+    // console.log(quesCompletedToday, dailyGoalQues);
   }, [globalCtx, globalCtx.sheets]);
   const percentage = (quesCompleted / dailyGoalQues) * 100;
   // globalCtx.sheets.forEach((sheet) => {

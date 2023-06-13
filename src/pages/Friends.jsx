@@ -18,12 +18,12 @@ const Friends = () => {
     setPattern(event?.target?.value);
     if (event?.target?.value?.trim() === "") return;
     if (tout) clearTimeout(tout);
-    console.log(event.target.value);
+    // console.log(event.target.value);
     const t = setTimeout(async () => {
       try {
         setLoading(true);
         const res = await findUser(event.target.value);
-        console.log(res);
+        // console.log(res);
         setUsers(res.data.users.filter((u) => u?._id !== user?.userId));
       } catch (err) {
         customisedNotification("error", "Something went wrong");

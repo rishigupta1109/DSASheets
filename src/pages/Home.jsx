@@ -15,7 +15,7 @@ export default function Home() {
       navigate("/");
     }
   }, []);
-  console.log(sheets);
+  // console.log(sheets);
   return (
     <Container
       fluid

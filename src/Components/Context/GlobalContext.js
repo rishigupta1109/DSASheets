@@ -36,7 +36,7 @@ export const GlobalContextProvider = ({ children }) => {
       setLoading(true);
       const res = await getSheet(user?.userId);
       const data = res?.data;
-      console.log(data.sheets);
+      // console.log(data.sheets);
       setSheets(data?.sheets);
       setLoading(false);
     } catch (err) {
@@ -74,7 +74,7 @@ export const GlobalContextProvider = ({ children }) => {
       validateUserSession();
     }
   }, []);
-  console.log(sheets);
+  // console.log(sheets);
   return (
     <globalContext.Provider
       value={{

@@ -21,7 +21,7 @@ export const Profile = () => {
   const [dailyGoal, setDailyGoal] = React.useState(user?.dailyGoal || "");
   const [revisitDays, setRevisitDays] = React.useState(user?.revisitDays || "");
   const updateHandler = async () => {
-    console.log(name, dailyGoal, revisitDays);
+    // console.log(name, dailyGoal, revisitDays);
     try {
       setLoading(true);
       const res = await updateUserData(
@@ -30,7 +30,7 @@ export const Profile = () => {
         parseInt(dailyGoal),
         parseInt(revisitDays)
       );
-      console.log(res);
+      // console.log(res);
       setUser(
         (prev) =>
           (prev = {

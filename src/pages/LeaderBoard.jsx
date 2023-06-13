@@ -24,7 +24,7 @@ const LeaderBoard = () => {
       try {
         setLoading(true);
         const res = await getLeaderboard(user?.userId, sheet, duration);
-        console.log(res);
+        // console.log(res);
         const data = res?.data?.leaderboard?.map((d) => ({
           ...d,
           sheet: sheetSelected?.title,
@@ -39,7 +39,7 @@ const LeaderBoard = () => {
     }
   };
   useEffect(() => {
-    console.log(sheet, duration);
+    // console.log(sheet, duration);
     fetchData();
   }, [sheet, duration]);
 

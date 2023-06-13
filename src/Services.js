@@ -8,7 +8,7 @@ const signup = async (body) => {
   return data;
 };
 const login = async (body) => {
-  console.log(process.env.REACT_APP_SERVER_URL);
+  // console.log(process.env.REACT_APP_SERVER_URL);
   const data = await axios.post("api/user/login", body);
   return data;
 };
@@ -106,7 +106,7 @@ const deleteSheet = async (sheetId) => {
   return data;
 };
 const getSheet = async (userId) => {
-  console.log({ userId });
+  // console.log({ userId });
   const data = await axios.get("api/data/sheets/", {
     params: {
       userId: userId,

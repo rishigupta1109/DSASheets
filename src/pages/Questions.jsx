@@ -38,7 +38,7 @@ export const Questions = () => {
   const { user, setLoading } = useContext(globalContext);
   if (mode === "1") {
     data = data?.filter((question) => question?.isCompleted);
-    console.log(data);
+    // console.log(data);
     data = data?.filter((ques) => {
       const date = new Date(ques?.completedAt);
       const today = new Date();
@@ -78,7 +78,7 @@ export const Questions = () => {
       try {
         const res = await getQuestions(topic_id);
         setQuestions(res.data.questions);
-        console.log(res.data.questions);
+        // console.log(res.data.questions);
       } catch (err) {
         console.log(err);
         customisedNotification("error", "Something went wrong");
@@ -256,7 +256,7 @@ export const Questions = () => {
           <SegmentedControl
             value={mode}
             onChange={(value) => {
-              console.log(value);
+              // console.log(value);
               setMode(value);
             }}
             data={[

@@ -33,7 +33,7 @@ export const EditQuestions = () => {
       try {
         const res = await getQuestions(topic_id);
         setQuestions(res.data.questions);
-        console.log(res.data.questions);
+        // console.log(res.data.questions);
       } catch (err) {
         console.log(err);
         customisedNotification("error", "Something went wrong");
@@ -97,7 +97,7 @@ export const EditQuestions = () => {
       console.log(err);
       return customisedNotification("error", "Invalid JSON");
     }
-    console.log(ques);
+    // console.log(ques);
     if (!Array.isArray(ques)) {
       customisedNotification("error", "Invalid JSON");
       form2.setErrors({ data: "Invalid JSON" });
@@ -125,7 +125,7 @@ export const EditQuestions = () => {
     try {
       setLoading(true);
       const res = await createMultipleQuestion(ques);
-      console.log(res);
+      // console.log(res);
       setQuestions((prev) => [...prev, ...ques]);
 
       customisedNotification(
@@ -178,7 +178,7 @@ export const EditQuestions = () => {
     try {
       setLoading(true);
       const res = await createQuestion(question);
-      console.log(res);
+      // console.log(res);
       question.isCompleted = false;
       question.notes = "";
       question._id = res.data.questionId;
@@ -244,7 +244,7 @@ export const EditQuestions = () => {
   };
 
   const editHandler = (question) => {
-    console.log(question);
+    // console.log(question);
     setSelectedQuestion(question);
     open();
   };

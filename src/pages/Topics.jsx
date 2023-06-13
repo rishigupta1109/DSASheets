@@ -31,13 +31,13 @@ export default function Topics() {
     sheets?.find((s) => {
       return s._id === sheet_id;
     })?.completed || 0;
-  console.log(sheets);
+  // console.log(sheets);
   const total =
     sheets?.find((s) => {
       return s._id === sheet_id;
     })?.questions || 0;
   // console.log(sheets);
-  console.log(topics);
+  // console.log(topics);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchTopics = async () => {
@@ -45,7 +45,7 @@ export default function Topics() {
       try {
         const res = await getTopic(sheet_id);
         setTopics(res.data.topics);
-        console.log(res.data.topics);
+        // console.log(res.data.topics);
       } catch (err) {
         console.log(err);
         customisedNotification("error", "Something went wrong");
@@ -151,11 +151,11 @@ export default function Topics() {
       >
         {topics?.length > 0 &&
           topics?.map((topic) => {
-            console.log(topic);
+            // console.log(topic);
             const completedTopic = topic?.completedQuestions || 0;
             const totalTopic = topic?.questions || 0;
             const toRevisit = topic?.toRevisit || 0;
-            console.log(topic);
+            // console.log(topic);
             return (
               <Grid.Col
                 key={topic?._id}

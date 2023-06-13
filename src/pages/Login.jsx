@@ -62,7 +62,7 @@ export function AuthenticationForm(props) {
     },
   });
   const handleLogin = async () => {
-    console.log(form.values);
+    // console.log(form.values);
     try {
       globalCtx.setLoading(true);
       const res = await login({
@@ -70,7 +70,7 @@ export function AuthenticationForm(props) {
         password: form.values.password,
       });
       const data = res.data;
-      console.log(data);
+      // console.log(data);
       customisedNotification(
         "Success",
         "User logged in successfully",
@@ -92,7 +92,7 @@ export function AuthenticationForm(props) {
     globalCtx.setLoading(false);
   };
   const handleRegister = async () => {
-    console.log(form.values);
+    // console.log(form.values);
     try {
       globalCtx.setLoading(true);
       const data = await signup({
@@ -108,7 +108,7 @@ export function AuthenticationForm(props) {
       );
       form.reset();
       navigate("/login");
-      console.log(data);
+      // console.log(data);
     } catch (err) {
       customisedNotification("Error", err?.response?.data?.message);
       console.log(err);

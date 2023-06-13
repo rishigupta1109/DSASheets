@@ -54,7 +54,7 @@ const useStyles = createStyles((theme) => ({
 
 function filterData(data, search) {
   const query = search?.toLowerCase().trim();
-  console.log({ data });
+  // console.log({ data });
   return data?.filter((item) =>
     keys(data[0])?.some((key) =>
       String(item[key])?.toLowerCase()?.includes(query)
@@ -83,7 +83,7 @@ export default function CustomTable({
   const { sheets, setSheets, user } = useContext(globalContext);
   const { topic_id, sheet_id } = useParams();
   const toggleRow = async (id, checked) => {
-    console.log({ id });
+    // console.log({ id });
     if (!user)
       return customisedNotification(
         "Error",
@@ -115,9 +115,9 @@ export default function CustomTable({
         });
       });
       try {
-        console.log({ id, user, topic_id, sheet_id });
+        // console.log({ id, user, topic_id, sheet_id });
         const res = await createProgress(id, user?.userId, topic_id, sheet_id);
-        console.log({ res });
+        // console.log({ res });
       } catch (e) {
         toggle(id);
         customisedNotification("Error", "Something went wrong");
@@ -125,7 +125,7 @@ export default function CustomTable({
     }
   };
   const toggleRevisitedHandler = async (id) => {
-    console.log({ id });
+    // console.log({ id });
     if (!user)
       return customisedNotification(
         "Error",
@@ -135,9 +135,9 @@ export default function CustomTable({
     if (user) {
       toggle(id);
       try {
-        console.log({ id, user, topic_id, sheet_id });
+        // console.log({ id, user, topic_id, sheet_id });
         const res = await toggleRevisited(id, user?.userId, topic_id, sheet_id);
-        console.log({ res });
+        // console.log({ res });
       } catch (e) {
         toggle(id);
         customisedNotification("Error", "Something went wrong");
@@ -149,7 +149,7 @@ export default function CustomTable({
     setFilteredData(questionData);
     setData(questionData);
   }, [questionData]);
-  console.log({ questionData, filteredData, data });
+  // console.log({ questionData, filteredData, data });
   const getLinkType = (link) => {
     if (link?.includes("leetcode")) {
       return <img src={leetcode} height={30} />;
@@ -170,7 +170,7 @@ export default function CustomTable({
     try {
       toggleBookmarked(id);
       const res = await toggleBookmark(id, user?.userId, topic_id, sheet_id);
-      console.log({ res });
+      // console.log({ res });
     } catch (err) {
       console.log({ err });
 
@@ -243,7 +243,7 @@ export default function CustomTable({
                 "warning"
               );
             open();
-            console.log({ item });
+            // console.log({ item });
             setSelectedQuestion(item);
           }}
           style={{
@@ -314,13 +314,13 @@ export default function CustomTable({
     setSearch(value);
     setFilteredData(filterData(data, value));
   };
-  console.log({ user });
+  // console.log({ user });
   const onSaveHandler = async (note, questionId) => {
-    console.log({ user });
+    // console.log({ user });
     if (user) {
       try {
         const res = await createNote(questionId, user?.userId, note, topic_id);
-        console.log({ res });
+        // console.log({ res });
         customisedNotification("Success", res?.data?.message, "success");
       } catch (err) {
         console.log({ err });
