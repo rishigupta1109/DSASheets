@@ -19,6 +19,7 @@ import {
   createMultipleQuestion,
   createQuestion,
   customisedNotification,
+  deleteQuestion,
   deleteTopic,
   getQuestions,
 } from "../Services";
@@ -248,6 +249,30 @@ export const EditQuestions = () => {
     setSelectedQuestion(question);
     open();
   };
+  const deleteQuestionHandler = async (question) => {
+    try {
+      setLoading(true);
+      const res = await deleteQuestion(question._id, topic_id);
+      // console.log(res);
+      setQuestions((prev) => {
+        const newQuestions = [...prev];
+        const index = newQuestions.findIndex(
+          (ques) => ques._id === question._id
+        );
+        newQuestions.splice(index, 1);
+        return newQuestions;
+      });
+      customisedNotification(
+        "success",
+        "Question Deleted Successfully",
+        "success"
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
+
   const deleteHandler = (question) => {
     modals.openConfirmModal({
       title: "Are you sure",
@@ -259,7 +284,7 @@ export const EditQuestions = () => {
       ),
       labels: { confirm: "Confirm", cancel: "Cancel" },
       onCancel: () => console.log("Cancel"),
-      onConfirm: () => console.log("Confirmed"),
+      onConfirm: () => deleteQuestionHandler(question),
     });
     console.log(question);
   };

@@ -166,6 +166,18 @@ const getQuestions = async (topicId) => {
   });
   return data;
 };
+const deleteQuestion = async (questionId, topicId) => {
+  const token = localStorage.getItem("token");
+  const data = await axios.delete(
+    "api/data/questions/" + topicId + "/" + questionId,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return data;
+};
 const createMultipleQuestion = async (questions) => {
   //body={questions,topicId}
   const token = localStorage.getItem("token");
@@ -330,6 +342,7 @@ const ResetPasswordVerify = async (email, password, otp) => {
   return data;
 };
 export {
+  deleteQuestion,
   ResetPassword,
   ResetPasswordVerify,
   toggleBookmark,
