@@ -10,7 +10,7 @@ const LeaderBoard = () => {
   const [sheet, setSheet] = useState("ALL");
   const [duration, setDuration] = useState(1);
   const { colleges } = useContext(globalContext);
-  const [withs, setWith] = useState("ALL");
+  const [withs, setWith] = useState("Friends");
   const [data, setData] = useState([]);
 
   const { sheets, user, setLoading } = useContext(globalContext);
