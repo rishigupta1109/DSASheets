@@ -259,13 +259,14 @@ const toggleFriend = async (userId, friendId) => {
   );
   return data;
 };
-const getLeaderboard = async (userId, sheetId, duration) => {
+const getLeaderboard = async (userId, sheetId, duration, withs) => {
   const data = await axios.post(
     "api/user/leaderboard",
     {
       userId: userId,
       sheetId: sheetId,
       duration: duration,
+      withs: withs,
     },
     {
       headers: {
@@ -276,7 +277,13 @@ const getLeaderboard = async (userId, sheetId, duration) => {
   return data;
 };
 
-const updateUserData = async (userId, name, dailyGoal, revisitDays) => {
+const updateUserData = async (
+  userId,
+  name,
+  dailyGoal,
+  revisitDays,
+  college
+) => {
   const data = await axios.patch(
     "api/user/update",
     {
@@ -284,6 +291,7 @@ const updateUserData = async (userId, name, dailyGoal, revisitDays) => {
       name: name,
       dailyGoal: dailyGoal,
       revisitDays: revisitDays,
+      college,
     },
     {
       headers: {
@@ -341,7 +349,28 @@ const ResetPasswordVerify = async (email, password, otp) => {
   });
   return data;
 };
+const getOtp = async (email, username) => {
+  const data = await axios.post("api/user/otp", {
+    email: email,
+    username: username,
+  });
+  return data;
+};
+const verifyOtp = async (email, otp) => {
+  const data = await axios.post("api/user/otpverify", {
+    email: email,
+    otp: otp,
+  });
+  return data;
+};
+const getUniqueColleges = async () => {
+  const data = await axios.get("api/user/colleges");
+  return data;
+};
 export {
+  getUniqueColleges,
+  getOtp,
+  verifyOtp,
   deleteQuestion,
   ResetPassword,
   ResetPasswordVerify,

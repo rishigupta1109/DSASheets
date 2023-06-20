@@ -31,6 +31,8 @@ import CustomLoader from "./Components/UI/CustomLoader";
 import { Profile } from "./pages/Profile";
 import { ForgotPassword } from "./pages/ResetPassword";
 import { Analytics } from "@vercel/analytics/react";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 const routerAdmin = createBrowserRouter([
   {
     path: "/",
@@ -195,7 +197,7 @@ const routerGuest = createBrowserRouter([
     path: "/login",
     element: (
       <Layout>
-        <AuthenticationForm />
+        <LoginPage />
       </Layout>
     ),
   },
@@ -203,7 +205,7 @@ const routerGuest = createBrowserRouter([
     path: "/register",
     element: (
       <Layout>
-        <AuthenticationForm />
+        <RegisterPage />
       </Layout>
     ),
   },

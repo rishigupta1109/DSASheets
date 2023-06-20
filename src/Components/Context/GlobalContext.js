@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   customisedNotification,
   getSheet,
+  getUniqueColleges,
   validateSession,
 } from "../../Services";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +32,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [sheets, setSheets] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [colleges, setColleges] = useState([]);
   const fetchSheets = async () => {
     try {
       setLoading(true);
@@ -56,6 +58,12 @@ export const GlobalContextProvider = ({ children }) => {
         setIsUserLoggedIn(true);
         setToken(res.data.token);
         setUser(res.data);
+        if (res.data?.college?.trim()?.length === 0)
+          customisedNotification(
+            "Reminder",
+            "Please fill up your details",
+            "warning"
+          );
         setSheets(res.data?.sheets);
       }
     } catch (err) {
@@ -69,15 +77,25 @@ export const GlobalContextProvider = ({ children }) => {
     }
     setLoading(false);
   };
+  const getColleges = async () => {
+    try {
+      const data = await getUniqueColleges();
+      setColleges(data.data.colleges);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     if (localStorage.getItem("token")) {
       validateUserSession();
     }
+    getColleges();
   }, []);
   // console.log(sheets);
   return (
     <globalContext.Provider
       value={{
+        colleges,
         user,
         setUser,
         isUserLoggedIn,

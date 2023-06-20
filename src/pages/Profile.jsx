@@ -10,7 +10,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import globalContext from "../Components/Context/GlobalContext";
 import { customisedNotification, updateUserData } from "../Services";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,7 @@ export const Profile = () => {
   const [name, setName] = React.useState(user?.name || "");
   const [dailyGoal, setDailyGoal] = React.useState(user?.dailyGoal || "");
   const [revisitDays, setRevisitDays] = React.useState(user?.revisitDays || "");
+  const [college, setCollege] = useState(user?.college || "");
   const updateHandler = async () => {
     // console.log(name, dailyGoal, revisitDays);
     try {
@@ -28,7 +29,8 @@ export const Profile = () => {
         user?.userId,
         name,
         parseInt(dailyGoal),
-        parseInt(revisitDays)
+        parseInt(revisitDays),
+        college
       );
       // console.log(res);
       setUser(
@@ -38,6 +40,7 @@ export const Profile = () => {
             name,
             dailyGoal: parseInt(dailyGoal),
             revisitDays: parseInt(revisitDays),
+            college,
           })
       );
       customisedNotification("success", "Updated successfully", "success");
@@ -93,6 +96,14 @@ export const Profile = () => {
           value={revisitDays}
           onChange={(e) => {
             setRevisitDays(e.target.value);
+          }}
+          required
+        />
+        <TextInput
+          label="College"
+          value={college}
+          onChange={(e) => {
+            setCollege(e.target.value);
           }}
           required
         />

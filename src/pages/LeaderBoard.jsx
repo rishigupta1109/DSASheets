@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 const LeaderBoard = () => {
   const [sheet, setSheet] = useState("ALL");
   const [duration, setDuration] = useState(1);
+  const { colleges } = useContext(globalContext);
+  const [withs, setWith] = useState("ALL");
   const [data, setData] = useState([]);
 
   const { sheets, user, setLoading } = useContext(globalContext);
@@ -17,13 +19,13 @@ const LeaderBoard = () => {
     label: sheet.title,
     value: sheet._id,
   }));
-  sheetOptions.unshift({ label: "All", value: "ALL" });
+  sheetOptions.unshift({ label: "ALL", value: "ALL" });
   const sheetSelected = sheets.find((s) => s?._id === sheet);
   const fetchData = async () => {
-    if (duration && user) {
+    if (duration && user && withs) {
       try {
         setLoading(true);
-        const res = await getLeaderboard(user?.userId, sheet, duration);
+        const res = await getLeaderboard(user?.userId, sheet, duration, withs);
         // console.log(res);
         const data = res?.data?.leaderboard?.map((d) => ({
           ...d,
@@ -41,7 +43,7 @@ const LeaderBoard = () => {
   useEffect(() => {
     // console.log(sheet, duration);
     fetchData();
-  }, [sheet, duration]);
+  }, [sheet, duration, withs]);
 
   if (window.location.pathname !== "/leaderboard") {
     navigate("/leaderboard");
@@ -96,6 +98,14 @@ const LeaderBoard = () => {
             { label: "This Week", value: 7 },
             { label: "This Month", value: 31 },
           ]}
+        />
+        <Select
+          label="With"
+          placeholder="Pick one"
+          nothingFound="No options"
+          value={withs}
+          onChange={(event) => setWith(event)}
+          data={["ALL", "Friends", ...colleges]}
         />
       </Container>
       <LeaderBoardTable sheet={sheet} data={data} />

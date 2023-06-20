@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Container, Text, Title, useMantineTheme } from "@mantine/core";
+import { Container, Select, Text, Title, useMantineTheme } from "@mantine/core";
 import { FriendsTable } from "../Components/UI/Table/FriendsTable";
 import { TextInput, ActionIcon } from "@mantine/core";
 import { IconSearch, IconArrowRight, IconArrowLeft } from "@tabler/icons-react";
@@ -9,7 +9,8 @@ import globalContext from "../Components/Context/GlobalContext";
 import { useNavigate } from "react-router-dom";
 const Friends = () => {
   const theme = useMantineTheme();
-  const { user } = useContext(globalContext);
+  const { user, colleges } = useContext(globalContext);
+  const [college, setCollege] = useState("ALL");
   const [tout, setTout] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,6 +38,12 @@ const Friends = () => {
 
   if (window.location.pathname !== "/friends") {
     navigate("/friends");
+  }
+  let filteredUsers;
+  if (college === "ALL") {
+    filteredUsers = users;
+  } else {
+    filteredUsers = users.filter((u) => u.college === college);
   }
   return (
     <Container
@@ -66,6 +73,20 @@ const Friends = () => {
           justifyContent: "space-evenly",
         }}
       >
+        <Select
+          sx={{
+            marginLeft: "auto",
+          }}
+          label="College"
+          placeholder="Pick one"
+          searchable
+          nothingFound="No options"
+          data={["ALL", ...colleges]}
+          value={college}
+          onChange={(event) => {
+            setCollege(event);
+          }}
+        />
         <TextInput
           icon={<IconSearch size="1.1rem" stroke={1.5} />}
           radius="xl"
@@ -93,7 +114,9 @@ const Friends = () => {
           onChange={searchHandler}
         />
       </Container>
-      {users?.length > 0 && <FriendsTable loading={loading} data={users} />}
+      {users?.length > 0 && (
+        <FriendsTable loading={loading} data={filteredUsers} />
+      )}
       {users?.length === 0 && pattern?.trim().length > 0 && !loading && (
         <Text>No users found</Text>
       )}
