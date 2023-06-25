@@ -213,22 +213,10 @@ const RegisterPage = () => {
             "Username should include at least 3 characters"
           }
         />
-        <TextInput
-          label="College"
-          placeholder="IET DAVV"
-          required
-          value={form.values.college}
-          onChange={(event) => {
-            form.setFieldValue("college", event.target.value);
-          }}
-          error={
-            form.errors.college &&
-            "College should include at least 3 characters"
-          }
-        />
+
         <Select
           label="College"
-          placeholder="Pick one"
+          placeholder="Pick one ore create One"
           searchable
           nothingFound="No options"
           creatable
