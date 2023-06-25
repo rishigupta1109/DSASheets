@@ -287,7 +287,7 @@ function App() {
             )}
             <Modal
               opened={confetti}
-              onClose={setConfetti}
+              onClose={() => setConfetti(false)}
               title="Congratulations"
               size="xl"
             >

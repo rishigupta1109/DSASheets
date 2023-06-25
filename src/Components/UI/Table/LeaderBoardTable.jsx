@@ -42,9 +42,11 @@ export function LeaderBoardTable({ data, sheet }) {
         <td>
           <Text fz="sm">{row.name}</Text>
         </td>
-        {row?.sheet && <td>{row.sheet}</td>}
+        {sheetSelected.length > 0 && <td>{sheetSelected[0]?.title}</td>}
         {totalQuestions && <td>{totalQuestions}</td>}
         <td>{Intl.NumberFormat().format(row.completed)}</td>
+        <td>{row.currentStreak}</td>
+        <td>{row.longestStreak}</td>
         {totalQuestions && (
           <td>
             <Group position="apart">
@@ -88,6 +90,8 @@ export function LeaderBoardTable({ data, sheet }) {
             {specificData && <th>Sheet Name</th>}
             {specificData && <th>Total Questions</th>}
             <th>Completed</th>
+            <th>Current Streak</th>
+            <th>Longest Streak</th>
             {specificData && <th>Progress</th>}
           </tr>
         </thead>

@@ -10,6 +10,7 @@ import {
   rem,
   Button,
   useMantineColorScheme,
+  Badge,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 // import { MantineLogo } from "@mantine/ds";
@@ -132,7 +133,28 @@ export function Navbar({ links }) {
       {link.label}
     </NavLink>
   ));
+  const goalCompletedToday =
+    new Date(globalCtx?.user?.lastGoal).getDate() === new Date().getDate() &&
+    new Date(globalCtx?.user?.lastGoal).getMonth() === new Date().getMonth() &&
+    new Date(globalCtx?.user?.lastGoal).getFullYear() ===
+      new Date().getFullYear();
+  function isYesterday(date) {
+    if (!(date instanceof Date)) {
+      throw new Error('Invalid argument: you must provide a "date" instance');
+    }
 
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    return (
+      date.getDate() === yesterday.getDate() &&
+      date.getMonth() === yesterday.getMonth() &&
+      date.getFullYear() === yesterday.getFullYear()
+    );
+  }
+  const goalCompletedYesterDay = isYesterday(
+    new Date(globalCtx?.user?.lastGoal)
+  );
   return (
     <Header height={HEADER_HEIGHT} className={classes.root}>
       <Container className={classes.header}>
@@ -163,6 +185,7 @@ export function Navbar({ links }) {
               }}
             />
           )}
+
           {/* {!globalCtx.isUserLoggedIn && (
             <Group spacing={5} className={classes.links}>
               <Button onClick={() => navigate("/login")} variant="default">
@@ -188,6 +211,56 @@ export function Navbar({ links }) {
           )} */}
         </Group>
         <SegmentedToggle />
+        {goalCompletedToday && (
+          <Badge
+            color="green"
+            size="xl"
+            sx={{
+              borderRadius: "100%",
+              height: "2rem",
+              width: "2rem",
+              padding: "0.5rem",
+              animation: "neon 2s infinite",
+              boxShadow:
+                colorScheme === "dark"
+                  ? "0 0 5px #fff, 0 0 5px #fff, 0 0 15px #fff, 0 0 25px #b6ff00,0 0 35px #b6ff00, 0 0 45px #b6ff00, 0 0 5px #b6ff00, 0 0 5px #b6ff00 "
+                  : "0 0 5px green, 0 0 5px lightgreen, 0 0 15px lightgreen, 0 0 25px green,0 0 35px #b6ff00, 0 0 45px #b6ff00, 0 0 5px #b6ff00, 0 0 5px #b6ff00 ",
+            }}
+            variant="filled"
+          >
+            {globalCtx?.user?.currentStreak}
+          </Badge>
+        )}
+        {goalCompletedYesterDay && (
+          <Badge
+            sx={{
+              borderRadius: "100%",
+              height: "2rem",
+              width: "2rem",
+              padding: "0.5rem",
+            }}
+            color="green"
+            size="xl"
+            variant="outline"
+          >
+            {globalCtx?.user?.currentStreak}
+          </Badge>
+        )}
+        {!goalCompletedYesterDay && !goalCompletedToday && (
+          <Badge
+            sx={{
+              borderRadius: "100%",
+              height: "2rem",
+              width: "2rem",
+              padding: "0.5rem",
+            }}
+            color="green"
+            size="xl"
+            variant="outlined"
+          >
+            0
+          </Badge>
+        )}
 
         <Burger
           opened={opened}

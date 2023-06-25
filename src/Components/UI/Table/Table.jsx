@@ -80,7 +80,8 @@ export default function CustomTable({
     questionData?.sort((a, b) => a?.isCompleted - b?.isCompleted)
   );
   const [selection, setSelection] = useState(["1"]);
-  const { sheets, setSheets, user, setConfetti } = useContext(globalContext);
+  const { sheets, setSheets, user, setConfetti, setUser } =
+    useContext(globalContext);
   const { topic_id, sheet_id } = useParams();
   const toggleRow = async (id, checked) => {
     // console.log({ id });
@@ -98,7 +99,7 @@ export default function CustomTable({
             if (checked) {
               return {
                 ...sheet,
-                completed: sheet.completed - 1,
+                completed: Math.max(0, sheet.completed - 1),
                 completedToday: sheet.completedToday.includes(id)
                   ? sheet.completedToday.filter((ques) => ques !== id)
                   : sheet.completedToday,
@@ -127,8 +128,25 @@ export default function CustomTable({
           setTimeout(() => {
             setConfetti(false);
           }, 10000);
-
-          customisedNotification("Success", "Daily Goal Completed", "success");
+          setUser((prev) => {
+            return {
+              ...prev,
+              currentStreak: prev?.currentStreak + 1,
+              longestStreak: Math.max(
+                prev?.currentStreak + 1,
+                prev?.longestStreak
+              ),
+              lastGoal: new Date(),
+            };
+          });
+        } else if (checked && quesCompletedToday === user?.dailyGoal) {
+          setUser((prev) => {
+            return {
+              ...prev,
+              currentStreak: Math.max(0, prev?.currentStreak - 1),
+              lastGoal: new Date().setDate(new Date().getDate() - 1),
+            };
+          });
         }
       } catch (e) {
         toggle(id);
