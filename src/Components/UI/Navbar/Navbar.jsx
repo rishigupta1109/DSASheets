@@ -256,7 +256,7 @@ export function Navbar({ links }) {
             }}
             color="green"
             size="xl"
-            variant="outlined"
+            variant="outline"
           >
             0
           </Badge>
