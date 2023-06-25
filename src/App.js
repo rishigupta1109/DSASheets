@@ -3,6 +3,9 @@ import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
+  Modal,
+  Text,
+  Container,
 } from "@mantine/core";
 import { useHotkeys, useLocalStorage } from "@mantine/hooks";
 import Layout from "./Components/UI/Layout/Layout";
@@ -33,6 +36,8 @@ import { ForgotPassword } from "./pages/ResetPassword";
 import { Analytics } from "@vercel/analytics/react";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import Confetti from "react-confetti";
+import congrats from "./Images/giphy.gif";
 const routerAdmin = createBrowserRouter([
   {
     path: "/",
@@ -233,7 +238,8 @@ function App() {
     defaultValue: "light",
     getInitialValueInEffect: true,
   });
-  const { isUserAdmin, isUserLoggedIn, loading } = useContext(globalContext);
+  const { isUserAdmin, isUserLoggedIn, loading, confetti, setConfetti } =
+    useContext(globalContext);
 
   const toggleColorScheme = (value) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
@@ -265,8 +271,39 @@ function App() {
           <ModalsProvider>
             <Notifications position="top-right" zIndex={2077} />
             <Analytics />
-
             {loading && <CustomLoader />}
+            {confetti && (
+              <Confetti
+                run={confetti}
+                width={window.innerWidth - 50}
+                style={{
+                  zIndex: 1000,
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  height: "100vh",
+                }}
+              />
+            )}
+            <Modal
+              opened={confetti}
+              onClose={setConfetti}
+              title="Congratulations"
+              size="xl"
+            >
+              <Container
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text size={"xl"}> You have completed Your Daily Goal🤩🥳</Text>
+                <Text size={"xl"}> Stay Consistent🥳</Text>
+                <img src={congrats} height={300}></img>
+              </Container>
+            </Modal>
             <RouterProvider
               router={
                 localStorage.getItem("token")

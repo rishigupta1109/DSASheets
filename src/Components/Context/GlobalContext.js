@@ -21,6 +21,8 @@ const globalContext = React.createContext({
   loading: false,
   setLoading: () => {},
   validateUserSession: async () => {},
+  confetti: false,
+  setConfetti: () => {},
 });
 
 export default globalContext;
@@ -33,6 +35,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [sheets, setSheets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [colleges, setColleges] = useState([]);
+  const [confetti, setConfetti] = useState(false);
   const fetchSheets = async () => {
     try {
       setLoading(true);
@@ -95,6 +98,8 @@ export const GlobalContextProvider = ({ children }) => {
   return (
     <globalContext.Provider
       value={{
+        confetti,
+        setConfetti,
         colleges,
         user,
         setUser,

@@ -80,7 +80,7 @@ export default function CustomTable({
     questionData?.sort((a, b) => a?.isCompleted - b?.isCompleted)
   );
   const [selection, setSelection] = useState(["1"]);
-  const { sheets, setSheets, user } = useContext(globalContext);
+  const { sheets, setSheets, user, setConfetti } = useContext(globalContext);
   const { topic_id, sheet_id } = useParams();
   const toggleRow = async (id, checked) => {
     // console.log({ id });
@@ -118,6 +118,18 @@ export default function CustomTable({
         // console.log({ id, user, topic_id, sheet_id });
         const res = await createProgress(id, user?.userId, topic_id, sheet_id);
         // console.log({ res });
+        let quesCompletedToday = 0;
+        sheets?.forEach((sheet) => {
+          quesCompletedToday += sheet?.completedToday?.length || 0;
+        });
+        if (!checked && quesCompletedToday === user?.dailyGoal - 1) {
+          setConfetti(true);
+          setTimeout(() => {
+            setConfetti(false);
+          }, 10000);
+
+          customisedNotification("Success", "Daily Goal Completed", "success");
+        }
       } catch (e) {
         toggle(id);
         customisedNotification("Error", "Something went wrong");
