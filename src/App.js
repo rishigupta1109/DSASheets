@@ -269,7 +269,7 @@ function App() {
             {loading && <CustomLoader />}
             <RouterProvider
               router={
-                isUserLoggedIn
+                localStorage.getItem("token")
                   ? isUserAdmin
                     ? routerAdmin
                     : routerUser
