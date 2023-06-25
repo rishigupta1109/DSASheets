@@ -43,7 +43,7 @@ const LeaderBoard = () => {
   useEffect(() => {
     // console.log(sheet, duration);
     fetchData();
-  }, [sheet, duration, withs]);
+  }, [sheet, duration, withs, user]);
 
   if (window.location.pathname !== "/leaderboard") {
     navigate("/leaderboard");
