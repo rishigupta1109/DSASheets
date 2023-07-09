@@ -168,13 +168,12 @@ export function TopPerformerCard({ users, month }) {
 
   const gradients = [
     "linear-gradient(-60deg, #ff5858 0%, #f09819 100%)",
-    "linear-gradient(-60deg, #11998e, #38ef7d)",
+    "linear-gradient(-60deg, #003732, #028132)",
     //7 amazing dark colorful gradients
     "linear-gradient(-60deg, #29323c 0%, #485563 100%)",
-    "linear-gradient(-60deg, #007991 0%, #78ffd6 100%)",
     "linear-gradient(-60deg, #2c3e50 0%, #fd746c 100%)",
     "linear-gradient(-60deg, #ff5858 0%, #f09819 100%)",
-    "linear-gradient(-60deg, #ff0844 0%, #ffb199 100%)",
+    "linear-gradient(-60deg, #ff0844 0%, #ff794f 100%)",
   ];
   return (
     <div
