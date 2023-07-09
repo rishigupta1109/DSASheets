@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Container, Select, Title } from "@mantine/core";
+import { Container, SegmentedControl, Select, Title } from "@mantine/core";
 import CustomTable from "../Components/UI/Table/Table";
 import { LeaderBoardTable } from "../Components/UI/Table/LeaderBoardTable";
 import globalContext from "../Components/Context/GlobalContext";
 import { getLeaderboard } from "../Services";
 import { useNavigate } from "react-router-dom";
+import TopPerfromers from "./TopPerfromers";
 
 const LeaderBoard = () => {
   const [sheet, setSheet] = useState("ALL");
@@ -12,6 +13,7 @@ const LeaderBoard = () => {
   const { colleges } = useContext(globalContext);
   const [withs, setWith] = useState("Friends");
   const [data, setData] = useState([]);
+  const [mode, setMode] = useState("0");
 
   const { sheets, user, setLoading } = useContext(globalContext);
   const navigate = useNavigate();
@@ -63,54 +65,72 @@ const LeaderBoard = () => {
       }}
     >
       <Title align="center" order={1} italic>
-        LeaderBoard
-      </Title>
-      <Container
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-          gap: "1rem",
-          alignItems: "center",
-          flexWrap: "wrap",
-          justifyContent: "space-evenly",
-        }}
-      >
-        <Select
-          label="Sheet"
-          placeholder="Pick one"
-          searchable
-          nothingFound="No options"
-          data={sheetOptions}
-          value={sheet}
-          onChange={(event) => {
-            setSheet(event);
+        <SegmentedControl
+          value={mode}
+          onChange={(value) => {
+            // console.log(value);
+            setMode(value);
+          }}
+          data={[
+            { label: "LeaderBoard", value: "0" },
+            { label: "Top Performers", value: "1" },
+          ]}
+          sx={{
+            margin: "1rem",
           }}
         />
-        <Select
-          label="Duration"
-          placeholder="Pick one"
-          nothingFound="No options"
-          value={duration}
-          onChange={(event) => setDuration(event)}
-          data={[
-            { label: "Today", value: 1 },
-            { label: "This Week", value: 7 },
-            { label: "This Month", value: 31 },
-            { label: "This Year", value: 365 },
-            { label: "Overall", value: -1 },
-          ]}
-        />
-        <Select
-          label="With"
-          placeholder="Pick one"
-          nothingFound="No options"
-          value={withs}
-          onChange={(event) => setWith(event)}
-          data={["ALL", "Friends", ...colleges]}
-        />
-      </Container>
-      <LeaderBoardTable sheet={sheet} data={data} />
+      </Title>
+      {mode === "1" && <TopPerfromers />}
+      {mode === "0" && (
+        <>
+          <Container
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              gap: "1rem",
+              alignItems: "center",
+              flexWrap: "wrap",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Select
+              label="Sheet"
+              placeholder="Pick one"
+              searchable
+              nothingFound="No options"
+              data={sheetOptions}
+              value={sheet}
+              onChange={(event) => {
+                setSheet(event);
+              }}
+            />
+            <Select
+              label="Duration"
+              placeholder="Pick one"
+              nothingFound="No options"
+              value={duration}
+              onChange={(event) => setDuration(event)}
+              data={[
+                { label: "Today", value: 1 },
+                { label: "This Week", value: 7 },
+                { label: "This Month", value: 31 },
+                { label: "This Year", value: 365 },
+                { label: "Overall", value: -1 },
+              ]}
+            />
+            <Select
+              label="With"
+              placeholder="Pick one"
+              nothingFound="No options"
+              value={withs}
+              onChange={(event) => setWith(event)}
+              data={["ALL", "Friends", ...colleges]}
+            />
+          </Container>
+          <LeaderBoardTable sheet={sheet} data={data} />
+        </>
+      )}
     </Container>
   );
 };

@@ -367,7 +367,12 @@ const getUniqueColleges = async () => {
   const data = await axios.get("api/user/colleges");
   return data;
 };
+const getTopPerformers = async () => {
+  const data = await axios.get("api/user/top-performers");
+  return data;
+};
 export {
+  getTopPerformers,
   getUniqueColleges,
   getOtp,
   verifyOtp,

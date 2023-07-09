@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   customisedNotification,
   getSheet,
+  getTopPerformers,
   getUniqueColleges,
   validateSession,
 } from "../../Services";
@@ -23,6 +24,8 @@ const globalContext = React.createContext({
   validateUserSession: async () => {},
   confetti: false,
   setConfetti: () => {},
+  colleges: [],
+  topPerformers: [],
 });
 
 export default globalContext;
@@ -36,6 +39,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [colleges, setColleges] = useState([]);
   const [confetti, setConfetti] = useState(false);
+  const [topPerformers, setTopPerformers] = useState([]);
   const fetchSheets = async () => {
     try {
       setLoading(true);
@@ -88,16 +92,26 @@ export const GlobalContextProvider = ({ children }) => {
       console.log(err);
     }
   };
+  const getTopPerformersData = async () => {
+    try {
+      const data = await getTopPerformers();
+      setTopPerformers(data?.data?.topPerformersPerMonth);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     if (localStorage.getItem("token")) {
       validateUserSession();
     }
     getColleges();
+    getTopPerformersData();
   }, []);
   // console.log(sheets);
   return (
     <globalContext.Provider
       value={{
+        topPerformers,
         confetti,
         setConfetti,
         colleges,
