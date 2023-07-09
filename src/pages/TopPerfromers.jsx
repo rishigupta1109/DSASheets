@@ -12,7 +12,15 @@ const TopPerfromers = () => {
     console.log(topPerformersData);
   }
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
       {topPerformersData?.map((data, index) => (
         <TopPerformerCard key={index} users={data.slice(1)} month={data[0]} />
       ))}
