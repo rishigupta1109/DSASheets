@@ -246,21 +246,23 @@ export function Navbar({ links }) {
             {globalCtx?.user?.currentStreak}
           </Badge>
         )}
-        {!goalCompletedYesterDay && !goalCompletedToday && (
-          <Badge
-            sx={{
-              borderRadius: "100%",
-              height: "2rem",
-              width: "2rem",
-              padding: "0.5rem",
-            }}
-            color="green"
-            size="xl"
-            variant="outline"
-          >
-            0
-          </Badge>
-        )}
+        {!goalCompletedYesterDay &&
+          !goalCompletedToday &&
+          globalCtx?.isUserLoggedIn && (
+            <Badge
+              sx={{
+                borderRadius: "100%",
+                height: "2rem",
+                width: "2rem",
+                padding: "0.5rem",
+              }}
+              color="green"
+              size="xl"
+              variant="outline"
+            >
+              0
+            </Badge>
+          )}
 
         <Burger
           opened={opened}

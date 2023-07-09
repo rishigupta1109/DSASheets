@@ -13,16 +13,7 @@ import { Link } from "react-router-dom";
 import { IconArrowLeft, IconArrowLeftBar } from "@tabler/icons-react";
 import { Footer } from "../Navbar/Footer";
 export default function Layout({ children }) {
-  const linkGuest = [
-    {
-      label: "Login",
-      link: "/login",
-    },
-    {
-      label: "Register",
-      link: "/register",
-    },
-  ];
+  const linkGuest = [];
   const linkUser = [
     {
       label: "Home",

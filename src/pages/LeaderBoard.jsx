@@ -97,6 +97,8 @@ const LeaderBoard = () => {
             { label: "Today", value: 1 },
             { label: "This Week", value: 7 },
             { label: "This Month", value: 31 },
+            { label: "This Year", value: 365 },
+            { label: "Overall", value: -1 },
           ]}
         />
         <Select
