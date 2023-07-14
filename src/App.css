@@ -40,3 +40,7 @@
 input[type="checkbox"] {
   cursor: pointer;
 }
+tbody tr:hover {
+  cursor: crosshair;
+  background-color: rgba(131, 216, 242, 0.299);
+}
