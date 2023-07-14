@@ -105,13 +105,10 @@ const useStyles = createStyles((theme) => ({
 
 export function Navbar({ links }) {
   const [opened, { toggle, close }] = useDisclosure(false);
-  const [active, setActive] = useState(
-    links.find((link) => link.link === window.location.pathname)?.link
-  );
+  const [active, setActive] = useState(window.location.pathname);
+  console.log(active);
   useEffect(() => {
-    setActive(
-      links.find((link) => link.link === window.location.pathname)?.link
-    );
+    setActive(window.location.pathname);
   }, [window.location.pathname]);
   const { classes, cx } = useStyles();
   const navigate = useNavigate();
@@ -133,6 +130,7 @@ export function Navbar({ links }) {
       {link.label}
     </NavLink>
   ));
+  console.log(items);
   const goalCompletedToday =
     new Date(globalCtx?.user?.lastGoal).getDate() === new Date().getDate() &&
     new Date(globalCtx?.user?.lastGoal).getMonth() === new Date().getMonth() &&

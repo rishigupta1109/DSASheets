@@ -265,6 +265,7 @@ export const Questions = () => {
             ]}
             sx={{
               margin: "1rem",
+              zIndex: 1,
             }}
           />
           <Button

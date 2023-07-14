@@ -12,6 +12,7 @@ import {
 // import { MantineLogo } from "@mantine/ds";
 // import { IconUpload } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import styles from "./SheetCard.module.css";
 export function SheetCard({
   title,
   description,
@@ -26,6 +27,7 @@ export function SheetCard({
   const dark = colorScheme === "dark";
   return (
     <div
+      className={styles.card}
       style={{
         // height: "500px",
         width: "350px",

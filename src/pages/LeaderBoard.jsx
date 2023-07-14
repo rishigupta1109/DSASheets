@@ -77,6 +77,7 @@ const LeaderBoard = () => {
           ]}
           sx={{
             margin: "1rem",
+            zIndex: 1,
           }}
         />
       </Title>

@@ -8,6 +8,7 @@ import {
   TextInput,
   Anchor,
   useMantineColorScheme,
+  Transition,
 } from "@mantine/core";
 import leetcode from "../../../Images/LeetCode_logo_black.png";
 import CN from "../../../Images/download-removebg-preview.png";
@@ -75,11 +76,12 @@ export default function CustomTable({
   const [selectedQuestion, setSelectedQuestion] = useState();
   const { classes, cx } = useStyles();
   const [search, setSearch] = useState("");
-  const [data, setData] = useState(questionData);
+  const [data, setData] = useState(
+    questionData?.sort((a, b) => a?.isCompleted - b?.isCompleted)
+  );
   const [filteredData, setFilteredData] = useState(
     questionData?.sort((a, b) => a?.isCompleted - b?.isCompleted)
   );
-  const [selection, setSelection] = useState(["1"]);
   const { sheets, setSheets, user, setConfetti, setUser } =
     useContext(globalContext);
   const { topic_id, sheet_id } = useParams();
@@ -179,6 +181,13 @@ export default function CustomTable({
     setFilteredData(questionData);
     setData(questionData);
   }, [questionData]);
+  useEffect(() => {
+    if (mode === "0") {
+      setData(questionData?.sort((a, b) => a?.isCompleted - b?.isCompleted));
+    } else {
+      setData(questionData?.sort((a, b) => a?.revisited - b?.revisited));
+    }
+  }, [mode, questionData]);
   // console.log({ questionData, filteredData, data });
   const getLinkType = (link) => {
     if (link?.includes("leetcode")) {
@@ -209,86 +218,82 @@ export default function CustomTable({
     }
   };
   const { colorScheme } = useMantineColorScheme();
-  const rows = filteredData?.map((item) => {
-    return (
-      <tr
-        key={item?._id}
-        className={cx({
-          [classes.rowSelected]:
-            mode === "0" ? item?.isCompleted : item?.revisited,
-        })}
-      >
-        <td>
-          <Checkbox
-            checked={
-              mode === "0"
-                ? item?.isCompleted || false
-                : item?.revisited || false
-            }
-            onChange={() => {
-              if (mode === "0") toggleRow(item._id, item?.isCompleted);
-              else toggleRevisitedHandler(item._id);
-            }}
-            transitionDuration={1}
-            style={{
-              "& input": {
-                cursor: "pointer",
-              },
-            }}
-          />
-        </td>
-        <td>{item?.title}</td>
-        <td
-          style={{
-            display: "flex",
-            gap: "1rem",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {item?.links?.length > 0 &&
-            item?.links?.map((link, index) => {
-              if (link?.trim()?.length === 0) return;
-              if (link === "#") return;
-              return (
-                <Anchor
-                  key={index}
-                  href={link}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {getLinkType(link)}
-                  {/* <IconBrandLeetcode /> */}
-                </Anchor>
-              );
-            })}
-        </td>
 
-        <td
-          onClick={() => {
-            if (!user)
-              return customisedNotification(
-                "Error",
-                "Please login to continue",
-                "warning"
-              );
-            open();
-            // console.log({ item });
-            setSelectedQuestion(item);
-          }}
-          style={{
-            cursor: "pointer",
-          }}
-        >
-          {item?.notes?.trim().length > 0 ? (
-            <IconNote fill={colorScheme === "dark" ? "white" : "black"} />
-          ) : (
-            <IconNote />
-          )}
-        </td>
-        <td>
-          {!item?.bookmarked && (
-            <IconBookmark
+  const rows = data?.map((item) => {
+    let show =
+      !!filteredData.find((ques) => ques?._id === item?._id) &&
+      !item?.isCompleted;
+    if (mode === "1") {
+      show =
+        !!filteredData.find((ques) => ques?._id === item?._id) &&
+        item?.isCompleted &&
+        !item?.revisited;
+    }
+    return (
+      <Transition
+        key={item?._id + "not completed"}
+        mounted={show}
+        transition="slide-up"
+        duration={400}
+        timingFunction="ease"
+        exitDuration={400}
+      >
+        {(styles) => (
+          <tr
+            style={styles}
+            key={item?._id + "notcompleted"}
+            className={cx({
+              [classes.rowSelected]:
+                mode === "0" ? item?.isCompleted : item?.revisited,
+            })}
+          >
+            <td>
+              <Checkbox
+                checked={
+                  mode === "0"
+                    ? item?.isCompleted || false
+                    : item?.revisited || false
+                }
+                onChange={() => {
+                  if (mode === "0") toggleRow(item._id, item?.isCompleted);
+                  else toggleRevisitedHandler(item._id);
+                }}
+                transitionDuration={1}
+                style={{
+                  "& input": {
+                    cursor: "pointer",
+                  },
+                }}
+              />
+            </td>
+            <td>{item?.title}</td>
+            <td
+              style={{
+                display: "flex",
+                gap: "1rem",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {item?.links?.length > 0 &&
+                item?.links?.map((link, index) => {
+                  if (link?.trim()?.length === 0) return;
+                  if (link === "#") return;
+                  return (
+                    <Anchor
+                      key={index}
+                      href={link}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {getLinkType(link)}
+                      {/* <IconBrandLeetcode /> */}
+                    </Anchor>
+                  );
+                })}
+            </td>
+
+            <td
               onClick={() => {
                 if (!user)
                   return customisedNotification(
@@ -296,47 +301,224 @@ export default function CustomTable({
                     "Please login to continue",
                     "warning"
                   );
-                toggleBookmarkHandler(item?._id);
+                open();
+                // console.log({ item });
+                setSelectedQuestion(item);
               }}
               style={{
                 cursor: "pointer",
               }}
-            />
-          )}
-          {item?.bookmarked && (
-            <IconBookmarkFilled
-              onClick={() => {
-                if (!user)
-                  return customisedNotification(
-                    "Error",
-                    "Please login to continue",
-                    "warning"
-                  );
-                toggleBookmarkHandler(item?._id);
-              }}
-              style={{
-                cursor: "pointer",
-              }}
-            />
-          )}
-        </td>
-        {onEdit && (
-          <td>
-            <IconEditCircle
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                onEdit(item);
-              }}
-            />
-            <IconMedicalCrossFilled
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                onDelete(item);
-              }}
-            />
-          </td>
+            >
+              {item?.notes?.trim().length > 0 ? (
+                <IconNote fill={colorScheme === "dark" ? "white" : "black"} />
+              ) : (
+                <IconNote />
+              )}
+            </td>
+            <td>
+              {!item?.bookmarked && (
+                <IconBookmark
+                  onClick={() => {
+                    if (!user)
+                      return customisedNotification(
+                        "Error",
+                        "Please login to continue",
+                        "warning"
+                      );
+                    toggleBookmarkHandler(item?._id);
+                  }}
+                  style={{
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+              {item?.bookmarked && (
+                <IconBookmarkFilled
+                  onClick={() => {
+                    if (!user)
+                      return customisedNotification(
+                        "Error",
+                        "Please login to continue",
+                        "warning"
+                      );
+                    toggleBookmarkHandler(item?._id);
+                  }}
+                  style={{
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+            </td>
+            {onEdit && (
+              <td>
+                <IconEditCircle
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    onEdit(item);
+                  }}
+                />
+                <IconMedicalCrossFilled
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    onDelete(item);
+                  }}
+                />
+              </td>
+            )}
+          </tr>
         )}
-      </tr>
+      </Transition>
+    );
+  });
+  const rowsCompleted = data?.map((item) => {
+    let show =
+      !!filteredData.find((ques) => ques?._id === item?._id) &&
+      item?.isCompleted;
+    if (mode === "1") {
+      show =
+        !!filteredData.find((ques) => ques?._id === item?._id) &&
+        item?.isCompleted &&
+        item?.revisited;
+    }
+    return (
+      <Transition
+        key={item?._id + "completed"}
+        mounted={show}
+        transition="slide-down"
+        duration={400}
+        timingFunction="ease"
+        exitDuration={400}
+      >
+        {(styles) => (
+          <tr
+            style={styles}
+            key={item?._id + "completed"}
+            className={cx({
+              [classes.rowSelected]:
+                mode === "0" ? item?.isCompleted : item?.revisited,
+            })}
+          >
+            <td>
+              <Checkbox
+                checked={
+                  mode === "0"
+                    ? item?.isCompleted || false
+                    : item?.revisited || false
+                }
+                onChange={() => {
+                  if (mode === "0") toggleRow(item._id, item?.isCompleted);
+                  else toggleRevisitedHandler(item._id);
+                }}
+                transitionDuration={1}
+                style={{
+                  "& input": {
+                    cursor: "pointer",
+                  },
+                }}
+              />
+            </td>
+            <td>{item?.title}</td>
+            <td
+              style={{
+                display: "flex",
+                gap: "1rem",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {item?.links?.length > 0 &&
+                item?.links?.map((link, index) => {
+                  if (link?.trim()?.length === 0) return;
+                  if (link === "#") return;
+                  return (
+                    <Anchor
+                      key={index}
+                      href={link}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {getLinkType(link)}
+                      {/* <IconBrandLeetcode /> */}
+                    </Anchor>
+                  );
+                })}
+            </td>
+
+            <td
+              onClick={() => {
+                if (!user)
+                  return customisedNotification(
+                    "Error",
+                    "Please login to continue",
+                    "warning"
+                  );
+                open();
+                // console.log({ item });
+                setSelectedQuestion(item);
+              }}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              {item?.notes?.trim().length > 0 ? (
+                <IconNote fill={colorScheme === "dark" ? "white" : "black"} />
+              ) : (
+                <IconNote />
+              )}
+            </td>
+            <td>
+              {!item?.bookmarked && (
+                <IconBookmark
+                  onClick={() => {
+                    if (!user)
+                      return customisedNotification(
+                        "Error",
+                        "Please login to continue",
+                        "warning"
+                      );
+                    toggleBookmarkHandler(item?._id);
+                  }}
+                  style={{
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+              {item?.bookmarked && (
+                <IconBookmarkFilled
+                  onClick={() => {
+                    if (!user)
+                      return customisedNotification(
+                        "Error",
+                        "Please login to continue",
+                        "warning"
+                      );
+                    toggleBookmarkHandler(item?._id);
+                  }}
+                  style={{
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+            </td>
+            {onEdit && (
+              <td>
+                <IconEditCircle
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    onEdit(item);
+                  }}
+                />
+                <IconMedicalCrossFilled
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    onDelete(item);
+                  }}
+                />
+              </td>
+            )}
+          </tr>
+        )}
+      </Transition>
     );
   });
   const handleSearchChange = (event) => {
@@ -400,7 +582,10 @@ export default function CustomTable({
             {onEdit && <th>Action</th>}
           </tr>
         </thead>
-        <tbody>{rows}</tbody>
+        <tbody>
+          {rows}
+          {rowsCompleted}
+        </tbody>
       </Table>
     </ScrollArea>
   );

@@ -7,16 +7,21 @@ import {
   Paper,
   Group,
   rem,
+  clsx,
 } from "@mantine/core";
 import { IconCrown } from "@tabler/icons-react";
 import gold from "../../Images/Gold-crown-50.png";
 import silver from "../../Images/silver-crown-50.png";
 import bronze from "../../Images/bronze-crown-50.png";
+import styles from "./TopPerformer.module.css";
 const useStyles = createStyles((theme) => ({
   root: {
     padding: theme.spacing.xl,
     borderRadius: theme.radius.md,
     display: "flex",
+    width: "60%",
+    minWidth: rem(350),
+    maxWidth: rem(800),
 
     [theme.fn.smallerThan("xs")]: {
       flexDirection: "column",
@@ -31,7 +36,8 @@ const useStyles = createStyles((theme) => ({
   },
 
   stat: {
-    minWidth: rem(98),
+    maxWidth: rem(180),
+
     paddingTop: theme.spacing.xl,
     minHeight: rem(140),
     display: "flex",
@@ -177,7 +183,7 @@ export function TopPerformerCard({ users, month }) {
   ];
   return (
     <div
-      className={classes.root}
+      className={clsx(classes.root, styles.card)}
       style={{
         background: gradients[Math.floor(Math.random() * gradients.length)],
       }}
