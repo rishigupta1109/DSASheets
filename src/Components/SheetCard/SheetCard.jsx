@@ -189,7 +189,13 @@ export function SheetCard({
               </Text>
             </Text>
 
-            <Progress value={(completed / total) * 100} mt={5} bg={"white"} />
+            <Progress
+              striped
+              animate
+              value={(completed / total) * 100}
+              mt={5}
+              bg={"white"}
+            />
           </>
         )}
         {/* {toRevisit > 0 && toRevisit !== revisited && (
@@ -240,7 +246,13 @@ export function SheetCard({
               </Text>
             </Text>
 
-            <Progress color="green" value={(completed / total) * 100} mt={5} />
+            <Progress
+              animate
+              striped
+              color="green"
+              value={(completed / total) * 100}
+              mt={5}
+            />
           </>
         )}
       </Card>

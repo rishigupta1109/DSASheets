@@ -9,7 +9,7 @@ const TopPerfromers = () => {
     for (let key in topPerformers) {
       topPerformersData.push([key, ...topPerformers[key]]);
     }
-    console.log(topPerformersData);
+    topPerformersData;
   }
   return (
     <div

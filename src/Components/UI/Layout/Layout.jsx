@@ -56,8 +56,8 @@ export default function Layout({ children }) {
   ];
   const globalCtx = useContext(globalContext);
   let topics = [];
-  const [quesCompleted, setQuesCompleted] = React.useState(0);
   let dailyGoalQues = globalCtx?.user?.dailyGoal || 0;
+  const [quesCompleted, setQuesCompleted] = React.useState(0);
   useEffect(() => {
     if (globalCtx.user?.dailyGoal) {
       dailyGoalQues = globalCtx.user?.dailyGoal;
@@ -144,33 +144,34 @@ export default function Layout({ children }) {
             : linkGuest
         }
       />
-      {dailyGoalQues !== 0 && percentage > 0 && (
-        <Transition
-          transition={"slide-right"}
-          duration={500}
-          mounted={percentage > 0 && dailyGoalQues !== 0}
-        >
-          {(styles) => (
-            <Progress
-              striped
-              color={percentage >= 100 ? "green  " : "indigo"}
-              label={
-                percentage >= 100
-                  ? "Daily Goal Completed"
-                  : `Daily Goal ${quesCompleted}/${dailyGoalQues}`
-              }
-              size="xl"
-              style={{
-                position: "sticky",
-                zIndex: 2,
-                top: "4rem",
-                ...styles,
-              }}
-              value={Math.min(percentage, 100)}
-            />
-          )}
-        </Transition>
-      )}
+
+      <Transition
+        transition={"slide-right"}
+        duration={500}
+        mounted={percentage > 0 && dailyGoalQues !== 0}
+      >
+        {(styles) => (
+          <Progress
+            striped
+            animate
+            color={percentage >= 100 ? "green  " : "indigo"}
+            label={
+              percentage >= 100
+                ? "Daily Goal Completed"
+                : `Daily Goal ${quesCompleted}/${dailyGoalQues}`
+            }
+            size="xl"
+            style={{
+              position: "sticky",
+              zIndex: 2,
+              top: "4rem",
+              ...styles,
+            }}
+            value={Math.min(percentage, 100)}
+          />
+        )}
+      </Transition>
+
       {/* <Container
         sx={{
           width: "100%",

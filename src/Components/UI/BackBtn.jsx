@@ -10,10 +10,11 @@ export const BackBtn = () => {
     <IconArrowLeft
       style={{
         cursor: "pointer",
-        position: "absolute",
-        top: "1.5rem",
+        position: "fixed",
+        top: "7rem",
         left: "2rem",
-        zIndex: 1,
+        zIndex: 51,
+        borderRadius: "50%",
       }}
       onClick={() => navigate(-1)}
     />

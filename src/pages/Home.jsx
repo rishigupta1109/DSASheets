@@ -29,13 +29,23 @@ export default function Home() {
         minHeight: "80vh",
       }}
     >
-      <Title align="center" order={1} italic>
+      <Title
+        align="center"
+        sx={(theme) => ({
+          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontWeight: 900,
+        })}
+      >
         Home
       </Title>
 
       <Grid
         sx={{
           width: "100%",
+
+          "@media (max-width: 700px) and (min-width:500px)": {
+            justifyContent: "center",
+          },
         }}
       >
         {startedSheets.length === 0 && (
@@ -80,8 +90,9 @@ export default function Home() {
                 xxs={9}
                 xs={7}
                 sm={6}
-                md={4}
-                lg={3}
+                md={4.5}
+                lg={3.5}
+                xl={3}
                 span={3}
                 key={sheet._id}
               >

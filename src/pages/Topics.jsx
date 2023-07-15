@@ -76,7 +76,14 @@ export default function Topics() {
       }}
     >
       <BackBtn />
-      <Title align="center" italic order={1}>
+      <Title
+        align="center"
+        sx={(theme) => ({
+          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontWeight: 900,
+        })}
+        order={1}
+      >
         {
           sheets.find((sheet) => {
             return sheet._id === sheet_id;
@@ -95,9 +102,9 @@ export default function Topics() {
       >
         {((completed / total) * 100).toFixed(0) != 100 && (
           <RingProgress
-            sections={[{ value: (completed / total) * 100, color: "blue" }]}
+            sections={[{ value: (completed / total) * 100, color: "green" }]}
             label={
-              <Text color="blue" weight={700} align="center" size="xl">
+              <Text color="green" weight={700} align="center" size="xl">
                 {((completed / total) * 100).toFixed(0)}%
               </Text>
             }
@@ -106,10 +113,10 @@ export default function Topics() {
 
         {((completed / total) * 100).toFixed(0) == 100 && (
           <RingProgress
-            sections={[{ value: 100, color: "teal" }]}
+            sections={[{ value: 100, color: "green" }]}
             label={
               <Center>
-                <ThemeIcon color="teal" variant="light" radius="xl" size="xl">
+                <ThemeIcon color="green" variant="light" radius="xl" size="xl">
                   <IconCheck size={22} />
                 </ThemeIcon>
               </Center>

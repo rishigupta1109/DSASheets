@@ -28,13 +28,24 @@ export default function AllSheets() {
         minHeight: "80vh",
       }}
     >
-      <Title align="center" order={1} italic>
-        AllSheets
+      <Title
+        align="center"
+        order={1}
+        sx={(theme) => ({
+          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontWeight: 900,
+        })}
+      >
+        All Sheets
       </Title>
 
       <Grid
         sx={{
           width: "100%",
+
+          "@media (max-width: 700px) and (min-width:500px)": {
+            justifyContent: "center",
+          },
         }}
       >
         {sheets?.length > 0 &&
@@ -46,10 +57,10 @@ export default function AllSheets() {
                 xxs={9}
                 xs={7}
                 sm={6}
-                md={5}
-                lg={4}
+                md={4.5}
+                lg={3.5}
                 xl={3}
-                span={4}
+                span={3}
                 key={sheet._id}
               >
                 <SheetCard

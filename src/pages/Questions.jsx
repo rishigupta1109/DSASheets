@@ -143,18 +143,25 @@ export const Questions = () => {
       sx={{
         width: "100%",
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         gap: "1rem",
         alignItems: "center",
         flexWrap: "wrap",
-        justifyContent: "center",
+        justifyContent: "baseline",
         position: "relative",
         minHeight: "80vh",
         padding: "1rem",
       }}
     >
       <BackBtn />
-      <Title align="center" order={1} italic>
+      <Title
+        align="center"
+        order={1}
+        sx={(theme) => ({
+          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontWeight: 900,
+        })}
+      >
         {" "}
         {topic?.name}
       </Title>
@@ -171,9 +178,9 @@ export const Questions = () => {
         {!isNaN(((completed / total) * 100)?.toFixed(0)) &&
           ((completed / total) * 100)?.toFixed(0) != 100 && (
             <RingProgress
-              sections={[{ value: (completed / total) * 100, color: "blue" }]}
+              sections={[{ value: (completed / total) * 100, color: "green" }]}
               label={
-                <Text color="blue" weight={700} align="center" size="xl">
+                <Text color="green" weight={700} align="center" size="xl">
                   {((completed / total) * 100)?.toFixed(0)}%
                 </Text>
               }
@@ -182,10 +189,10 @@ export const Questions = () => {
 
         {((completed / total) * 100)?.toFixed(0) == 100 && (
           <RingProgress
-            sections={[{ value: 100, color: "teal" }]}
+            sections={[{ value: 100, color: "green" }]}
             label={
               <Center>
-                <ThemeIcon color="teal" variant="light" radius="xl" size="xl">
+                <ThemeIcon color="green" variant="light" radius="xl" size="xl">
                   <IconCheck size={22} />
                 </ThemeIcon>
               </Center>
@@ -244,7 +251,6 @@ export const Questions = () => {
           style={{
             width: "100%",
             minWidth: "80vw",
-
             display: "flex",
             flexDirection: "row",
             gap: "1rem",

@@ -59,7 +59,14 @@ const Friends = () => {
         padding: "1rem",
       }}
     >
-      <Title align="center" order={1} italic>
+      <Title
+        align="center"
+        order={1}
+        sx={(theme) => ({
+          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontWeight: 900,
+        })}
+      >
         Friends
       </Title>
       <Container

@@ -6,6 +6,7 @@ import {
   Modal,
   Text,
   Container,
+  Title,
 } from "@mantine/core";
 import { useHotkeys, useLocalStorage } from "@mantine/hooks";
 import Layout from "./Components/UI/Layout/Layout";
@@ -288,7 +289,6 @@ function App() {
             <Modal
               opened={confetti}
               onClose={() => setConfetti(false)}
-              title="Congratulations"
               size="xl"
             >
               <Container
@@ -297,11 +297,49 @@ function App() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
+                  gap: "1rem",
+                  padding: "0rem 2rem",
                 }}
               >
-                <Text size={"xl"}> You have completed Your Daily Goal🤩🥳</Text>
-                <Text size={"xl"}> Stay Consistent🥳</Text>
-                <img src={congrats} height={300}></img>
+                <Title
+                  align="center"
+                  sx={(theme) => ({
+                    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+                    fontWeight: 900,
+                  })}
+                >
+                  {" "}
+                  Congratulations🤩🥳
+                </Title>
+                <Title
+                  align="center"
+                  order={2}
+                  sx={(theme) => ({
+                    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+                    fontWeight: 900,
+                  })}
+                >
+                  {" "}
+                  You have completed Your Daily Goal🤩🥳
+                </Title>
+                <Title
+                  align="center"
+                  order={2}
+                  sx={(theme) => ({
+                    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+                    fontWeight: 900,
+                  })}
+                >
+                  {" "}
+                  Stay Consistent🥳
+                </Title>
+                <img
+                  src={congrats}
+                  height={300}
+                  style={{
+                    borderRadius: "25px",
+                  }}
+                ></img>
               </Container>
             </Modal>
             <RouterProvider

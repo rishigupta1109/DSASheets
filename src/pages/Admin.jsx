@@ -120,7 +120,15 @@ const Admin = () => {
           minHeight: "80vh",
         }}
       >
-        <Title align="center">Admin</Title>
+        <Title
+          align="center"
+          sx={(theme) => ({
+            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+            fontWeight: 900,
+          })}
+        >
+          Admin
+        </Title>
         <Container
           size={"xl"}
           sx={{

@@ -105,8 +105,9 @@ const useStyles = createStyles((theme) => ({
 
 export function Navbar({ links }) {
   const [opened, { toggle, close }] = useDisclosure(false);
+  const [quesCompleted, setQuesCompleted] = useState(0);
   const [active, setActive] = useState(window.location.pathname);
-  console.log(active);
+  // console.log(active);
   useEffect(() => {
     setActive(window.location.pathname);
   }, [window.location.pathname]);
@@ -130,7 +131,7 @@ export function Navbar({ links }) {
       {link.label}
     </NavLink>
   ));
-  console.log(items);
+  // console.log(items);
   const goalCompletedToday =
     new Date(globalCtx?.user?.lastGoal).getDate() === new Date().getDate() &&
     new Date(globalCtx?.user?.lastGoal).getMonth() === new Date().getMonth() &&
@@ -153,6 +154,20 @@ export function Navbar({ links }) {
   const goalCompletedYesterDay = isYesterday(
     new Date(globalCtx?.user?.lastGoal)
   );
+  let dailyGoalQues = globalCtx?.user?.dailyGoal || 0;
+  useEffect(() => {
+    if (globalCtx.user?.dailyGoal) {
+      dailyGoalQues = globalCtx.user?.dailyGoal;
+    }
+    let quesCompletedToday = 0;
+
+    globalCtx?.sheets?.forEach((sheet) => {
+      quesCompletedToday += sheet?.completedToday?.length || 0;
+    });
+    setQuesCompleted(quesCompletedToday);
+    // console.log(quesCompletedToday, dailyGoalQues);
+  }, [globalCtx, globalCtx.sheets]);
+  // console.log(globalCtx);
   return (
     <Header height={HEADER_HEIGHT} className={classes.root}>
       <Container className={classes.header}>
@@ -214,11 +229,12 @@ export function Navbar({ links }) {
             color="green"
             size="xl"
             sx={{
+              cursor: "pointer",
               borderRadius: "100%",
               height: "2rem",
               width: "2rem",
               padding: "0.5rem",
-              animation: "neon 2s infinite",
+              animation: "neon 0.3s infinite",
               boxShadow:
                 colorScheme === "dark"
                   ? "0 0 5px #fff, 0 0 5px #fff, 0 0 15px #fff, 0 0 25px #b6ff00,0 0 35px #b6ff00, 0 0 45px #b6ff00, 0 0 5px #b6ff00, 0 0 5px #b6ff00 "
@@ -232,12 +248,16 @@ export function Navbar({ links }) {
         {goalCompletedYesterDay && (
           <Badge
             sx={{
+              cursor: "pointer",
               borderRadius: "100%",
               height: "2rem",
               width: "2rem",
               padding: "0.5rem",
+              background: `linear-gradient(to right, #00ccdf, white ${
+                (quesCompleted / dailyGoalQues) * 100
+              }%)`,
             }}
-            color="green"
+            color="white"
             size="xl"
             variant="outline"
           >
@@ -249,12 +269,16 @@ export function Navbar({ links }) {
           globalCtx?.isUserLoggedIn && (
             <Badge
               sx={{
+                cursor: "pointer",
                 borderRadius: "100%",
                 height: "2rem",
                 width: "2rem",
                 padding: "0.5rem",
+                background: `linear-gradient(to right, #00ccdf, white ${
+                  (quesCompleted / dailyGoalQues) * 100
+                }%)`,
               }}
-              color="green"
+              color="white"
               size="xl"
               variant="outline"
             >
