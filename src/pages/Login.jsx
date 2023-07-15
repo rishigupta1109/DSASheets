@@ -40,19 +40,17 @@ export function AuthenticationForm(props) {
       name: (val) =>
         type === "login"
           ? null
-          : val.length <= 3
+          : val.length < 3
           ? "Name should include at least 3 characters"
           : null,
       username: (val) =>
         type === "login"
           ? null
-          : val.length <= 3
+          : val.length < 3
           ? "Username should include at least 3 characters"
           : null,
       password: (val) =>
-        val.length <= 6
-          ? "Password should include at least 6 characters"
-          : null,
+        val.length < 6 ? "Password should include at least 6 characters" : null,
       terms: (val) =>
         type === "login"
           ? null

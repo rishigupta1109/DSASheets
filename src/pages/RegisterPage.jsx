@@ -54,17 +54,13 @@ const RegisterPage = () => {
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
       name: (val) =>
-        val.length <= 3 ? "Name should include at least 3 characters" : null,
+        val.length < 3 ? "Name should include at least 3 characters" : null,
       username: (val) =>
-        val.length <= 3
-          ? "Username should include at least 3 characters"
-          : null,
+        val.length < 3 ? "Username should include at least 3 characters" : null,
       password: (val) =>
-        val.length <= 6
-          ? "Password should include at least 6 characters"
-          : null,
+        val.length < 6 ? "Password should include at least 6 characters" : null,
       college: (val) =>
-        val.length <= 3 ? "College should include at least 3 characters" : null,
+        val.length < 3 ? "College should include at least 3 characters" : null,
     },
   });
   const { setLoading, colleges } = useContext(globalContext);

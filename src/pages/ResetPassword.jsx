@@ -82,6 +82,12 @@ export function ForgotPassword() {
         "Password and Confirm Password should be same",
         "warning"
       );
+    } else if (password.length < 6) {
+      return customisedNotification(
+        "error",
+        "Password should be atleast 6 characters long",
+        "warning"
+      );
     }
     console.log(email, password, otp);
     try {
