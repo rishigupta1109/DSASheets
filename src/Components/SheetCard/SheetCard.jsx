@@ -108,7 +108,7 @@ export function SheetCard({
         </Group>
         <Tooltip label={title.toUpperCase()}>
           <Text
-            fz="lg"
+            fz="xl"
             fw={700}
             mt="md"
             color={dark ? "white" : "black"}
@@ -121,12 +121,27 @@ export function SheetCard({
             {title.toUpperCase()}
           </Text>
         </Tooltip>
-        <Text fz="sm" mt={4} c="dimmed" weight={500}>
+        <Text
+          fz="sm"
+          mt={4}
+          c={dark ? "" : "dimmed"}
+          weight={500}
+          sx={(theme) => ({
+            color: theme.colorScheme === "dark" ? theme.white : theme.gray,
+          })}
+        >
           {description}
         </Text>
 
         {started && (
-          <Text fz="sm" fw={500} mt="md">
+          <Text
+            fz="sm"
+            fw={500}
+            mt="md"
+            sx={(theme) => ({
+              color: theme.colorScheme === "dark" ? theme.white : theme.black,
+            })}
+          >
             Questions completed:{" "}
             <Text
               span
@@ -170,11 +185,12 @@ export function SheetCard({
               fw={500}
               fz="sm"
               mt="md"
-              sx={{
+              sx={(theme) => ({
+                color: theme.colorScheme === "dark" ? theme.white : theme.black,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-              }}
+              })}
             >
               {total - completed} More to go{" "}
               <Text

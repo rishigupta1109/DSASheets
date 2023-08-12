@@ -14,8 +14,8 @@ const LeaderBoard = () => {
   const [withs, setWith] = useState("Friends");
   const [data, setData] = useState([]);
   const [mode, setMode] = useState("0");
-
-  const { sheets, user, setLoading } = useContext(globalContext);
+  const [loading, setLoading] = useState(false);
+  const { sheets, user } = useContext(globalContext);
   const navigate = useNavigate();
   const sheetOptions = sheets.map((sheet) => ({
     label: sheet.title,
@@ -129,7 +129,7 @@ const LeaderBoard = () => {
               data={["ALL", "Friends", ...colleges]}
             />
           </Container>
-          <LeaderBoardTable sheet={sheet} data={data} />
+          <LeaderBoardTable loading={loading} sheet={sheet} data={data} />
         </>
       )}
     </Container>

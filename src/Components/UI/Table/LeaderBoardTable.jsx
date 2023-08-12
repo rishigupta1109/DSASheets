@@ -8,6 +8,7 @@ import {
   ScrollArea,
   rem,
   Title,
+  Loader,
 } from "@mantine/core";
 import globalContext from "../../Context/GlobalContext";
 import { useContext } from "react";
@@ -22,7 +23,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function LeaderBoardTable({ data, sheet }) {
+export function LeaderBoardTable({ data, sheet, loading }) {
   const { classes, theme } = useStyles();
   const specificData = !(sheet === "ALL");
   const { sheets } = useContext(globalContext);
@@ -81,22 +82,26 @@ export function LeaderBoardTable({ data, sheet }) {
 
   return (
     <ScrollArea>
-      <Table sx={{ minWidth: 800 }} verticalSpacing="xs">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>User Name</th>
-            <th>Name</th>
-            {specificData && <th>Sheet Name</th>}
-            {specificData && <th>Total Questions</th>}
-            <th>Completed</th>
-            <th>Current Streak</th>
-            <th>Longest Streak</th>
-            {specificData && <th>Progress</th>}
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </Table>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Table sx={{ minWidth: 800 }} verticalSpacing="xs">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>User Name</th>
+              <th>Name</th>
+              {specificData && <th>Sheet Name</th>}
+              {specificData && <th>Total Questions</th>}
+              <th>Completed</th>
+              <th>Current Streak</th>
+              <th>Longest Streak</th>
+              {specificData && <th>Progress</th>}
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      )}
     </ScrollArea>
   );
 }

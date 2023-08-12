@@ -85,6 +85,20 @@ export default function CustomTable({
   const { sheets, setSheets, user, setConfetti, setUser } =
     useContext(globalContext);
   const { topic_id, sheet_id } = useParams();
+  function isYesterday(date) {
+    if (!(date instanceof Date)) {
+      return false;
+    }
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    return (
+      date.getDate() === yesterday.getDate() &&
+      date.getMonth() === yesterday.getMonth() &&
+      date.getFullYear() === yesterday.getFullYear()
+    );
+  }
   const toggleRow = async (id, checked) => {
     // console.log({ id });
     if (!user)
@@ -133,7 +147,9 @@ export default function CustomTable({
           setUser((prev) => {
             return {
               ...prev,
-              currentStreak: prev?.currentStreak + 1,
+              currentStreak: isYesterday(new Date(prev?.lastGoal))
+                ? prev?.currentStreak + 1
+                : 1,
               longestStreak: Math.max(
                 prev?.currentStreak + 1,
                 prev?.longestStreak

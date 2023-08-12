@@ -10,6 +10,13 @@ const TopPerfromers = () => {
       topPerformersData.push([key, ...topPerformers[key]]);
     }
   }
+  topPerformersData.sort((a, b) => {
+    if (a[0] > b[0]) {
+      return -1;
+    } else {
+      return 1;
+    }
+  });
   return (
     <div
       style={{

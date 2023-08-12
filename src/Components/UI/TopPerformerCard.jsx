@@ -36,17 +36,16 @@ const useStyles = createStyles((theme) => ({
   },
 
   stat: {
-    maxWidth: rem(180),
-
     paddingTop: theme.spacing.xl,
-    minHeight: rem(140),
     display: "flex",
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
     backgroundColor: theme.white,
+    width: "100%",
+    maxWidth: rem(180),
+    minWidth: rem(180),
   },
-
   label: {
     textTransform: "uppercase",
     fontWeight: 900,
@@ -116,6 +115,8 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    gap: "10px",
+    width: "120px",
   },
 
   control: {
@@ -172,15 +173,7 @@ export function TopPerformerCard({ users, month }) {
     </Paper>
   ));
 
-  const gradients = [
-    "linear-gradient(-60deg, #ff5858 0%, #f09819 100%)",
-    "linear-gradient(-60deg, #003732, #028132)",
-    //7 amazing dark colorful gradients
-    "linear-gradient(-60deg, #29323c 0%, #485563 100%)",
-    "linear-gradient(-60deg, #2c3e50 0%, #fd746c 100%)",
-    "linear-gradient(-60deg, #ff5858 0%, #f09819 100%)",
-    "linear-gradient(-60deg, #ff0844 0%, #ff794f 100%)",
-  ];
+  const gradients = ["linear-gradient(-60deg, #ff5858 0%, #f09819 100%)"];
   return (
     <div
       className={clsx(classes.root, styles.card)}

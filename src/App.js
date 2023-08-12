@@ -39,6 +39,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Confetti from "react-confetti";
 import congrats from "./Images/giphy.gif";
+import { askForPermissionToReceiveNotifications as getNotifyPermission } from "./utils/utils";
 const routerAdmin = createBrowserRouter([
   {
     path: "/",
@@ -246,6 +247,11 @@ function App() {
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
+  useEffect(() => {
+    if (localStorage.getItem("notification") === null) {
+      getNotifyPermission();
+    }
+  }, []);
 
   return (
     <div>
