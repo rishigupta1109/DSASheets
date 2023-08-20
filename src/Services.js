@@ -342,7 +342,7 @@ const ResetPassword = async (email) => {
   return data;
 };
 const ResetPasswordVerify = async (email, password, otp) => {
-  const data = await axios.post("api/user/otpverify", {
+  const data = await axios.post("api/user/reset-otpverify", {
     otp: otp,
     email: email,
     password: password,

@@ -74,9 +74,11 @@ export const EditQuestions = () => {
       data: (value) => {
         try {
           const questions = JSON.parse(value);
+          console.log(questions);
           if (Array.isArray(questions)) return true;
           return false;
         } catch (err) {
+          console.log(err);
           return false;
         }
       },
@@ -92,13 +94,15 @@ export const EditQuestions = () => {
   const createMultipleQuestionsHandler = async () => {
     const { data } = form2.values;
     let ques;
+    console.log(data);
     try {
       ques = JSON.parse(data);
+      console.log(ques);
     } catch (err) {
       console.log(err);
       return customisedNotification("error", "Invalid JSON");
     }
-    // console.log(ques);
+    console.log(ques, Array.isArray(ques));
     if (!Array.isArray(ques)) {
       customisedNotification("error", "Invalid JSON");
       form2.setErrors({ data: "Invalid JSON" });
