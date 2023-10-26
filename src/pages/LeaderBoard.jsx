@@ -44,7 +44,11 @@ const LeaderBoard = () => {
           questions: sheetSelected?.questions?.length,
         }));
         setTotalPages(parseInt(res?.data?.totalDocs));
-        setData(data?.sort((a, b) => b?.completed - a?.completed));
+        setData((prev) => {
+          return Array.from(new Set([...prev, ...data]))?.sort(
+            (a, b) => b?.completed - a?.completed
+          );
+        });
       } catch (err) {
         console.log(err);
       }
