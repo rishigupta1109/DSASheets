@@ -9,6 +9,8 @@ import TopPerfromers from "./TopPerfromers";
 
 const LeaderBoard = () => {
   const [sheet, setSheet] = useState("ALL");
+  let [pageNumber, setPageNumber] = useState(0);
+  let [totalPages, setTotalPages] = useState(1);
   const [duration, setDuration] = useState(1);
   const { colleges } = useContext(globalContext);
   const [withs, setWith] = useState("Friends");
@@ -27,7 +29,13 @@ const LeaderBoard = () => {
     if (duration && user && withs) {
       try {
         setLoading(true);
-        const res = await getLeaderboard(user?.userId, sheet, duration, withs);
+        const res = await getLeaderboard(
+          user?.userId,
+          sheet,
+          duration,
+          withs,
+          pageNumber
+        );
         // console.log(res);
         const data = res?.data?.leaderboard?.map((d) => ({
           ...d,
@@ -35,6 +43,7 @@ const LeaderBoard = () => {
           completed: d?.questions,
           questions: sheetSelected?.questions?.length,
         }));
+        totalPages = res?.data?.totalDocs / 10 + 1;
         setData(data?.sort((a, b) => b?.completed - a?.completed));
       } catch (err) {
         console.log(err);
@@ -45,7 +54,7 @@ const LeaderBoard = () => {
   useEffect(() => {
     // console.log(sheet, duration);
     fetchData();
-  }, [sheet, duration, withs, user]);
+  }, [sheet, duration, withs, user, pageNumber]);
 
   if (window.location.pathname !== "/leaderboard") {
     navigate("/leaderboard");
@@ -129,7 +138,14 @@ const LeaderBoard = () => {
               data={["ALL", "Friends", ...colleges]}
             />
           </Container>
-          <LeaderBoardTable loading={loading} sheet={sheet} data={data} />
+          <LeaderBoardTable
+            totalPages={totalPages}
+            pageNumber={pageNumber}
+            loading={loading}
+            sheet={sheet}
+            data={data}
+            setPageNumber={setPageNumber}
+          />
         </>
       )}
     </Container>

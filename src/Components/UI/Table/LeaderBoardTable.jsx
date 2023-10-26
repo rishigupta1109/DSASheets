@@ -1,6 +1,5 @@
 import {
   createStyles,
-  Table,
   Progress,
   Anchor,
   Text,
@@ -12,6 +11,7 @@ import {
 } from "@mantine/core";
 import globalContext from "../../Context/GlobalContext";
 import { useContext } from "react";
+import { Table } from "antd";
 
 const useStyles = createStyles((theme) => ({
   progressBar: {
@@ -23,13 +23,111 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function LeaderBoardTable({ data, sheet, loading }) {
+export function LeaderBoardTable({
+  data,
+  sheet,
+  loading,
+  totalPages,
+  pageNumber,
+  setPageNumber,
+}) {
   const { classes, theme } = useStyles();
   const specificData = !(sheet === "ALL");
   const { sheets } = useContext(globalContext);
 
   const sheetSelected = sheets.filter((s) => s?._id === sheet);
   // console.log({ data, sheets, sheetSelected });
+  const columns = [
+    {
+      title: "Rank",
+      key: "rank",
+      render: (_, row, index) => <p>{index + 1}</p>,
+    },
+    {
+      title: "User Name",
+      key: "username",
+      dataIndex: "username",
+    },
+    {
+      title: "Name",
+      key: "name",
+      dataIndex: "name",
+    },
+    {
+      title: "Completed",
+      key: "completed",
+      render: (_, row) => {
+        console.log(row);
+        const totalQuestions = sheetSelected[0]?.questions;
+        const completed = (row.completed / totalQuestions) * 100;
+        const remaining = 100 - completed;
+        return <p>{Intl.NumberFormat().format(row.completed)}</p>;
+      },
+    },
+    {
+      title: "Current Streak",
+      key: "currentStreak",
+      dataIndex: "currentStreak",
+    },
+    {
+      title: "Longest Streak",
+      key: "longestStreak",
+      dataIndex: "longestStreak",
+    },
+  ];
+  const columnsWithSheets = [
+    {
+      title: "Rank",
+      key: "rank",
+      render: (_, row, index) => <p>{index + 1}</p>,
+    },
+    {
+      title: "User Name",
+      key: "username",
+      dataIndex: "username",
+    },
+    {
+      title: "Name",
+      key: "name",
+      dataIndex: "name",
+    },
+    {
+      title: "Sheet Name",
+      key: "sheetName",
+      render: (row) => {
+        return <p>{sheetSelected[0]?.title}</p>;
+      },
+    },
+    {
+      title: "Total Questions",
+      key: "totalQuestions",
+      render: (row) => {
+        const totalQuestions = sheetSelected[0]?.questions;
+        return <p>{totalQuestions}</p>;
+      },
+    },
+    {
+      title: "Completed",
+      key: "completed",
+      render: (_, row) => {
+        console.log(row);
+        const totalQuestions = sheetSelected[0]?.questions;
+        const completed = (row.completed / totalQuestions) * 100;
+        const remaining = 100 - completed;
+        return <p>{Intl.NumberFormat().format(row.completed)}</p>;
+      },
+    },
+    {
+      title: "Current Streak",
+      key: "currentStreak",
+      dataIndex: "currentStreak",
+    },
+    {
+      title: "Longest Streak",
+      key: "longestStreak",
+      dataIndex: "longestStreak",
+    },
+  ];
   const rows = data.map((row, index) => {
     const totalQuestions = sheetSelected[0]?.questions;
     const completed = (row.completed / totalQuestions) * 100;
@@ -80,28 +178,46 @@ export function LeaderBoardTable({ data, sheet, loading }) {
     );
   });
 
+  // return (
+  //   <ScrollArea>
+  //     {loading ? (
+  //       <Loader />
+  //     ) : (
+  //       <Table sx={{ minWidth: 800 }} verticalSpacing="xs">
+  //         <thead>
+  //           <tr>
+  //             <th>Rank</th>
+  //             <th>User Name</th>
+  //             <th>Name</th>
+  //             {specificData && <th>Sheet Name</th>}
+  //             {specificData && <th>Total Questions</th>}
+  //             <th>Completed</th>
+  //             <th>Current Streak</th>
+  //             <th>Longest Streak</th>
+  //             {specificData && <th>Progress</th>}
+  //           </tr>
+  //         </thead>
+  //         <tbody>{rows}</tbody>
+  //       </Table>
+  //     )}
+  //   </ScrollArea>
+  // );
   return (
-    <ScrollArea>
-      {loading ? (
-        <Loader />
-      ) : (
-        <Table sx={{ minWidth: 800 }} verticalSpacing="xs">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>User Name</th>
-              <th>Name</th>
-              {specificData && <th>Sheet Name</th>}
-              {specificData && <th>Total Questions</th>}
-              <th>Completed</th>
-              <th>Current Streak</th>
-              <th>Longest Streak</th>
-              {specificData && <th>Progress</th>}
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </Table>
-      )}
-    </ScrollArea>
+    <Table
+      loading={loading}
+      style={{
+        width: "100%",
+      }}
+      columns={sheetSelected.length > 0 ? columnsWithSheets : columns}
+      dataSource={data}
+      pagination={{
+        total: totalPages,
+        pageSize: 10,
+        current: pageNumber + 1,
+        onChange: (page) => {
+          setPageNumber(page - 1);
+        },
+      }}
+    />
   );
 }

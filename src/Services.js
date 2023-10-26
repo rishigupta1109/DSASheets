@@ -259,7 +259,14 @@ const toggleFriend = async (userId, friendId) => {
   );
   return data;
 };
-const getLeaderboard = async (userId, sheetId, duration, withs) => {
+const getLeaderboard = async (
+  userId,
+  sheetId,
+  duration,
+  withs,
+  pageNumber,
+  limit = 10
+) => {
   const data = await axios.post(
     "api/user/leaderboard",
     {
@@ -267,6 +274,8 @@ const getLeaderboard = async (userId, sheetId, duration, withs) => {
       sheetId: sheetId,
       duration: duration,
       withs: withs,
+      pageNumber: pageNumber,
+      limit: limit,
     },
     {
       headers: {
