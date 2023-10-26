@@ -45,9 +45,12 @@ const LeaderBoard = () => {
         }));
         setTotalPages(parseInt(res?.data?.totalDocs));
         setData((prev) => {
-          return Array.from(new Set([...prev, ...data]))?.sort(
-            (a, b) => b?.completed - a?.completed
-          );
+          return [...prev, ...data]
+            ?.filter((val, ind, arr) => {
+              console.log(val, ind, arr);
+              return arr.findIndex((t) => t.username === val.username) === ind;
+            })
+            ?.sort((a, b) => b?.completed - a?.completed);
         });
       } catch (err) {
         console.log(err);
@@ -118,6 +121,9 @@ const LeaderBoard = () => {
               value={sheet}
               onChange={(event) => {
                 setSheet(event);
+                setPageNumber(0);
+                setTotalPages(1);
+                setData([]);
               }}
             />
             <Select
@@ -125,7 +131,12 @@ const LeaderBoard = () => {
               placeholder="Pick one"
               nothingFound="No options"
               value={duration}
-              onChange={(event) => setDuration(event)}
+              onChange={(event) => {
+                setPageNumber(0);
+                setTotalPages(1);
+                setData([]);
+                setDuration(event);
+              }}
               data={[
                 { label: "Today", value: 1 },
                 { label: "This Week", value: 7 },
@@ -139,7 +150,12 @@ const LeaderBoard = () => {
               placeholder="Pick one"
               nothingFound="No options"
               value={withs}
-              onChange={(event) => setWith(event)}
+              onChange={(event) => {
+                setWith(event);
+                setPageNumber(0);
+                setTotalPages(1);
+                setData([]);
+              }}
               data={["ALL", "Friends", ...colleges]}
             />
           </Container>
