@@ -212,7 +212,7 @@ export function LeaderBoardTable({
       columns={sheetSelected.length > 0 ? columnsWithSheets : columns}
       dataSource={data}
       pagination={{
-        total: totalPages,
+        total: Math.floor(totalPages),
         hideOnSinglePage: true,
         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`,
         pageSize: 10,
