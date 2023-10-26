@@ -42,7 +42,7 @@ export function LeaderBoardTable({
     {
       title: "Rank",
       key: "rank",
-      render: (_, row, index) => <p>{index + 1}</p>,
+      render: (_, row, index) => <p>{pageNumber * 10 + index + 1}</p>,
     },
     {
       title: "User Name",
@@ -80,7 +80,7 @@ export function LeaderBoardTable({
     {
       title: "Rank",
       key: "rank",
-      render: (_, row, index) => <p>{index + 1}</p>,
+      render: (_, row, index) => <p>{pageNumber * 10 + index + 1}</p>,
     },
     {
       title: "User Name",
