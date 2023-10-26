@@ -31,6 +31,7 @@ export function LeaderBoardTable({
   pageNumber,
   setPageNumber,
 }) {
+  console.log({ totalPages });
   const { classes, theme } = useStyles();
   const specificData = !(sheet === "ALL");
   const { sheets } = useContext(globalContext);
@@ -212,6 +213,8 @@ export function LeaderBoardTable({
       dataSource={data}
       pagination={{
         total: totalPages,
+        hideOnSinglePage: true,
+        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`,
         pageSize: 10,
         current: pageNumber + 1,
         onChange: (page) => {
