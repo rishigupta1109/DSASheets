@@ -43,7 +43,7 @@ const LeaderBoard = () => {
           completed: d?.questions,
           questions: sheetSelected?.questions?.length,
         }));
-        totalPages = res?.data?.totalDocs / 10 + 1;
+        setTotalPages(res?.data?.totalDocs / 10 + 1);
         setData(data?.sort((a, b) => b?.completed - a?.completed));
       } catch (err) {
         console.log(err);
