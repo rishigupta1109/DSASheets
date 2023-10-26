@@ -37,7 +37,7 @@ export function LeaderBoardTable({
   const { sheets } = useContext(globalContext);
 
   const sheetSelected = sheets.filter((s) => s?._id === sheet);
-  // console.log({ data, sheets, sheetSelected });
+  console.log({ data, sheets, sheetSelected });
   const columns = [
     {
       title: "Rank",
