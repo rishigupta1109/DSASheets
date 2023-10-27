@@ -207,7 +207,8 @@ export function LeaderBoardTable({
     <Table
       loading={loading}
       style={{
-        width: "100%",
+        width: "80%",
+        border: "1px solid #e8e8e8",
       }}
       columns={sheetSelected.length > 0 ? columnsWithSheets : columns}
       dataSource={data}
