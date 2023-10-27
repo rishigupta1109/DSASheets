@@ -34,8 +34,8 @@ export function LeaderBoardTable({
   console.log({ totalPages });
   const { classes, theme } = useStyles();
   const specificData = !(sheet === "ALL");
-  const { sheets } = useContext(globalContext);
-
+  const { sheets, user } = useContext(globalContext);
+  console.log({ user });
   const sheetSelected = sheets.filter((s) => s?._id === sheet);
   console.log({ data, sheets, sheetSelected });
   const columns = [
@@ -48,6 +48,12 @@ export function LeaderBoardTable({
       title: "User Name",
       key: "username",
       dataIndex: "username",
+      render: (username) => {
+        if (user?.username === username) {
+          return <p style={{ color: "green" }}>{username} (YOU)</p>;
+        }
+        return <p>{username}</p>;
+      },
     },
     {
       title: "Name",
@@ -178,6 +184,7 @@ export function LeaderBoardTable({
       </tr>
     );
   });
+  const darkmode = theme.colorScheme === "dark";
 
   // return (
   //   <ScrollArea>
@@ -203,12 +210,13 @@ export function LeaderBoardTable({
   //     )}
   //   </ScrollArea>
   // );
+  console.log({ darkmode });
   return (
     <Table
       loading={loading}
+      bordered
       style={{
         width: "80%",
-        border: "1px solid #e8e8e8",
       }}
       columns={sheetSelected.length > 0 ? columnsWithSheets : columns}
       dataSource={data}

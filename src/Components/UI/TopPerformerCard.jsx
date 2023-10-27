@@ -19,10 +19,12 @@ const useStyles = createStyles((theme) => ({
     padding: theme.spacing.xl,
     borderRadius: theme.radius.md,
     display: "flex",
-    width: "60%",
-    minWidth: rem(350),
-    maxWidth: rem(800),
-
+    width: "100%",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    maxWidth: rem(1000),
+    gap: "5rem",
     [theme.fn.smallerThan("xs")]: {
       flexDirection: "column",
     },
