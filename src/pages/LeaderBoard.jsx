@@ -45,12 +45,27 @@ const LeaderBoard = () => {
         }));
         setTotalPages(parseInt(res?.data?.totalDocs));
         setData((prev) => {
-          return [...prev, ...data]
-            ?.filter((val, ind, arr) => {
-              console.log(val, ind, arr);
-              return arr.findIndex((t) => t.username === val.username) === ind;
-            })
-            ?.sort((a, b) => b?.completed - a?.completed);
+          let x = [];
+          for (let i = 0; i < pageNumber * 10; i++) {
+            x.push({
+              username: "Loading",
+              name: "Loading",
+              sheet: "Loading",
+              completed: "Loading",
+              questions: "Loading",
+            });
+          }
+          return [
+            ...x,
+            ...data
+              ?.filter((val, ind, arr) => {
+                console.log(val, ind, arr);
+                return (
+                  arr.findIndex((t) => t.username === val.username) === ind
+                );
+              })
+              ?.sort((a, b) => b?.completed - a?.completed),
+          ];
         });
       } catch (err) {
         console.log(err);
