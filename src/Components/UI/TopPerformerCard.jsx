@@ -23,7 +23,7 @@ const useStyles = createStyles((theme) => ({
     flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
-    maxWidth: rem(1000),
+    maxWidth: rem(700),
     gap: "5rem",
     [theme.fn.smallerThan("xs")]: {
       flexDirection: "column",
@@ -102,8 +102,9 @@ const useStyles = createStyles((theme) => ({
   controls: {
     display: "flex",
     flexDirection: "column",
-    marginRight: `calc(${theme.spacing.xl} * 2)`,
-
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
     [theme.fn.smallerThan("xs")]: {
       flexDirection: "row",
       alignItems: "center",
@@ -117,8 +118,9 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    alignItems: "center",
     gap: "10px",
-    width: "120px",
+    width: "100%",
   },
 
   control: {
@@ -192,7 +194,14 @@ export function TopPerformerCard({ users, month }) {
           <Text className={classes.month}>{new Date().getFullYear()}</Text>
         </div>
       </div>
-      <Group sx={{ flex: 1 }}>{stats}</Group>
+      <Group
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {stats}
+      </Group>
     </div>
   );
 }

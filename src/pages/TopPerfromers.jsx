@@ -11,12 +11,13 @@ const TopPerfromers = () => {
     }
   }
   topPerformersData.sort((a, b) => {
-    if (a[0] > b[0]) {
+    if (parseInt(a[0]) > parseInt(b[0])) {
       return -1;
     } else {
       return 1;
     }
   });
+  // console.log(topPerformersData);
   return (
     <div
       style={{
