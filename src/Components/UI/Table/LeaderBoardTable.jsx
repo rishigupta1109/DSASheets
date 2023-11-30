@@ -212,23 +212,38 @@ export function LeaderBoardTable({
   // );
   console.log({ darkmode });
   return (
-    <Table
-      loading={loading}
-      bordered
+    <div
       style={{
         width: "80%",
+        display: "flex",
+        flexDirection: "row",
+        gap: "1rem",
+        alignItems: "center",
+        flexWrap: "wrap",
+        justifyContent: "space-evenly",
+        backgroundColor: darkmode ? "white" : "#fff",
+        borderRadius: "10px",
       }}
-      columns={sheetSelected.length > 0 ? columnsWithSheets : columns}
-      dataSource={data}
-      pagination={{
-        total: totalPages,
-        hideOnSinglePage: true,
-        pageSize: 10,
-        current: pageNumber + 1,
-        onChange: (page) => {
-          setPageNumber(page - 1);
-        },
-      }}
-    />
+    >
+      <Table
+        loading={loading}
+        bordered
+        style={{
+          width: "100%",
+          padding: "1rem",
+        }}
+        columns={sheetSelected.length > 0 ? columnsWithSheets : columns}
+        dataSource={data}
+        pagination={{
+          total: totalPages,
+          hideOnSinglePage: true,
+          pageSize: 10,
+          current: pageNumber + 1,
+          onChange: (page) => {
+            setPageNumber(page - 1);
+          },
+        }}
+      />
+    </div>
   );
 }
