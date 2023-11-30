@@ -223,6 +223,7 @@ export function LeaderBoardTable({
         justifyContent: "space-evenly",
         backgroundColor: darkmode ? "white" : "#fff",
         borderRadius: "10px",
+        overflow: "auto",
       }}
     >
       <Table
