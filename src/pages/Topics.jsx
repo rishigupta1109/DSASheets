@@ -151,9 +151,15 @@ export default function Topics() {
           )}
         </div>
       </div>
-      <Grid
-        sx={{
+      <div
+        style={{
           width: "100%",
+          display: "flex",
+          flexDirection: "row",
+          gap: "1rem",
+          alignItems: "center",
+          flexWrap: "wrap",
+          justifyContent: "center",
         }}
       >
         {topics?.length > 0 &&
@@ -164,15 +170,7 @@ export default function Topics() {
             const toRevisit = topic?.toRevisit || 0;
             // console.log(topic);
             return (
-              <Grid.Col
-                key={topic?._id}
-                xxs={9}
-                xs={7}
-                sm={6}
-                md={4}
-                lg={3}
-                span={3}
-              >
+              <div key={topic?._id}>
                 <SheetCard
                   link={topic?._id + "/questions"}
                   completed={completedTopic}
@@ -181,10 +179,10 @@ export default function Topics() {
                   total={totalTopic}
                   toRevisit={toRevisit}
                 />
-              </Grid.Col>
+              </div>
             );
           })}
-      </Grid>
+      </div>
     </Container>
   );
 }

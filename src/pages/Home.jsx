@@ -39,13 +39,15 @@ export default function Home() {
         Home
       </Title>
 
-      <Grid
-        sx={{
+      <div
+        style={{
           width: "100%",
-
-          "@media (max-width: 700px) and (min-width:500px)": {
-            justifyContent: "center",
-          },
+          display: "flex",
+          flexDirection: "row",
+          gap: "1rem",
+          alignItems: "center",
+          flexWrap: "wrap",
+          justifyContent: "center",
         }}
       >
         {startedSheets.length === 0 && (
@@ -86,16 +88,7 @@ export default function Home() {
             const toRevisit = sheet?.toRevisit?.length;
 
             return (
-              <Grid.Col
-                xxs={9}
-                xs={7}
-                sm={6}
-                md={4.5}
-                lg={3.5}
-                xl={3}
-                span={3}
-                key={sheet._id}
-              >
+              <div key={sheet._id}>
                 <SheetCard
                   link={`/sheet/${sheet._id}`}
                   total={sheet?.questions}
@@ -105,10 +98,10 @@ export default function Home() {
                   started={completed > 0}
                   toRevisit={toRevisit}
                 />
-              </Grid.Col>
+              </div>
             );
           })}
-      </Grid>
+      </div>
     </Container>
   );
 }
